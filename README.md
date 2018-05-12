@@ -7,3 +7,29 @@ This repository which we call Kamaladevi is the front-end for SARAL developed us
 
 ## SARAL - NavGurukul's eLearning Platform
 Saral is our eLearning platform which is meant to provide higher education to students in vernacular languages.
+
+## Project setup
+
+1. Touch a `.env` file in the root of the project and add environment variables to it. These values are available via
+`process.env` object in the javascript and via `%Variable_name%` in the `index.html`
+
+	To pass the variables to the `index.html` file being used by react append the variable name with `REACT_APP_`.
+
+	Eg: 
+`REACT_APP_TITLE=KamalaDevi`
+
+	```html
+	<title>%REACT_APP_TITLE%</title>
+	```
+
+2. To add any images to the project create a folder `src/img` and import them by `import ./src/img/file.jpeg` inside the components code.
+
+	**Note:-** Do not commit images to the github repository. It increases the size 	of the future pulls. Hence, added `src/img` to `.gitignore`. 
+
+3. Run the project by executing - 
+
+	```javascript
+	npm install
+	npm start
+	```
+
