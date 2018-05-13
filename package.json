@@ -1,25 +1,39 @@
 {
   "name": "kamaladevi",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@angular/material": "^6.0.1",
-    "@swimlane/ngx-datatable": "^12.0.0",
-    "node-sass-chokidar": "^1.3.0",
-    "normalize.css": "^8.0.0",
-    "npm-run-all": "^4.1.3",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4"
-  },
+  "main": "index.js",
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recusrive",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/navgurukul/kamaladevi.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/navgurukul/kamaladevi/issues"
+  },
+  "homepage": "https://github.com/navgurukul/kamaladevi#readme",
+  "dependencies": {
+    "@material-ui/icons": "^1.0.0-beta.43",
+    "material-ui": "^1.0.0-beta.47",
+    "next": "^6.0.1",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.1"
   }
 }
