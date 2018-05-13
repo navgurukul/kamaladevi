@@ -10,13 +10,12 @@ Saral is our eLearning platform which is meant to provide higher education to st
 
 ## Project setup
 1. Clone the repository
+    
+    ```git clone https://github.com/navgurukul/kamaladevi```
 
-  ```git clone https://github.com/navgurukul/kamaladevi
-  ```
 2. Checkout the branch `next`
 
-  ```git checkout next
-  ```
+  ```git checkout next```
 
 2. Run the project by executing
 
