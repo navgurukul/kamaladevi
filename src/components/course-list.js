@@ -4,9 +4,9 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
 
-import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import { fetchApi } from '../services/api';
 
@@ -62,9 +62,15 @@ class CourseList extends React.Component {
 		return (
 			<div className={classes.root}>
 				{availableCourses.map(value => (
-					<Typography key={value.id}>
-						{value.name}
-					</Typography>
+					<div key={value.id} >
+						<Button onClick={() => Router.push({
+							pathname: '/course',
+							query: { id: value.id },
+						})}
+						>
+							{value.name}
+						</Button>
+					</div>
 				))}
 			</div>
 		);
