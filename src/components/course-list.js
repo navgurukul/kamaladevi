@@ -1,10 +1,14 @@
 // Course list
 import React from 'react';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
+import localforage from 'localforage';
 
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
+
+import { fetchApi } from '../services/api';
 
 const styles = theme => ({
 	root: {
@@ -18,51 +22,38 @@ class CourseList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			courses: null,
+			prefetchedData: false,
+			availableCourses: [],
+			// For future uses
+			enrolledCourses: [], // eslint-disable-line react/no-unused-state
+			facilitatingCourses: [], // eslint-disable-line react/no-unused-state
 		};
 	}
 
 	componentDidMount() {
-		// We will be actually making a network request here,
-		// on http://saral.navgurukul.org/api/courses to get the courses
-		setTimeout(() => {
-			this.setState({
-				courses: {
-					availableCourses: [
-						{
-							id: 12,
-							name: 'Basics of Programming Language',
-						},
-						{
-							id: 13,
-							name: 'Introduction to HTML',
-						},
-						{
-							id: 14,
-							name: 'Introduction to CSS',
-						},
-						{
-							id: 15,
-							name: 'Introduction to Javascript',
-						},
-						{
-							id: 16,
-							name: 'NavGurukul Learning Framework',
-						},
-						{
-							id: 17,
-							name: 'Introduction to Angular',
-						},
-					],
-				},
-			});
-		}, 1500);
+		localforage.getItem('authResponse', (error, value) => {
+			if (!error) {
+				if (value === null) {
+					Router.replace('/');
+				} else {
+					const { jwt } = value;
+					fetchApi('/courses', {}, { Authorization: jwt }).then((response) => {
+						this.setState({
+							prefetchedData: true,
+							...response.data,
+						});
+					});
+				}
+			} else {
+				// TODO: Handle error cases
+			}
+		});
 	}
 
 	render() {
 		const { classes } = this.props;
-		const { courses } = this.state;
-		if (!courses) {
+		const { availableCourses, prefetchedData } = this.state;
+		if (!prefetchedData) {
 			return (
 				<div className={classes.root}>
 					<CircularProgress className={classes.progress} size={50} />
@@ -70,7 +61,7 @@ class CourseList extends React.Component {
 		}
 		return (
 			<div className={classes.root}>
-				{courses.availableCourses.map(value => (
+				{availableCourses.map(value => (
 					<Typography key={value.id}>
 						{value.name}
 					</Typography>
