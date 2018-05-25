@@ -45,15 +45,27 @@ class CourseDetail extends React.Component {
 		}
 		const { id } = Router.query;
 		const { jwt } = value;
-		response = await fetchApi(`/courses/${id}/exercises`, {}, { Authorization: jwt });
+		try {
+			response = await fetchApi(`/courses/${id}/exercises`, {}, { Authorization: jwt });
+		} catch (e) {
+			// TODO: Handle network error cases
+			return;
+		}
+
 		const exercises = response.data.data;
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			exercises,
 		});
 		const firstExerciseSlug = exercises[0].slug;
-		response = (
-			await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug: firstExerciseSlug }, { Authorization: jwt })
-		);
+		try {
+			response = (
+				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug: firstExerciseSlug }, { Authorization: jwt })
+			);
+		} catch (e) {
+			// TODO: Handle network error cases
+			return;
+		}
+
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			content: response.data.content,
 			prefetchedData: true,

@@ -13,12 +13,13 @@ export const fetchApi = (endpoint, payload, headers, method = 'get') => {
 		axiosConfig.data = payload;
 	}
 	return axios(`${BACKEND_URL}${endpoint}`, axiosConfig)
-		.catch((response) => {
+		.catch((error) => {
 			// TODO: More sane error handling. Currently, assuming that
 			// the access token has expired, and hence sending to / to
 			// ask user to log in again
-			if (response.code === '401') {
+			if (error.response && error.response.status === 401) {
 				Router.replace('/');
 			}
+			throw error;
 		});
 };

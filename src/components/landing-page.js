@@ -34,7 +34,8 @@ const authSuccess = (response) => {
 				} else {
 					// TODO: Handle error case
 				}
-			});
+			})
+				.catch(() => { /* TODO: Handle network error cases */ });
 		});
 };
 

@@ -37,12 +37,14 @@ class CourseList extends React.Component {
 					Router.replace('/');
 				} else {
 					const { jwt } = value;
-					fetchApi('/courses', {}, { Authorization: jwt }).then((response) => {
-						this.setState({
-							prefetchedData: true,
-							...response.data,
-						});
-					});
+					fetchApi('/courses', {}, { Authorization: jwt })
+						.then((response) => {
+							this.setState({
+								prefetchedData: true,
+								...response.data,
+							});
+						})
+						.catch(() => { /* TODO: Handle network error cases */ });
 				}
 			} else {
 				// TODO: Handle error cases
