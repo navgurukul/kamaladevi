@@ -1,10 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
+
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import GoogleLogin from 'react-google-login';
+import localforage from 'localforage';
+
+import { fetchApi } from '../services/api';
 
 
 const styles = theme => ({
@@ -19,8 +24,23 @@ const styles = theme => ({
 	},
 });
 
-const responseGoogle = (response) => {
-	console.log(response);
+const authSuccess = (response) => {
+	const { tokenId } = response;
+	fetchApi('/users/auth/google', { idToken: tokenId }, { 'Content-Type': 'application/json' }, 'post')
+		.then((authResponse) => {
+			localforage.setItem('authResponse', authResponse.data, (error) => {
+				if (!error) {
+					Router.replace('/home');
+				} else {
+					// TODO: Handle error case
+				}
+			})
+				.catch(() => { /* TODO: Handle network error cases */ });
+		});
+};
+
+const authFailure = () => {
+	// TODO: Send analytics or do something meaningful here
 };
 
 const LandingPage = (props) => {
@@ -48,8 +68,8 @@ const LandingPage = (props) => {
 					clientId="330505979484-sgfkanh7p0nsqvua8susd9q60i94dnbh.apps.googleusercontent.com"
 					cookiePolicy="single_host_origin"
 					scope="profile email"
-					onSuccess={responseGoogle}
-					onFailure={responseGoogle}
+					onSuccess={authSuccess}
+					onFailure={authFailure}
 				>
           Sign In
 				</Button>
