@@ -3,17 +3,27 @@ import React from 'react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-import ReactMarkdown from 'react-markdown';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../services/api';
 
+// Parse markdown content
+const md = require('markdown-it')({
+	html: true,
+})
+	.use(require('markdown-it-highlightjs'));
+
 const styles = theme => ({
 	root: {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
+	},
+	paper: {
+		width: '50%',
+		margin: 'auto',
+		padding: theme.spacing.unit * 2.5,
 	},
 });
 
@@ -82,8 +92,9 @@ class CourseDetail extends React.Component {
 				</div>);
 		}
 		return (
-			<div className={classes.root} id="content-container">
-				<ReactMarkdown source={content} />
+			<div className={classes.paper}>
+				{/* eslint-disable-next-line react/no-danger */}
+				<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
 			</div>
 		);
 	}
