@@ -135,7 +135,7 @@ class CourseList extends React.Component {
 											{value.shortDescription}
 										</Typography>
 										<Typography component="p">
-											<LinearProgress variant="determinate" value={(value.daysSinceEnrolled * 100) / value.daysToComplete} />
+											<LinearProgress variant="determinate" value={(value.completedSubmissions * 100) / value.totalExercises} />
 										</Typography>
 									</CardContent>
 									<CardActions aligh="end">
