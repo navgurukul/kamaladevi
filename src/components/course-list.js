@@ -124,6 +124,7 @@ class CourseList extends React.Component {
 								</Typography>
 							) : ''}
 						</Grid>
+						{/* Enrolled courses list  */}
 						{enrolledCourses.map(value => (
 							<Grid	item xs={6} key={value.id}>
 								<Card variant="raised" className={classes.card}>
@@ -156,6 +157,7 @@ class CourseList extends React.Component {
 							</Grid>
 						))}
 					</Grid>
+					{/* Available courses list */}
 					<Grid container spacing={0}>
 						<Grid	item xs={12} >
 							{availableCourses !== [] ? (
@@ -197,7 +199,7 @@ class CourseList extends React.Component {
 								</Card>
 							</Grid>
 						))}
-
+						{/* Facilitating courses list */}
 						{facilitatingCourses === [] ? (
 							<h2>Aap inn courses ko facilitate kar rahe hain</h2>
 						) : facilitatingCourses.size}

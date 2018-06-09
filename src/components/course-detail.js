@@ -109,11 +109,8 @@ class CourseDetail extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
-
 		const { id } = Router.query;
 		const { jwt } = value;
-		const { exercises } = this.state;
-
 		try {
 			response = (
 				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
@@ -122,12 +119,10 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
-
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			content: response.data.content,
 		});
 	}
-
 
 	render() {
 		const { classes } = this.props;
@@ -146,7 +141,7 @@ class CourseDetail extends React.Component {
 				</Card>
 
 				<Card className={classes.sidebar}>
-					{exercises.map((value, key) => (
+					{exercises.map(value => (
 						<div>
 							<List component="nav">
 								<ListItem button onClick={() => this.loadExercise(value.slug)}>
@@ -155,14 +150,14 @@ class CourseDetail extends React.Component {
 									</ListItemIcon>
 									<ListItemText primary={value.name} />
 								</ListItem>
-								{value.childExercises.map((child, childKey) => (
+								{value.childExercises.map(child => (
 									<ListItem button onClick={() => this.loadExercise(child.slug)}>
 										<ListItemIcon>
 											<DraftsIcon />
 										</ListItemIcon>
 										<ListItemText primary={child.name} />
 									</ListItem>
-						  ))}
+								))}
 							</List>
 							<Divider />
 						</div>
