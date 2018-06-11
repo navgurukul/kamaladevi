@@ -45,6 +45,16 @@ const authFailure = () => {
 
 const LandingPage = (props) => {
 	const { classes } = props;
+	localforage.getItem('authResponse', (error, value) => {
+		if (!error) {
+			if (value !== null) {
+				const { jwt } = value;
+				Router.replace('/home');
+			}
+		} else {
+			// TODO: Handle error cases
+		}
+	});
 	return (
 		<div className={classes.root}>
 			<Paper className={classes.paper}>

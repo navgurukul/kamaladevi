@@ -18,6 +18,10 @@ const styles = {
 		marginLeft: -12,
 		marginRight: 20,
 	},
+	link: {
+	  textDecoration: 'inherit',
+		color: 'inherit',
+	},
 };
 
 function Header(props) {
@@ -26,11 +30,13 @@ function Header(props) {
 		<div className={classes.root}>
 			<AppBar position="static">
 				<Toolbar>
-					<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-						<MenuIcon />
-					</IconButton>
+					{/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"> */}
+					{/* <MenuIcon /> */}
+					{/* </IconButton> */}
 					<Typography variant="title" color="inherit" className={classes.flex}>
+						<a href="/home" className={classes.link}>
             Saral
+						</a>
 					</Typography>
 				</Toolbar>
 			</AppBar>
