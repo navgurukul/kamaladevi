@@ -135,9 +135,9 @@ class CourseList extends React.Component {
 										<Typography color="textSecondary">
 											{value.shortDescription}
 										</Typography>
-										<Typography component="p">
+										<div>
 											<LinearProgress variant="determinate" value={(value.completedSubmissions * 100) / value.totalExercises} />
-										</Typography>
+										</div>
 									</CardContent>
 									<CardActions aligh="end">
 										<Button
