@@ -6,16 +6,10 @@ import localforage from 'localforage';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../services/api';
+import CourseDetailSideNav from './course-detail-sidenav';
 
 // Parse markdown content
 const md = require('markdown-it')({
@@ -43,6 +37,7 @@ const styles = theme => ({
 	container: {
 		width: '80%',
 		margin: 'auto',
+		paddingTop: theme.spacing.unit * 2,
 	},
 });
 
@@ -55,6 +50,7 @@ class CourseDetail extends React.Component {
 			exercises: [],
 			content: '',
 		};
+		this.loadExercise = this.loadExercise.bind(this);
 	}
 
 	async componentDidMount() {
@@ -140,29 +136,7 @@ class CourseDetail extends React.Component {
 					<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
 				</Card>
 
-				<Card className={classes.sidebar}>
-					{exercises.map(value => (
-						<div>
-							<List component="nav">
-								<ListItem button onClick={() => this.loadExercise(value.slug)}>
-									<ListItemIcon>
-										<InboxIcon />
-									</ListItemIcon>
-									<ListItemText primary={value.name} />
-								</ListItem>
-								{value.childExercises.map(child => (
-									<ListItem button onClick={() => this.loadExercise(child.slug)}>
-										<ListItemIcon>
-											<DraftsIcon />
-										</ListItemIcon>
-										<ListItemText primary={child.name} />
-									</ListItem>
-								))}
-							</List>
-							<Divider />
-						</div>
-					))}
-				</Card>
+				<CourseDetailSideNav exercises={{ exercises }} loadExercise={this.loadExercise} />
 			</div>
 		);
 	}
