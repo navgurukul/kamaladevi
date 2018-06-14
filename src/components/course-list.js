@@ -19,10 +19,8 @@ import { fetchApi } from '../services/api';
 
 const styles = theme => ({
 	rootLoader: {
-		display: 'flex',
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		textAlign: 'center',
+		paddingTop: theme.spacing.unit * 20,
 	},
 	root: {
 		display: 'flex',
@@ -78,6 +76,9 @@ const styles = theme => ({
 	dividerContainer: {
 		paddingTop: theme.spacing.unit * 2,
 		justifyContent: 'center',
+	},
+	progress: {
+		margin: theme.spacing.unit * 2,
 	},
 });
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
