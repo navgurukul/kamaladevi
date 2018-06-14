@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Router from 'next/router';
 import { BACKEND_URL } from './config';
+import { clearSession } from './session';
 
 export const fetchApi = (endpoint, payload, headers, method = 'get') => {
 	const axiosConfig = {
@@ -18,7 +18,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'get') => {
 			// the access token has expired, and hence sending to / to
 			// ask user to log in again
 			if (error.response && error.response.status === 401) {
-				Router.replace('/');
+				clearSession();
 			}
 			throw error;
 		});

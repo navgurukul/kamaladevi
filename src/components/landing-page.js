@@ -10,6 +10,7 @@ import GoogleLogin from 'react-google-login';
 import localforage from 'localforage';
 
 import { fetchApi } from '../services/api';
+import { setSession } from '../services/session';
 
 
 const styles = theme => ({
@@ -27,16 +28,7 @@ const styles = theme => ({
 const authSuccess = (response) => {
 	const { tokenId } = response;
 	fetchApi('/users/auth/google', { idToken: tokenId }, { 'Content-Type': 'application/json' }, 'post')
-		.then((authResponse) => {
-			localforage.setItem('authResponse', authResponse.data, (error) => {
-				if (!error) {
-					Router.replace('/home');
-				} else {
-					// TODO: Handle error case
-				}
-			})
-				.catch(() => { /* TODO: Handle network error cases */ });
-		});
+		.then(authResponse => setSession(authResponse));
 };
 
 const authFailure = () => {
@@ -48,7 +40,6 @@ const LandingPage = (props) => {
 	localforage.getItem('authResponse', (error, value) => {
 		if (!error) {
 			if (value !== null) {
-				const { jwt } = value;
 				Router.replace('/home');
 			}
 		} else {
