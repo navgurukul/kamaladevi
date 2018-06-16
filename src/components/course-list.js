@@ -13,15 +13,15 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 
 import { fetchApi } from '../services/api';
+import { setEnrolledCourses } from '../services/courses';
 
 const styles = theme => ({
 	rootLoader: {
-		display: 'flex',
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		textAlign: 'center',
+		paddingTop: theme.spacing.unit * 20,
 	},
 	root: {
 		display: 'flex',
@@ -65,6 +65,22 @@ const styles = theme => ({
 	cardAction: {
 		justifyContent: 'flex-end',
 	},
+	avbCoursesContainer: {
+		paddingTop: theme.spacing.unit * 5,
+	},
+	containerHeadingItem: {
+		paddingBottom: theme.spacing.unit * 2,
+	},
+	enrolledProgress: {
+		paddingTop: theme.spacing.unit,
+	},
+	dividerContainer: {
+		paddingTop: theme.spacing.unit * 2,
+		justifyContent: 'center',
+	},
+	progress: {
+		margin: theme.spacing.unit * 2,
+	},
 });
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
@@ -89,6 +105,7 @@ class CourseList extends React.Component {
 					const { jwt } = value;
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
+							setEnrolledCourses(response.data);
 							this.setState({
 								prefetchedData: true,
 								...response.data,
@@ -117,16 +134,23 @@ class CourseList extends React.Component {
 			<div className={classes.root}>
 				<div className={classes.rootContent}>
 					<Grid container spacing={0}>
-						<Grid	item xs={12} >
+						<Grid	item xs={12} className={classes.containerHeadingItem}>
 							{enrolledCourses !== [] ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Aapke Courses
 								</Typography>
 							) : ''}
 						</Grid>
-						{enrolledCourses.map(value => (
-							<Grid	item xs={6} key={value.id}>
-								<Card variant="raised" className={classes.card}>
+						{/* Enrolled courses list  */}
+						{enrolledCourses.map((value, key) => (
+							<Grid	item xs={6} key={value.id} className={classes.cardGrid}>
+								<Card
+									variant="raised"
+									className={
+										(key % 2 === 0)
+											? classes.cardMarginRightBot
+											: classes.cardMarginLeftBot}
+								>
 									<CardContent>
 										<Typography variant="headline" component="h2">
 											{value.name}
@@ -134,11 +158,11 @@ class CourseList extends React.Component {
 										<Typography color="textSecondary">
 											{value.shortDescription}
 										</Typography>
-										<Typography component="p">
-											<LinearProgress variant="determinate" value={(value.daysSinceEnrolled * 100) / value.daysToComplete} />
-										</Typography>
+										<div className={classes.enrolledProgress}>
+											<LinearProgress variant="determinate" value={(value.completedSubmissions * 100) / value.totalExercises} />
+										</div>
 									</CardContent>
-									<CardActions aligh="end">
+									<CardActions aligh="end" className={classes.cardAction}>
 										<Button
 											size="small"
 											variant="raised"
@@ -156,10 +180,16 @@ class CourseList extends React.Component {
 							</Grid>
 						))}
 					</Grid>
-					<Grid container spacing={0}>
-						<Grid	item xs={12} >
+					<Grid container spacing={0} className={classes.dividerContainer}>
+						<Grid	item xs={6}>
+							<Divider />
+						</Grid>
+					</Grid>
+					{/* Available courses list */}
+					<Grid container spacing={0} className={classes.avbCoursesContainer}>
+						<Grid	item xs={12} className={classes.containerHeadingItem}>
 							{availableCourses !== [] ? (
-								<Typography variant="headline" component="h2" align="left" gutterBottom>
+								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Aap yeh courses mein enroll kar skte hai
 								</Typography>
 							) : ''}
@@ -197,7 +227,7 @@ class CourseList extends React.Component {
 								</Card>
 							</Grid>
 						))}
-
+						{/* Facilitating courses list */}
 						{facilitatingCourses === [] ? (
 							<h2>Aap inn courses ko facilitate kar rahe hain</h2>
 						) : facilitatingCourses.size}

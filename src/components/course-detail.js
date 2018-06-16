@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import localforage from 'localforage';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../services/api';
+import CourseDetailSideNav from './course-detail-sidenav';
 
 // Parse markdown content
 const md = require('markdown-it')({
@@ -21,9 +23,24 @@ const styles = theme => ({
 		paddingTop: theme.spacing.unit * 20,
 	},
 	paper: {
-		width: '50%',
+		width: '63%',
 		margin: 'auto',
 		padding: theme.spacing.unit * 2.5,
+		float: 'left',
+	},
+	sidebar: {
+		width: '35%',
+		margin: 'auto',
+		padding: theme.spacing.unit * 2.5,
+		float: 'right',
+	},
+	container: {
+		width: '80%',
+		margin: 'auto',
+		paddingTop: theme.spacing.unit * 2,
+	},
+	progress: {
+		margin: theme.spacing.unit * 2,
 	},
 });
 
@@ -36,6 +53,7 @@ class CourseDetail extends React.Component {
 			exercises: [],
 			content: '',
 		};
+		this.loadExercise = this.loadExercise.bind(this);
 	}
 
 	async componentDidMount() {
@@ -66,25 +84,48 @@ class CourseDetail extends React.Component {
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			exercises,
 		});
+
 		const firstExerciseSlug = exercises[0].slug;
+		this.loadExercise(firstExerciseSlug);
+
+		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
+			exercises,
+			prefetchedData: true,
+		});
+	}
+
+	async loadExercise(slug) {
+		let value;
+		let response;
+		try {
+			value = await localforage.getItem('authResponse');
+			if (!value) {
+				// No access tokens saved
+				Router.replace('/');
+				return;
+			}
+		} catch (e) {
+			// TODO: Handle localforage error cases
+			return;
+		}
+		const { id } = Router.query;
+		const { jwt } = value;
 		try {
 			response = (
-				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug: firstExerciseSlug }, { Authorization: jwt })
+				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
 			);
 		} catch (e) {
 			// TODO: Handle network error cases
 			return;
 		}
-
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			content: response.data.content,
-			prefetchedData: true,
 		});
 	}
 
 	render() {
 		const { classes } = this.props;
-		const { prefetchedData, content } = this.state;
+		const { prefetchedData, exercises, content } = this.state;
 		if (!prefetchedData) {
 			return (
 				<div className={classes.root}>
@@ -92,9 +133,13 @@ class CourseDetail extends React.Component {
 				</div>);
 		}
 		return (
-			<div className={classes.paper}>
-				{/* eslint-disable-next-line react/no-danger */}
-				<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
+			<div className={classes.container}>
+				<Card className={classes.paper}>
+					{/* eslint-disable-next-line react/no-danger */}
+					<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
+				</Card>
+
+				<CourseDetailSideNav exercises={{ exercises }} loadExercise={this.loadExercise} />
 			</div>
 		);
 	}
