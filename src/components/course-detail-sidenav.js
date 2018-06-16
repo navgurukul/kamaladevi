@@ -25,11 +25,6 @@ const styles = () => ({
 	root: {
 		textAlign: 'center',
 	},
-	sidebar: {
-		width: '35%',
-		margin: 'auto',
-		float: 'right',
-	},
 	extPnlSmryRoot: {
 		padding: 0,
 	},
@@ -108,100 +103,98 @@ class CourseDetailSideNav extends React.Component {
 		const { exercises } = this.props.exercises;
 		return (
 			<div className={classes.root}>
-				<div className={classes.sidebar}>
-					{/* Check whether the user is enrolled in the course.
+				{/* Check whether the user is enrolled in the course.
           If enrolled, do not show the enroll button */}
-					{!enrolled ?
-						<ExpansionPanel
-							expanded
+				{!enrolled ?
+					<ExpansionPanel
+						expanded
+					>
+						<Button
+							variant="raised"
+							color="primary"
+							className={classes.enrollButton}
+							onClick={() => {
+								const { id } = Router.query;
+								enrollCourse(id, success => this.setState({ enrolled: success }));
+							}}
 						>
-							<Button
-								variant="raised"
-								color="primary"
-								className={classes.enrollButton}
-								onClick={() => {
-									const { id } = Router.query;
-									enrollCourse(id, success => this.setState({ enrolled: success }));
-								}}
-							>
             Enroll In Course
-							</Button>
-						</ExpansionPanel>
-						: null
-					}
-					{/* Display the exercises */}
-					{exercises.map((value, index) => (
-						<ExpansionPanel
-							expanded={(value.childExercises.length !== 0) ? openExercises[index] : false}
-							onChange={() => { this.switchPanel(index); }}
-							key={value.id}
-						>
-							{/* ExpansionPanelSummary wraps child in different classes,
+						</Button>
+					</ExpansionPanel>
+					: null
+				}
+				{/* Display the exercises */}
+				{exercises.map((value, index) => (
+					<ExpansionPanel
+						expanded={(value.childExercises.length !== 0) ? openExercises[index] : false}
+						onChange={() => { this.switchPanel(index); }}
+						key={value.id}
+					>
+						{/* ExpansionPanelSummary wraps child in different classes,
 								classes prop is to target the wrapper classes and style */}
-							<ExpansionPanelSummary
-								expandIcon={(value.childExercises.length !== 0) ? <ExpandMoreIcon /> : null}
-								classes={{
-									root: classes.extPnlSmryRoot,
-									content: classes.expPnlSmryContent,
-									expanded: classes.expPnlSmryExpanded,
-								}}
-							>
-								{/* Had to customize listiem text, as we cannot target it directly to style it
+						<ExpansionPanelSummary
+							expandIcon={(value.childExercises.length !== 0) ? <ExpandMoreIcon /> : null}
+							classes={{
+								root: classes.extPnlSmryRoot,
+								content: classes.expPnlSmryContent,
+								expanded: classes.expPnlSmryExpanded,
+							}}
+						>
+							{/* Had to customize listiem text, as we cannot target it directly to style it
 									provided similar component inside primary where we can style
 									disableTypography prevented 2 times wrapping */}
-								<List component="nav" className={classes.flex1}>
+							<List component="nav" className={classes.flex1}>
+								<ListItem
+									onClick={() => {
+										loadExercise(value.slug);
+										this.highLightSelectedList(value.id, null);
+									}}
+								>
+									<ListItemIcon>
+										<InboxIcon color={(selectedvalue === value.id) ? 'primary' : 'inherit'} />
+									</ListItemIcon>
+									<ListItemText
+										disableTypography
+										primary={
+											<Typography variant="subheading" color={(selectedvalue === value.id) ? 'primary' : 'inherit'}>
+												{value.name}
+											</Typography>
+										}
+									/>
+								</ListItem>
+							</List>
+						</ExpansionPanelSummary>
+						{/* checking if there are any sub categories,
+							if not then hiding the ExpansionPanelDetails */}
+						{(value.childExercises.length !== 0) ?
+							<ExpansionPanelDetails className={classes.expPnlDetails}>
+								{value.childExercises.map(child => (
 									<ListItem
+										button
 										onClick={() => {
-											loadExercise(value.slug);
-											this.highLightSelectedList(value.id, null);
+											loadExercise(child.slug);
+											this.highLightSelectedList(value.id, child.id);
 										}}
+										key={child.id}
 									>
 										<ListItemIcon>
-											<InboxIcon color={(selectedvalue === value.id) ? 'primary' : 'inherit'} />
+											<DraftsIcon color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'} />
 										</ListItemIcon>
 										<ListItemText
 											disableTypography
 											primary={
-												<Typography variant="subheading" color={(selectedvalue === value.id) ? 'primary' : 'inherit'}>
-													{value.name}
+												<Typography variant="subheading" color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'}>
+													{child.name}
 												</Typography>
 											}
 										/>
 									</ListItem>
-								</List>
-							</ExpansionPanelSummary>
-							{/* checking if there are any sub categories,
-							if not then hiding the ExpansionPanelDetails */}
-							{(value.childExercises.length !== 0) ?
-								<ExpansionPanelDetails className={classes.expPnlDetails}>
-									{value.childExercises.map(child => (
-										<ListItem
-											button
-											onClick={() => {
-												loadExercise(child.slug);
-												this.highLightSelectedList(value.id, child.id);
-											}}
-											key={child.id}
-										>
-											<ListItemIcon>
-												<DraftsIcon color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'} />
-											</ListItemIcon>
-											<ListItemText
-												disableTypography
-												primary={
-													<Typography variant="subheading" color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'}>
-														{child.name}
-													</Typography>
-												}
-											/>
-										</ListItem>
-									))}
-								</ExpansionPanelDetails>
-								: null}
-							<Divider />
-						</ExpansionPanel>
-					))}
-				</div>
+								))}
+							</ExpansionPanelDetails>
+							: null}
+						<Divider />
+					</ExpansionPanel>
+				))}
 			</div>
 		);
 	}
