@@ -116,6 +116,7 @@ class CourseDetail extends React.Component {
 	async loadExercise(slug) {
 		let value;
 		let response;
+		let content;
 		try {
 			value = await localforage.getItem('authResponse');
 			if (!value) {
@@ -137,8 +138,9 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
+		content = response.data.content.replace(/\`\`\`ngMeta[\s\S]*?\`\`\`/,'');
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
-			content: response.data.content,
+			content,
 		});
 	}
 
