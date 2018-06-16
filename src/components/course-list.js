@@ -16,6 +16,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 
 import { fetchApi } from '../services/api';
+import { setEnrolledCourses } from '../services/courses';
 
 const styles = theme => ({
 	rootLoader: {
@@ -104,6 +105,7 @@ class CourseList extends React.Component {
 					const { jwt } = value;
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
+							setEnrolledCourses(response.data);
 							this.setState({
 								prefetchedData: true,
 								...response.data,
