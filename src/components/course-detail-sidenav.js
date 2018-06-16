@@ -45,6 +45,10 @@ const styles = () => ({
 	flex1: {
 		flex: 1,
 	},
+	enrollButton: {
+		padding: 20,
+		width: '100%',
+	},
 });
 
 
@@ -108,17 +112,22 @@ class CourseDetailSideNav extends React.Component {
 					{/* Check whether the user is enrolled in the course.
           If enrolled, do not show the enroll button */}
 					{!enrolled ?
-						<Button
-							variant="raised"
-							color="primary"
-							className={classes.button}
-							onClick={() => {
-								const { id } = Router.query;
-								enrollCourse(id, success => this.setState({ enrolled: success }));
-							}}
+						<ExpansionPanel
+							expanded
 						>
+							<Button
+								variant="raised"
+								color="primary"
+								className={classes.enrollButton}
+								onClick={() => {
+									const { id } = Router.query;
+									enrollCourse(id, success => this.setState({ enrolled: success }));
+								}}
+							>
             Enroll In Course
-						</Button> : null
+							</Button>
+						</ExpansionPanel>
+						: null
 					}
 					{/* Display the exercises */}
 					{exercises.map((value, index) => (
