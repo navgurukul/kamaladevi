@@ -63,57 +63,36 @@ const styles = theme => ({
 	},
 });
 
+const navigateToExercise = id => (slug) => {
+	Router.push({
+		pathname: '/course',
+		query: { id, slug },
+	});
+};
+
 
 class CourseDetail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			prefetchedData: false,
-			exercises: [],
 			content: '',
 		};
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
-	async componentDidMount() {
-		// Using async await, just to avoid deep nesting of asynchronous callbacks
-		let value;
-		let response;
-		try {
-			value = await localforage.getItem('authResponse');
-			if (!value) {
-				// No access tokens saved
-				Router.replace('/');
-				return;
-			}
-		} catch (e) {
-			// TODO: Handle localforage error cases
-			return;
-		}
-		const { id } = Router.query;
-		const { jwt } = value;
-		try {
-			response = await fetchApi(`/courses/${id}/exercises`, {}, { Authorization: jwt });
-		} catch (e) {
-			// TODO: Handle network error cases
-			return;
-		}
-
-		const exercises = response.data.data;
-		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
-			exercises,
-		});
-
-		const firstExerciseSlug = exercises[0].slug;
-		this.loadExercise(firstExerciseSlug);
-
-		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
-			exercises,
-			prefetchedData: true,
-		});
+	componentDidMount() {
+		this.loadExercise(this.props.slug);
 	}
 
-	async loadExercise(slug) {
+	shouldComponentUpdate(nextProps) {
+		if (nextProps.slug !== this.props.slug) {
+			this.loadExercise(nextProps.slug);
+		}
+		return true;
+	}
+
+	async loadExercise() {
 		let value;
 		let response;
 		try {
@@ -127,7 +106,7 @@ class CourseDetail extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
-		const { id } = Router.query;
+		const { id, slug } = this.props;
 		const { jwt } = value;
 		try {
 			response = (
@@ -139,12 +118,13 @@ class CourseDetail extends React.Component {
 		}
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
 			content: response.data.content,
+			prefetchedData: true,
 		});
 	}
 
 	render() {
-		const { classes } = this.props;
-		const { prefetchedData, exercises, content } = this.state;
+		const { classes, exercises, id } = this.props;
+		const { prefetchedData, content } = this.state;
 		if (!prefetchedData) {
 			return (
 				<div className={classes.loaderRoot}>
@@ -182,7 +162,7 @@ class CourseDetail extends React.Component {
 					</div>
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
-					<CourseDetailSideNav exercises={{ exercises }} loadExercise={this.loadExercise} />
+					<CourseDetailSideNav exercises={{ exercises }} loadExercise={navigateToExercise(id)} />
 				</Grid>
 			</Grid>
 		);
@@ -191,6 +171,9 @@ class CourseDetail extends React.Component {
 
 CourseDetail.propTypes = {
 	classes: PropTypes.object.isRequired,
+	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+	id: PropTypes.string.isRequired,
+	slug: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(CourseDetail);
