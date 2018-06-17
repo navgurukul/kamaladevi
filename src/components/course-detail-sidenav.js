@@ -46,36 +46,70 @@ const styles = () => ({
 	},
 });
 
+export const getExerciseIdFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return {
+				openExerciseId: exerciseId,
+				selectedvalue: exercises[exerciseId].id,
+				selectedchildExercise: null,
+			};
+		}
+		if (exercises[exerciseId].childExercises) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return {
+						openExerciseId: exerciseId,
+						selectedvalue: exercises[exerciseId].id,
+						selectedchildExercise: exercises[exerciseId].childExercises[childExerciseId].id,
+					};
+				}
+			}
+		}
+	}
+};
+
+// Change this property to let multiple panels to be open simultaneously
+const onlyonePanelOpen = true;
 
 class CourseDetailSideNav extends React.Component {
 	constructor(props) {
 		super(props);
+		const { exercises, slug } = props;
+		const openExercises = new Array(exercises.length);
+		for (let i = 0; i < openExercises.length; i += 1) {
+			openExercises[i] = false;
+		}
+		const {
+			openExerciseId,
+			selectedvalue,
+			selectedchildExercise,
+		} = getExerciseIdFromSlug(slug, exercises);
+		openExercises[openExerciseId] = true;
 		this.state = {
-			openExercises: [],
-			selectedvalue: null,
-			selectedchildExercise: null,
-			onlyonePanelOpen: true,
+			openExercises,
+			selectedvalue,
+			selectedchildExercise,
 			// setting enrolled to true to prevent the flicker,
 			// when the button disappers after appearing
 			enrolled: true,
 		};
 	}
+
 	componentWillMount() {
-		const { exercises } = this.props.exercises;
-		const openExercises = new Array(exercises.length);
-		for (let i = 0; i < openExercises.length; i += 1) {
-			openExercises[i] = false;
-		}
-		this.setState({ openExercises, selectedvalue: exercises[0].id });
 		// Check whether course is enrolled
 		const { id } = Router.query;
 		isEnrolled(id, success => this.setState({ enrolled: success }));
 	}
+
 	switchPanel = (index) => {
-		const { exercises } = this.props.exercises;
+		const { exercises } = this.props;
 		const oldpanel = this.state.openExercises;
 
-		if (this.state.onlyonePanelOpen) {
+		if (onlyonePanelOpen) {
 			const openExercises = new Array(exercises.length);
 			for (let i = 0; i < openExercises.length; i += 1) {
 				openExercises[i] = false;
@@ -87,6 +121,7 @@ class CourseDetailSideNav extends React.Component {
 			this.setState({ openExercises: oldpanel });
 		}
 	};
+
 	highLightSelectedList(valueID, childID) {
 		this.setState({
 			selectedvalue: valueID,
@@ -100,7 +135,7 @@ class CourseDetailSideNav extends React.Component {
 		} = this.state;
 		const { classes, loadExercise } = this.props;
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
-		const { exercises } = this.props.exercises;
+		const { exercises } = this.props;
 		return (
 			<div className={classes.root}>
 				{/* Check whether the user is enrolled in the course.
@@ -202,8 +237,9 @@ class CourseDetailSideNav extends React.Component {
 
 CourseDetailSideNav.propTypes = {
 	classes: PropTypes.object.isRequired,
-	exercises: PropTypes.object.isRequired,
+	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
 	loadExercise: PropTypes.func.isRequired,
+	slug: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(CourseDetailSideNav);

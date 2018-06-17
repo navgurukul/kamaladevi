@@ -117,14 +117,16 @@ class CourseDetail extends React.Component {
 			return;
 		}
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
-		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
+		this.setState({
 			content,
 			prefetchedData: true,
 		});
 	}
 
 	render() {
-		const { classes, exercises, id } = this.props;
+		const {
+			classes, exercises, id, slug,
+		} = this.props;
 		const { prefetchedData, content } = this.state;
 		if (!prefetchedData) {
 			return (
@@ -163,7 +165,7 @@ class CourseDetail extends React.Component {
 					</div>
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
-					<CourseDetailSideNav exercises={{ exercises }} loadExercise={navigateToExercise(id)} />
+					<CourseDetailSideNav exercises={exercises} loadExercise={navigateToExercise(id)} slug={slug} />
 				</Grid>
 			</Grid>
 		);
