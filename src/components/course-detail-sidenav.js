@@ -18,7 +18,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import { enrollCourse, isEnrolled } from '../services/courses';
+import {
+	enrollCourse,
+	isEnrolled,
+	getExerciseIdFromSlug,
+} from '../services/courses';
 
 
 const styles = () => ({
@@ -46,31 +50,6 @@ const styles = () => ({
 	},
 });
 
-export const getExerciseIdFromSlug = (slug, exercises) => {
-	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
-		if (exercises[exerciseId].slug === slug) {
-			return {
-				openExerciseId: exerciseId,
-				selectedvalue: exercises[exerciseId].id,
-				selectedchildExercise: null,
-			};
-		}
-		if (exercises[exerciseId].childExercises) {
-			for (
-				let childExerciseId = 0;
-				childExerciseId < exercises[exerciseId].childExercises.length;
-				childExerciseId += 1) {
-				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
-					return {
-						openExerciseId: exerciseId,
-						selectedvalue: exercises[exerciseId].id,
-						selectedchildExercise: exercises[exerciseId].childExercises[childExerciseId].id,
-					};
-				}
-			}
-		}
-	}
-};
 
 // Change this property to let multiple panels to be open simultaneously
 const onlyonePanelOpen = true;
@@ -105,21 +84,30 @@ class CourseDetailSideNav extends React.Component {
 		isEnrolled(id, success => this.setState({ enrolled: success }));
 	}
 
-	switchPanel = (index) => {
-		const { exercises } = this.props;
-		const oldpanel = this.state.openExercises;
+	shouldComponentUpdate(nextProps) {
+		const { slug, exercises } = nextProps;
+		if (slug !== this.props.slug) {
+			const {
+				openExerciseId,
+				selectedvalue,
+				selectedchildExercise,
+			} = getExerciseIdFromSlug(slug, exercises);
+			this.switchPanel(openExerciseId);
+			this.highLightSelectedList(selectedvalue, selectedchildExercise);
+		}
+		return true;
+	}
 
+	switchPanel = (index) => {
+		const { openExercises } = this.state;
+		// If open only one panel at a time, close all the active panels
 		if (onlyonePanelOpen) {
-			const openExercises = new Array(exercises.length);
 			for (let i = 0; i < openExercises.length; i += 1) {
 				openExercises[i] = false;
 			}
-			openExercises[index] = !oldpanel[index];
-			this.setState({ openExercises });
-		} else {
-			oldpanel[index] = !oldpanel[index];
-			this.setState({ openExercises: oldpanel });
 		}
+		openExercises[index] = true;
+		this.setState({ openExercises });
 	};
 
 	highLightSelectedList(valueID, childID) {
@@ -162,7 +150,6 @@ class CourseDetailSideNav extends React.Component {
 				{exercises.map((value, index) => (
 					<ExpansionPanel
 						expanded={(value.childExercises.length !== 0) ? openExercises[index] : false}
-						onChange={() => { this.switchPanel(index); }}
 						key={value.id}
 					>
 						{/* ExpansionPanelSummary wraps child in different classes,
@@ -182,7 +169,6 @@ class CourseDetailSideNav extends React.Component {
 								<ListItem
 									onClick={() => {
 										loadExercise(value.slug);
-										this.highLightSelectedList(value.id, null);
 									}}
 								>
 									<ListItemIcon>
@@ -208,7 +194,6 @@ class CourseDetailSideNav extends React.Component {
 										button
 										onClick={() => {
 											loadExercise(child.slug);
-											this.highLightSelectedList(value.id, child.id);
 										}}
 										key={child.id}
 									>

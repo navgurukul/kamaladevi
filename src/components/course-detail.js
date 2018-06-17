@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
 import { fetchApi } from '../services/api';
+import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
 
 // Parse markdown content
@@ -146,8 +147,8 @@ class CourseDetail extends React.Component {
 							variant="raised"
 							color="primary"
 							onClick={() => {
-								/* eslint-disable-next-line no-alert,no-undef */
-								alert('unAssigned');
+								const previousSlug = getSlugOfPreviousCourse(slug, exercises);
+								navigateToExercise(id)(previousSlug);
 							}}
 						>
 							Previous
@@ -156,8 +157,8 @@ class CourseDetail extends React.Component {
 							variant="raised"
 							color="primary"
 							onClick={() => {
-								/* eslint-disable-next-line no-alert,no-undef */
-								alert('unAssigned');
+								const nextSlug = getSlugOfNextCourse(slug, exercises);
+								navigateToExercise(id)(nextSlug);
 							}}
 						>
 							Next
@@ -165,7 +166,11 @@ class CourseDetail extends React.Component {
 					</div>
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
-					<CourseDetailSideNav exercises={exercises} loadExercise={navigateToExercise(id)} slug={slug} />
+					<CourseDetailSideNav
+						exercises={exercises}
+						loadExercise={navigateToExercise(id)}
+						slug={slug}
+					/>
 				</Grid>
 			</Grid>
 		);
