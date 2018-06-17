@@ -98,6 +98,27 @@ const getNextChildSlug = (exercises, exerciseId, childExerciseId) => {
 	}
 };
 
+const getPreviousExerciseSlug = (exercises, exerciseId) => {
+	try {
+		const childExerciseListLength = exercises[exerciseId - 1].childExercises.length;
+		if (childExerciseListLength) {
+			return exercises[exerciseId - 1].childExercises[childExerciseListLength - 1].slug;
+		} else {
+			return exercises[exerciseId - 1].slug;
+		}
+	} catch (e) {
+		// no-op
+	}
+};
+
+const getPreviousChildSlug = (exercises, exerciseId, childExerciseId) => {
+	if (childExerciseId === 0) {
+		return exercises[exerciseId].slug;
+	} else {
+		return exercises[exerciseId].childExercises[childExerciseId - 1].slug;
+	}
+};
+
 // Get slug of the next course to navigate using next button
 export const getSlugOfNextCourse = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
@@ -129,7 +150,16 @@ export const getSlugOfNextCourse = (slug, exercises) => {
 export const getSlugOfPreviousCourse = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
 		if (exercises[exerciseId].slug === slug) {
-			// no-op
+			return getPreviousExerciseSlug(exercises, exerciseId);
+		} else if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return getPreviousChildSlug(exercises, exerciseId, childExerciseId);
+				}
+			}
 		}
 	}
 };

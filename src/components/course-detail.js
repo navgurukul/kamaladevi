@@ -148,7 +148,9 @@ class CourseDetail extends React.Component {
 							color="primary"
 							onClick={() => {
 								const previousSlug = getSlugOfPreviousCourse(slug, exercises);
-								navigateToExercise(id)(previousSlug);
+								if (previousSlug) {
+									navigateToExercise(id)(previousSlug);
+								}
 							}}
 						>
 							Previous
@@ -158,7 +160,9 @@ class CourseDetail extends React.Component {
 							color="primary"
 							onClick={() => {
 								const nextSlug = getSlugOfNextCourse(slug, exercises);
-								navigateToExercise(id)(nextSlug);
+								if (nextSlug) {
+									navigateToExercise(id)(nextSlug);
+								}
 							}}
 						>
 							Next
