@@ -116,8 +116,9 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
+		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
 		this.setState({ // eslint-disable-line  react/no-did-mount-set-state
-			content: response.data.content,
+			content,
 			prefetchedData: true,
 		});
 	}
