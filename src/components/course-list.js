@@ -91,8 +91,8 @@ class CourseList extends React.Component {
 			prefetchedData: false,
 			availableCourses: [],
 			// For future uses
-			enrolledCourses: [], // eslint-disable-line react/no-unused-state
-			facilitatingCourses: [], // eslint-disable-line react/no-unused-state
+			enrolledCourses: [],
+			facilitatingCourses: [],
 		};
 	}
 
