@@ -17,7 +17,12 @@ import CourseDetailSideNav from './course-detail-sidenav';
 // Parse markdown content
 const md = require('markdown-it')({
 	html: true,
+	// linkify: true,
+	breaks: true,
+	typographer: true
 })
+    .enable([ 'link' ])
+    .enable('image')
 	.use(require('markdown-it-highlightjs'));
 
 const styles = theme => ({
