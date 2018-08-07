@@ -35,7 +35,8 @@ const authSuccess = (response) => {
 		.then(authResponse => setSession(authResponse));
 };
 
-const authFailure = () => {
+const authFailure = (response) => {
+	console.log(response);
 	// TODO: Send analytics or do something meaningful here
 };
 

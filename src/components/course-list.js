@@ -134,16 +134,16 @@ class CourseList extends React.Component {
 			<div className={classes.root}>
 				<div className={classes.rootContent}>
 					<Grid container spacing={0}>
-						<Grid	item xs={12} className={classes.containerHeadingItem}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
 							{enrolledCourses !== [] ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Aapke Courses
+								Courses jis mein aap enrolled hai
 								</Typography>
 							) : ''}
 						</Grid>
 						{/* Enrolled courses list  */}
 						{enrolledCourses.map((value, key) => (
-							<Grid	item xs={6} key={value.id} className={classes.cardGrid}>
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
 								<Card
 									variant="raised"
 									className={
@@ -180,14 +180,16 @@ class CourseList extends React.Component {
 							</Grid>
 						))}
 					</Grid>
+
 					<Grid container spacing={0} className={classes.dividerContainer}>
-						<Grid	item xs={6}>
+						<Grid item xs={6}>
 							<Divider />
 						</Grid>
 					</Grid>
+
 					{/* Available courses list */}
 					<Grid container spacing={0} className={classes.avbCoursesContainer}>
-						<Grid	item xs={12} className={classes.containerHeadingItem}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
 							{availableCourses !== [] ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Aap yeh courses mein enroll kar skte hai
@@ -195,7 +197,7 @@ class CourseList extends React.Component {
 							) : ''}
 						</Grid>
 						{availableCourses.map((value, key) => (
-							<Grid	item xs={6} key={value.id} className={classes.cardGrid}>
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
 								<Card
 									variant="raised"
 									className={
@@ -227,13 +229,26 @@ class CourseList extends React.Component {
 								</Card>
 							</Grid>
 						))}
-						{/* Facilitating courses list */}
-						{facilitatingCourses === [] ? (
-							<h2>Aap inn courses ko facilitate kar rahe hain</h2>
-						) : facilitatingCourses.size}
-						{facilitatingCourses.map(value => (
-							<div key={value.id} >
-								<Card variant="raised" className={classes.card}>
+					</Grid>
+
+					{/* Facilitating courses list */}
+					<Grid container spacing={0} className={classes.avbCoursesContainer}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
+							{facilitatingCourses !== [] ? (
+								<Typography variant="headline" component="h2" align="center" gutterBottom>
+								Aap yeh courses ko facilitate kar rahe hai
+								</Typography>
+							) : ''}
+						</Grid>
+						{facilitatingCourses.map((value, key) => (
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+								<Card
+									variant="raised"
+									className={
+										(key % 2 === 0)
+											? classes.cardMarginRightBot
+											: classes.cardMarginLeftBot}
+								>
 									<CardContent>
 										<Typography variant="headline" component="h2">
 											{value.name}
@@ -242,22 +257,21 @@ class CourseList extends React.Component {
 											{value.shortDescription}
 										</Typography>
 									</CardContent>
-									{/* <CardActions aligh="end"> */}
-									{/* <Button */}
-									{/* size="small" */}
-									{/* variant="raised" */}
-									{/* color="primary" */}
-									{/* className={classes.button} */}
-									{/* onClick={() => Router.push({ */}
-									{/* pathname: '/course', */}
-									{/* query: { id: value.id }, */}
-									{/* })} */}
-									{/* > */}
-									{/* Preview */}
-									{/* </Button> */}
-									{/* </CardActions> */}
+									<CardActions aligh="end" className={classes.cardAction}>
+										<Button
+											size="small"
+											variant="raised"
+											color="primary"
+											onClick={() => Router.push({
+												pathname: '/course',
+												query: { id: value.id },
+											})}
+										>
+                  Preview
+										</Button>
+									</CardActions>
 								</Card>
-							</div>
+							</Grid>
 						))}
 					</Grid>
 				</div>

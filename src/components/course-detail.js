@@ -17,7 +17,7 @@ import CourseDetailSideNav from './course-detail-sidenav';
 // Parse markdown content
 const md = require('markdown-it')({
 	html: true,
-	// linkify: true,
+	linkify: true,
 	breaks: true,
 	typographer: true
 })
