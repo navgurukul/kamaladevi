@@ -17,9 +17,14 @@ Saral is our eLearning platform which is meant to provide higher education to st
 
   ```git checkout next```
 
-2. Run the project by executing
-
+2. Run the project in a development environment using
   ```
   npm install
   npm run dev
   ```
+
+3. Run the project in the production environment using
+```
+npm run build
+npm run start
+```
