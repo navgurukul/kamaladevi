@@ -23,6 +23,7 @@
     "axios": "^0.18.0",
     "localforage": "^1.7.1",
     "markdown-it": "^8.4.1",
+    "markdown-it-block-embed": "0.0.3",
     "markdown-it-highlightjs": "^3.0.0",
     "next": "^6.0.3",
     "prop-types": "^15.6.1",
