@@ -14,6 +14,8 @@ import { fetchApi } from '../services/api';
 import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
 
+var blockEmbedPlugin = require("markdown-it-block-embed");
+
 // Parse markdown content
 const md = require('markdown-it')({
 	html: true,
@@ -21,9 +23,13 @@ const md = require('markdown-it')({
 	breaks: true,
 	typographer: true
 })
-    .enable([ 'link' ])
-    .enable('image')
-	.use(require('markdown-it-highlightjs'));
+.enable([ 'link' ])
+.enable('image')
+.use(require('markdown-it-highlightjs'));
+
+md.use(blockEmbedPlugin, {
+    containerClassName: "video-embed"
+});
 
 const styles = theme => ({
 	root: {
@@ -39,6 +45,7 @@ const styles = theme => ({
 			paddingRight: theme.spacing.unit,
 		},
 	},
+
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
 		paddingTop: theme.spacing.unit * 1,

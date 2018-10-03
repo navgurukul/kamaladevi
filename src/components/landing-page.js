@@ -21,6 +21,7 @@ const styles = theme => ({
 	},
 	paper: {
 		width: '25%',
+		minWidth:'200px',
 		margin: 'auto',
 		padding: theme.spacing.unit * 2.5,
 	},
