@@ -147,6 +147,9 @@ class CourseDetail extends React.Component {
 					<CircularProgress className={classes.progress} size={50} />
 				</div>);
 		}
+		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
+		const nextSlug = getSlugOfNextCourse(slug, exercises);
+
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -155,30 +158,32 @@ class CourseDetail extends React.Component {
 						<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
 					</Card>
 					<div className={classes.navigationBtnDiv}>
-						<Button
-							variant="raised"
-							color="primary"
-							onClick={() => {
-								const previousSlug = getSlugOfPreviousCourse(slug, exercises);
-								if (previousSlug) {
-									navigateToExercise(id)(previousSlug);
-								}
-							}}
-						>
-							Previous
-						</Button>
-						<Button
-							variant="raised"
-							color="primary"
-							onClick={() => {
-								const nextSlug = getSlugOfNextCourse(slug, exercises);
-								if (nextSlug) {
+						{
+							previousSlug?
+							<Button
+								variant="raised"
+								color="primary"
+								onClick={() => {
+										navigateToExercise(id)(previousSlug);
+								}}
+								>
+								Previous
+							</Button>
+							:null
+						}
+						{
+							nextSlug?
+							<Button
+								variant="raised"
+								color="primary"
+								onClick={() => {
 									navigateToExercise(id)(nextSlug);
-								}
-							}}
-						>
-							Next
-						</Button>
+								}}
+								>
+								Next
+							</Button>
+							:null
+						}
 					</div>
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
