@@ -132,7 +132,7 @@ class CourseList extends React.Component {
 				<div className={classes.rootContent}>
 					<Grid container spacing={0}>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
-							{enrolledCourses !== [] ? (
+							{enrolledCourses.length ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Courses jis mein aap enrolled hai
 								</Typography>
@@ -180,7 +180,7 @@ class CourseList extends React.Component {
 					{/* Available courses list */}
 					<Grid container spacing={0} className={classes.avbCoursesContainer}>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
-							{availableCourses !== [] ? (
+							{availableCourses.length ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Aap yeh courses mein enroll kar skte hai
 								</Typography>
@@ -219,7 +219,7 @@ class CourseList extends React.Component {
 					{/* Facilitating courses list */}
 					<Grid container spacing={0} className={classes.avbCoursesContainer}>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
-							{facilitatingCourses !== [] ? (
+							{facilitatingCourses.length ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
 								Aap yeh courses ko facilitate kar rahe hai
 								</Typography>
