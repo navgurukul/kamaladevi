@@ -31,7 +31,9 @@ md.use(blockEmbedPlugin, {
     containerClassName: "video-embed"
 });
 
-const styles = theme => ({
+const styles = theme => {
+	console.log(theme)
+	return {
 	root: {
 		paddingTop: theme.spacing.unit * 2,
 		paddingLeft: '10%',
@@ -44,8 +46,10 @@ const styles = theme => ({
 			paddingLeft: theme.spacing.unit,
 			paddingRight: theme.spacing.unit,
 		},
+		'& img':{
+			maxWidth:'100%'
+		}
 	},
-
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
 		paddingTop: theme.spacing.unit * 1,
@@ -74,7 +78,8 @@ const styles = theme => ({
 		flexDirection: 'row',
 		paddingTop: theme.spacing.unit * 2,
 	},
-});
+}
+}
 
 const navigateToExercise = id => (slug) => {
 	Router.push({
