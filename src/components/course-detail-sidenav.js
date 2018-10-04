@@ -16,6 +16,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 
 import {
@@ -48,6 +52,13 @@ const styles = () => ({
 		padding: 20,
 		width: '100%',
 	},
+	unEnrollButton:{
+		padding: 20,
+		width: '100%',
+	},
+	close: {
+	 padding: '10px',
+ 	}
 });
 
 
@@ -75,6 +86,7 @@ class CourseDetailSideNav extends React.Component {
 			// setting enrolled to true to prevent the flicker,
 			// when the button disappers after appearing
 			enrolled: true,
+			showEnrolledNotification:false
 		};
 	}
 
@@ -117,6 +129,10 @@ class CourseDetailSideNav extends React.Component {
 		});
 	}
 
+	handleCloseSnackBar = () =>{
+		this.setState({ showEnrolledNotification: false })
+	}
+
 	render() {
 		const {
 			openExercises, selectedvalue, selectedchildExercise, enrolled,
@@ -124,10 +140,31 @@ class CourseDetailSideNav extends React.Component {
 		const { classes, loadExercise } = this.props;
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
+
+		const notifcationMessage = <div> You have enrolled in the course</div>;
+
 		return (
 			<div className={classes.root}>
 				{/* Check whether the user is enrolled in the course.
           If enrolled, do not show the enroll button */}
+					<Snackbar
+						anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+						open={this.state.showEnrolledNotification}
+						message={notifcationMessage}
+						autoHideDuration={6000}
+						onClose={this.handleCloseSnackBar}
+						action={[
+	            <IconButton
+	              key="close"
+	              aria-label="Close"
+	              color="inherit"
+	              className={classes.close}
+	              onClick={this.handleCloseSnackBar}
+	            >
+              <CloseIcon />
+            	</IconButton>
+          	]}
+					/>
 				{!enrolled ?
 					<ExpansionPanel
 						expanded
@@ -139,6 +176,7 @@ class CourseDetailSideNav extends React.Component {
 							onClick={() => {
 								const { id } = Router.query;
 								enrollCourse(id, success => this.setState({ enrolled: success }));
+								this.setState({showEnrolledNotification:true});
 							}}
 						>
             Enroll In Course
@@ -215,6 +253,20 @@ class CourseDetailSideNav extends React.Component {
 						<Divider />
 					</ExpansionPanel>
 				))}
+				{enrolled ?
+					<ExpansionPanel
+						expanded
+					>
+						<Button
+							variant="raised"
+							color="primary"
+							className={classes.unEnrollButton}
+						>
+						UnEnroll From Course
+						</Button>
+					</ExpansionPanel>
+					: null
+				}
 			</div>
 		);
 	}
