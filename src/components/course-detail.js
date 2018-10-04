@@ -9,9 +9,10 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 import { fetchApi } from '../services/api';
-import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
+import { getSlugOfPreviousCourse, getSlugOfNextCourse, getExerciseReviewTypeFromSlug } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
@@ -45,7 +46,12 @@ const styles = theme => ({
 			paddingRight: theme.spacing.unit,
 		},
 	},
-
+	floatButtonRight:{
+		marginLeft:'auto'
+	},
+	floatRight:{
+		float:'right'
+	},
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
 		paddingTop: theme.spacing.unit * 1,
@@ -150,6 +156,9 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
+		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
+		const reviewrs = ['peer', 'facilitator', 'automatic']
+
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -157,6 +166,27 @@ class CourseDetail extends React.Component {
 						{/* eslint-disable-next-line react/no-danger */}
 						<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
 					</Card>
+					<br />
+					{
+						!(reviewType in reviewrs)?
+						<form autoComplete='off'>
+							<TextField
+								multiline={true}
+								fullWidth
+								label={'Exercise Submission'}
+							/>
+							<br />
+							<br />
+							<Button
+								variant="raised"
+								color="primary"
+								className={classes.floatRight}
+							>
+								Submit
+							</Button>
+						</form>
+						:null
+					}
 					<div className={classes.navigationBtnDiv}>
 						{
 							previousSlug?
@@ -174,6 +204,7 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
+								className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
