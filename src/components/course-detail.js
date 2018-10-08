@@ -47,7 +47,9 @@ const styles = theme => {
 			paddingRight: theme.spacing.unit,
 		},
 		'& img':{
-			maxWidth:'100%'
+			maxWidth:'100%',
+			display:'block',
+			margin:'0 auto'
 		}
 	},
 	floatButtonRight:{
