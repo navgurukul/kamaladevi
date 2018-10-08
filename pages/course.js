@@ -70,7 +70,6 @@ class Course extends React.Component {
 		}
 		return (
 			<div>
-				<base target='_blank' /> {/* Helps to open all links inside course in new page */}
 				<Header />
 				<CourseDetail
 					id={id}
