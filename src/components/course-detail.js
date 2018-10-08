@@ -101,16 +101,20 @@ class CourseDetail extends React.Component {
 	}
 
 	updateLinks = (htmlFromServer) => {
-		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html')
-   	const anchorList = courseDetail.querySelectorAll('a')
+
+		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
+   	const anchorList = courseDetail.querySelectorAll('a');
+
 		// setting links inside courseDetail to be open in new tab
-		for (let anchor of anchorList){
+		anchorList.forEach(anchor	 => {
 			if (anchor.innerText === 'Saral'){
-				continue
+				return;
 			}
-			anchor.setAttribute('target', '_blank')
-		}
-		return courseDetail.body.innerHTML
+			else {
+				anchor.setAttribute('target', '_blank');
+			}
+		});
+		return courseDetail.body.innerHTML;
 	}
 
 
