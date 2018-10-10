@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-
+import EnglishDiscussionEmbed from './comments';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
@@ -80,6 +80,7 @@ const styles = theme => {
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: theme.spacing.unit * 2,
+		marginBottom: '10%'
 	},
 }
 }
@@ -177,6 +178,11 @@ class CourseDetail extends React.Component {
 		}
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
+		const disqusConfig = {
+			url: window.location.href,
+			identifier: this.props.slug,
+		}
+		const disqusShortname = 'navgurukul';
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -217,6 +223,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
+					<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
@@ -226,6 +233,7 @@ class CourseDetail extends React.Component {
 					/>
 				</Grid>
 			</Grid>
+
 		);
 	}
 }
