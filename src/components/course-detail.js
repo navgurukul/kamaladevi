@@ -50,6 +50,9 @@ const styles = theme => {
 			maxWidth:'100%'
 		}
 	},
+	floatButtonRight:{
+		marginLeft:'auto'
+	},
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
 		paddingTop: theme.spacing.unit * 1,
@@ -198,6 +201,11 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
+
+              
+              
+              
+              className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
