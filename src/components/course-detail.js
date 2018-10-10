@@ -1,5 +1,6 @@
 // Course list
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
@@ -31,7 +32,8 @@ md.use(blockEmbedPlugin, {
     containerClassName: "video-embed"
 });
 
-const styles = theme => ({
+const styles = theme => {
+	return {
 	root: {
 		paddingTop: theme.spacing.unit * 2,
 		paddingLeft: '10%',
@@ -44,6 +46,9 @@ const styles = theme => ({
 			paddingLeft: theme.spacing.unit,
 			paddingRight: theme.spacing.unit,
 		},
+		'& img':{
+			maxWidth:'100%'
+		}
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
@@ -76,7 +81,8 @@ const styles = theme => ({
 		flexDirection: 'row',
 		paddingTop: theme.spacing.unit * 2,
 	},
-});
+}
+}
 
 const navigateToExercise = id => (slug) => {
 	Router.push({
@@ -93,11 +99,31 @@ class CourseDetail extends React.Component {
 			prefetchedData: false,
 			content: '',
 		};
+		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
+	updateLinks = (htmlFromServer) => {
+
+		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
+   	const anchorList = courseDetail.querySelectorAll('a');
+
+		// setting links inside courseDetail to be open in new tab
+		anchorList.forEach(anchor	 => {
+			if (anchor.innerText === 'Saral'){
+				return;
+			}
+			else {
+				anchor.setAttribute('target', '_blank');
+			}
+		});
+		return courseDetail.body.innerHTML;
+	}
+
+
 	componentDidMount() {
 		this.loadExercise(this.props.slug);
+
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -151,13 +177,12 @@ class CourseDetail extends React.Component {
 		}
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
-
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
 					<Card className={classes.content}>
 						{/* eslint-disable-next-line react/no-danger */}
-						<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
+						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
 					<div className={classes.navigationBtnDiv}>
 						{
@@ -176,7 +201,11 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
-								className={classes.floatButtonRight}
+
+              
+              
+              
+              className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
