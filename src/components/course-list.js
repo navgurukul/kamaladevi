@@ -1,14 +1,12 @@
 // Course list
 import React from 'react';
-import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -45,6 +43,7 @@ const styles = theme => ({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
+		cursor:'pointer',
 		[theme.breakpoints.down('sm')]: {
 			marginRight: 2.5,
 		},
@@ -58,12 +57,10 @@ const styles = theme => ({
 		[theme.breakpoints.down('sm')]: {
 			marginRight: 2.5,
 		},
+		cursor:'pointer'
 	},
 	cardGrid: {
 		marginBottom: 10,
-	},
-	cardAction: {
-		justifyContent: 'flex-end',
 	},
 	avbCoursesContainer: {
 		paddingTop: theme.spacing.unit * 5,
@@ -144,6 +141,12 @@ class CourseList extends React.Component {
 						{/* Enrolled courses list  */}
 						{enrolledCourses.map((value, key) => (
 							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+								<Link
+									href={{
+										pathname: '/course',
+										query: { id: value.id },
+									}}
+									>
 								<Card
 									variant="raised"
 									className={
@@ -162,21 +165,8 @@ class CourseList extends React.Component {
 											<LinearProgress variant="determinate" value={(value.completedSubmissions * 100) / value.totalExercises} />
 										</div>
 									</CardContent>
-									<CardActions aligh="end" className={classes.cardAction}>
-										<Button
-											size="small"
-											variant="raised"
-											color="primary"
-											className={classes.button}
-											onClick={() => Router.push({
-												pathname: '/course',
-												query: { id: value.id },
-											})}
-										>
-                  Preview
-										</Button>
-									</CardActions>
 								</Card>
+							</Link>
 							</Grid>
 						))}
 					</Grid>
@@ -198,35 +188,30 @@ class CourseList extends React.Component {
 						</Grid>
 						{availableCourses.map((value, key) => (
 							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
-								<Card
-									variant="raised"
-									className={
-										(key % 2 === 0)
+								<Link
+									href={{
+										pathname: '/course',
+										query: { id: value.id },
+									}}
+									>
+									<Card
+										variant="raised"
+										className={
+											(key % 2 === 0)
 											? classes.cardMarginRightBot
 											: classes.cardMarginLeftBot}
-								>
-									<CardContent>
-										<Typography variant="headline" component="h2">
-											{value.name}
-										</Typography>
-										<Typography color="textSecondary">
-											{value.shortDescription}
-										</Typography>
-									</CardContent>
-									<CardActions aligh="end" className={classes.cardAction}>
-										<Button
-											size="small"
-											variant="raised"
-											color="primary"
-											onClick={() => Router.push({
-												pathname: '/course',
-												query: { id: value.id },
-											})}
-										>
-                  Preview
-										</Button>
-									</CardActions>
-								</Card>
+											>
+											<CardContent>
+												<Typography variant="headline" component="h2">
+													{value.name}
+												</Typography>
+												<Typography color="textSecondary">
+													{value.shortDescription}
+												</Typography>
+											</CardContent>
+
+										</Card>
+								</Link>
 							</Grid>
 						))}
 					</Grid>
@@ -257,19 +242,6 @@ class CourseList extends React.Component {
 											{value.shortDescription}
 										</Typography>
 									</CardContent>
-									<CardActions aligh="end" className={classes.cardAction}>
-										<Button
-											size="small"
-											variant="raised"
-											color="primary"
-											onClick={() => Router.push({
-												pathname: '/course',
-												query: { id: value.id },
-											})}
-										>
-                  Preview
-										</Button>
-									</CardActions>
 								</Card>
 							</Grid>
 						))}
