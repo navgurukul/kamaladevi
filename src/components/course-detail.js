@@ -1,7 +1,7 @@
 // Course list
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
 import EnglishDiscussionEmbed from './comments';
@@ -66,6 +66,9 @@ const styles = theme => {
 			display: 'none',
 		},
 	},
+	exerciseSubmission: {
+		marginBottom:theme.spacing.unit * 5
+	},
 	mainItem: {
 		paddingRight: theme.spacing.unit,
 	},
@@ -80,15 +83,21 @@ const styles = theme => {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
 	},
+	submitBox:{
+		marginBottom: theme.spacing.unit * 2
+	},
+	editLink: {
+		float:'right'
+	},
 	navigationBtnDiv: {
 		width: '100%',
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		paddingTop: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 1,
 		marginBottom: '10%'
 	},
-}
+ }
 }
 
 const navigateToExercise = id => (slug) => {
@@ -201,26 +210,34 @@ class CourseDetail extends React.Component {
 						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
 					<br />
-					{
-						!(reviewType in reviewrs)?
-						<form autoComplete='off'>
-							<TextField
-								multiline={true}
-								fullWidth
-								label={'Exercise Submission'}
-							/>
-							<br />
-							<br />
-							<Button
-								variant="raised"
-								color="primary"
-								className={classes.floatRight}
-							>
-								Submit
-							</Button>
-						</form>
-						:null
-					}
+					<div className={classes.exerciseSubmission}>
+						{
+							!(reviewType in reviewrs)?
+							<form autoComplete='off'>
+								<TextField
+									className={classes.submitBox}
+									multiline={true}
+									fullWidth
+									label={'Exercise Submission'}
+									/>
+								<Button
+									variant="raised"
+									color="primary"
+									className={classes.floatRight}
+									>
+									Submit
+								</Button>
+							</form>
+							:null
+						}
+					</div>
+					{/*link to github page*/}
+					<div className={classes.editLink}>
+						<a href='#'>
+							edit
+						</a>
+					</div>
+
 					<div className={classes.navigationBtnDiv}>
 						{
 							previousSlug?
