@@ -209,11 +209,7 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
-
-              
-              
-              
-              className={classes.floatButtonRight}
+              	className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
