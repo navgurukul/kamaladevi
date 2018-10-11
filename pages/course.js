@@ -57,7 +57,10 @@ class Course extends React.Component {
 		};
 	}
 
-
+	componentDidMount() {
+		const { slug } = this.props.router.query;
+		document.title = slug;
+	}
 	render() {
 		const { id, slug } = this.props.router.query;
 
