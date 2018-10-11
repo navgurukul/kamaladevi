@@ -4,6 +4,7 @@ import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
+
 import { fetchApi } from '../src/services/api';
 import withRoot from '../src/with-root';
 import CourseDetail from '../src/components/course-detail';
@@ -56,8 +57,10 @@ class Course extends React.Component {
 		};
 	}
 
+
 	render() {
 		const { id, slug } = this.props.router.query;
+
 		// If exercises.length is 0, it means the exercises are not loaded yet
 		if (!this.state.exercises.length) {
 			// TODO: Only run this code on server side

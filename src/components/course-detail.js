@@ -1,9 +1,10 @@
 // Course list
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-
+import EnglishDiscussionEmbed from './comments';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,7 +33,8 @@ md.use(blockEmbedPlugin, {
     containerClassName: "video-embed"
 });
 
-const styles = theme => ({
+const styles = theme => {
+	return {
 	root: {
 		paddingTop: theme.spacing.unit * 2,
 		paddingLeft: '10%',
@@ -45,6 +47,11 @@ const styles = theme => ({
 			paddingLeft: theme.spacing.unit,
 			paddingRight: theme.spacing.unit,
 		},
+		'& img':{
+			maxWidth:'100%',
+			display:'block',
+			margin:'0 auto'
+		}
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
@@ -79,8 +86,10 @@ const styles = theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: theme.spacing.unit * 2,
+		marginBottom: '10%'
 	},
-});
+}
+}
 
 const navigateToExercise = id => (slug) => {
 	Router.push({
@@ -97,11 +106,31 @@ class CourseDetail extends React.Component {
 			prefetchedData: false,
 			content: '',
 		};
+		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
+	updateLinks = (htmlFromServer) => {
+
+		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
+   	const anchorList = courseDetail.querySelectorAll('a');
+
+		// setting links inside courseDetail to be open in new tab
+		anchorList.forEach(anchor	 => {
+			if (anchor.innerText === 'Saral'){
+				return;
+			}
+			else {
+				anchor.setAttribute('target', '_blank');
+			}
+		});
+		return courseDetail.body.innerHTML;
+	}
+
+
 	componentDidMount() {
 		this.loadExercise(this.props.slug);
+
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -158,13 +187,18 @@ class CourseDetail extends React.Component {
 
 		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
 		const reviewrs = ['peer', 'facilitator', 'automatic']
+		const disqusConfig = {
+			url: window.location.href,
+			identifier: this.props.slug,
+		}
+		const disqusShortname = 'navgurukul';
 
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
 					<Card className={classes.content}>
 						{/* eslint-disable-next-line react/no-danger */}
-						<div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
+						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
 					<br />
 					{
@@ -204,7 +238,7 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
-								className={classes.floatButtonRight}
+        				className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
@@ -216,6 +250,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
+					<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
@@ -225,6 +260,7 @@ class CourseDetail extends React.Component {
 					/>
 				</Grid>
 			</Grid>
+
 		);
 	}
 }
