@@ -3,7 +3,8 @@ import React from 'react';
 import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-
+import { getTitleFromSlug } from '../src/services/courses';
+import DocumentTitle from 'react-document-title';
 
 import { fetchApi } from '../src/services/api';
 import withRoot from '../src/with-root';
@@ -57,13 +58,9 @@ class Course extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		const { slug } = this.props.router.query;
-		document.title = slug;
-	}
 	render() {
 		const { id, slug } = this.props.router.query;
-
+		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 		if (!this.state.exercises.length) {
 			// TODO: Only run this code on server side
@@ -75,14 +72,16 @@ class Course extends React.Component {
 			return null;
 		}
 		return (
-			<div>
-				<Header />
-				<CourseDetail
-					id={id}
-					slug={slug}
-					exercises={this.state.exercises}
-				/>
-			</div>
+				<DocumentTitle title={title}>
+					<div>
+						<Header />
+						<CourseDetail
+							id={id}
+							slug={slug}
+							exercises={this.state.exercises}
+							/>
+					</div>
+				</DocumentTitle>
 		);
 	}
 }
