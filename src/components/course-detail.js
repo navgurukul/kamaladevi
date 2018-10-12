@@ -50,6 +50,9 @@ const styles = theme => {
 			maxWidth:'100%',
 			display:'block',
 			margin:'0 auto'
+		},
+		'& iframe':{
+			width: '100%'
 		}
 	},
 	floatButtonRight:{
