@@ -21,7 +21,6 @@
     "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "^1.1.0",
     "axios": "^0.18.0",
-    "disqus-react": "^1.0.5",
     "localforage": "^1.7.1",
     "markdown-it": "^8.4.1",
     "markdown-it-block-embed": "0.0.3",
@@ -32,7 +31,8 @@
     "react-document-title": "^2.0.3",
     "react-dom": "^16.4.1",
     "react-google-login": "^3.2.1",
-    "react-markdown": "^3.3.2"
+    "react-markdown": "^3.3.2",
+    "react-utterances": "^0.6.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
