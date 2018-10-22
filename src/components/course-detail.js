@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-import EnglishDiscussionEmbed from './comments';
+/*import EnglishDiscussionEmbed from './comments';*/
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
+import ReactUtterences from "react-utterances";
 import { fetchApi } from '../services/api';
 import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
@@ -183,11 +183,7 @@ class CourseDetail extends React.Component {
 		}
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
-		const disqusConfig = {
-			url: window.location.href,
-			identifier: this.props.slug,
-		}
-		const disqusShortname = 'navgurukul';
+
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -224,7 +220,8 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
-					<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
+					{/*<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />*/}
+					<ReactUtterences repo={'navgurukul/newton'} type={'title'} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
