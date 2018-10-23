@@ -55,6 +55,9 @@ const styles = theme => {
 			width: '100%'
 		}
 	},
+	utterances: {
+		width: '100%'
+	},
 	floatButtonRight:{
 		marginLeft:'auto'
 	},
@@ -220,8 +223,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
-					{/*<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />*/}
-					<ReactUtterences repo={'navgurukul/newton'} type={'title'} />
+					<ReactUtterences className={classes.utterances} repo={'navgurukul/newton'} type={'title'} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
