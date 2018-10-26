@@ -195,6 +195,7 @@ class CourseDetail extends React.Component {
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
 		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
+		const githubLink = getExerciseGithubLinkFromSlug(slug, exercises);
 		const reviewrs = ['peer', 'facilitator', 'automatic']
 		const disqusConfig = {
 			url: window.location.href,
