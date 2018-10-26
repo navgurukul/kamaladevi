@@ -111,6 +111,14 @@ export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
 	}
 };
 
+export const getTitleFromSlug = (slug) => {
+	if (slug){
+		var title = slug.replace(/[-__/_]/g, ' ')
+		title = title[0].toUpperCase() + title.slice(1, title.length);
+		return title;
+	}
+};
+
 const getNextExerciseSlug = (exercises, exerciseId) => {
 	try {
 		// Return if there is a next exercise

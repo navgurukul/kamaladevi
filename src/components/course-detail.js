@@ -4,16 +4,20 @@ import Router from 'next/router';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-import EnglishDiscussionEmbed from './comments';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
+import ReactUtterences from "react-utterances";
 import { fetchApi } from '../services/api';
-import { getSlugOfPreviousCourse, getSlugOfNextCourse, getExerciseReviewTypeFromSlug } from '../services/courses';
+import {
+	       getSlugOfPreviousCourse,
+				 getSlugOfNextCourse,
+				 getExerciseReviewTypeFromSlug,
+				 getExerciseGithubLinkFromSlug
+			 } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
@@ -51,7 +55,13 @@ const styles = theme => {
 			maxWidth:'100%',
 			display:'block',
 			margin:'0 auto'
+		},
+		'& iframe':{
+			width: '100%'
 		}
+	},
+	utterances: {
+		width: '100%'
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
@@ -197,11 +207,7 @@ class CourseDetail extends React.Component {
 		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
 		const githubLink = getExerciseGithubLinkFromSlug(slug, exercises);
 		const reviewrs = ['peer', 'facilitator', 'automatic']
-		const disqusConfig = {
-			url: window.location.href,
-			identifier: this.props.slug,
-		}
-		const disqusShortname = 'navgurukul';
+
 
 		return (
 			<Grid container spacing={0} className={classes.root}>
@@ -234,7 +240,7 @@ class CourseDetail extends React.Component {
 					</div>
 					{/*link to github page*/}
 					<div className={classes.editLink}>
-						<a href='#'>
+						<a href={githubLink} target='_blank'>
 							edit
 						</a>
 					</div>
@@ -268,7 +274,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
-					<EnglishDiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
+					<ReactUtterences className={classes.utterances} repo={'navgurukul/newton'} type={'title'} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
