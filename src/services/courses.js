@@ -75,24 +75,6 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 	}
 };
 
-export const getExerciseReviewTypeFromSlug = (slug, exercises) => {
-	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
-		if (exercises[exerciseId].slug === slug) {
-			return exercises[exerciseId].reviewType;
-		}
-		if (exercises[exerciseId].childExercises.length) {
-			for (
-				let childExerciseId = 0;
-				childExerciseId < exercises[exerciseId].childExercises.length;
-				childExerciseId += 1) {
-				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
-					return exercises[exerciseId].childExercises[childExerciseId].reviewType;
-				}
-			}
-		}
-	}
-};
-
 export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
 		if (exercises[exerciseId].slug === slug) {

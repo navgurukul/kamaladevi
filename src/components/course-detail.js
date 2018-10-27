@@ -15,7 +15,6 @@ import { fetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
-				 getExerciseReviewTypeFromSlug,
 				 getExerciseGithubLinkFromSlug
 			 } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
@@ -76,9 +75,6 @@ const styles = theme => {
 			display: 'none',
 		},
 	},
-	exerciseSubmission: {
-		marginBottom:theme.spacing.unit * 5
-	},
 	mainItem: {
 		paddingRight: theme.spacing.unit,
 	},
@@ -92,9 +88,6 @@ const styles = theme => {
 	loaderRoot: {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
-	},
-	submitBox:{
-		marginBottom: theme.spacing.unit * 2
 	},
 	editLink: {
 		float:'right'
@@ -204,9 +197,7 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
-		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
 		const githubLink = getExerciseGithubLinkFromSlug(slug, exercises);
-		const reviewrs = ['peer', 'facilitator', 'automatic']
 
 
 		return (
@@ -217,27 +208,7 @@ class CourseDetail extends React.Component {
 						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
 					<br />
-					<div className={classes.exerciseSubmission}>
-						{
-							!(reviewType in reviewrs)?
-							<form autoComplete='off'>
-								<TextField
-									className={classes.submitBox}
-									multiline={true}
-									fullWidth
-									label={'Exercise Submission'}
-									/>
-								<Button
-									variant="raised"
-									color="primary"
-									className={classes.floatRight}
-									>
-									Submit
-								</Button>
-							</form>
-							:null
-						}
-					</div>
+
 					{/*link to github page*/}
 					<div className={classes.editLink}>
 						<a href={githubLink} target='_blank'>
