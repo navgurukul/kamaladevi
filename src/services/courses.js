@@ -75,6 +75,24 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 	}
 };
 
+export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return exercises[exerciseId].githubLink;
+		}
+		if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return exercises[exerciseId].childExercises[childExerciseId].githubLink;
+				}
+			}
+		}
+	}
+};
+
 export const getTitleFromSlug = (slug) => {
 	if (slug){
 		var title = slug.replace(/[-__/_]/g, ' ')

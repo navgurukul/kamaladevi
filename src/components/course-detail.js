@@ -1,18 +1,22 @@
 // Course list
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-/*import EnglishDiscussionEmbed from './comments';*/
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import ReactUtterences from "react-utterances";
 import { fetchApi } from '../services/api';
-import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
+import {
+	       getSlugOfPreviousCourse,
+				 getSlugOfNextCourse,
+				 getExerciseGithubLinkFromSlug
+			 } from '../services/courses';
 import CourseDetailSideNav from './course-detail-sidenav';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
@@ -61,6 +65,9 @@ const styles = theme => {
 	floatButtonRight:{
 		marginLeft:'auto'
 	},
+	floatRight:{
+		float:'right'
+	},
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
 		paddingTop: theme.spacing.unit * 1,
@@ -82,15 +89,18 @@ const styles = theme => {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
 	},
+	editLink: {
+		float:'right'
+	},
 	navigationBtnDiv: {
 		width: '100%',
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		paddingTop: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 1,
 		marginBottom: '10%'
 	},
-}
+ }
 }
 
 const navigateToExercise = id => (slug) => {
@@ -187,6 +197,9 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
+		const githubLink = getExerciseGithubLinkFromSlug(slug, exercises);
+
+
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -194,6 +207,15 @@ class CourseDetail extends React.Component {
 						{/* eslint-disable-next-line react/no-danger */}
 						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
+					<br />
+
+					{/*link to github page*/}
+					<div className={classes.editLink}>
+						<a href={githubLink} target='_blank'>
+							edit
+						</a>
+					</div>
+
 					<div className={classes.navigationBtnDiv}>
 						{
 							previousSlug?
@@ -211,7 +233,7 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
-              	className={classes.floatButtonRight}
+        				className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
