@@ -58,6 +58,25 @@ export const isEnrolled = (courseId, callBack) => {
 	});
 };
 
+//gets gihtub Link for each exercise
+export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return exercises[exerciseId].githubLink;
+		}
+		if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return exercises[exerciseId].childExercises[childExerciseId].githubLink;
+				}
+			}
+		}
+	}
+};
+
 // Get location in exercises list for currently active exercise
 export const getExerciseIdFromSlug = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
