@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-import EnglishDiscussionEmbed from './comments';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';

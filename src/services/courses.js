@@ -23,6 +23,16 @@ export const addEnrolledCourses = (courseId) => {
 	});
 };
 
+
+export const exerciseSubmission = async (courseId, exerciseId, notes) => {
+	localforage.getItem('authResponse', (error, value)=>{
+		const { jwt } =  value;
+		return fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+			.then((response)=>{
+					return response;
+			});
+	});
+};
 // Make enroll API call, and add that course to enrolledCourses
 export const enrollCourse = async (courseId, callBack) => {
 	localforage.getItem('authResponse', (error, value) => {
@@ -75,21 +85,11 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 	}
 };
 
-export const getExerciseReviewTypeFromSlug = (slug, exercises) => {
-	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
-		if (exercises[exerciseId].slug === slug) {
-			return exercises[exerciseId].reviewType;
-		}
-		if (exercises[exerciseId].childExercises.length) {
-			for (
-				let childExerciseId = 0;
-				childExerciseId < exercises[exerciseId].childExercises.length;
-				childExerciseId += 1) {
-				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
-					return exercises[exerciseId].childExercises[childExerciseId].reviewType;
-				}
-			}
-		}
+export const getTitleFromSlug = (slug) => {
+	if (slug){
+		var title = slug.replace(/[-__/_]/g, ' ')
+		title = title[0].toUpperCase() + title.slice(1, title.length);
+		return title;
 	}
 };
 
