@@ -23,16 +23,33 @@ export const addEnrolledCourses = (courseId) => {
 	});
 };
 
-
+// Make notes submission api call to submit notes for students
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
-		return fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
 			.then((response)=>{
-					return response;
+					console.log(response);
 			});
 	});
 };
+
+// Make notes submission api call to get submitted notes
+export const getExerciseSubmission = async (courseId, exerciseId) => {
+	let responseData;
+	const { jwt } = await localforage.getItem('authResponse');
+	const query = {
+			submissionUsers: 'current',
+			submissionState: 'all',
+	};
+
+	await fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query , { Authorization: jwt })
+			.then( resp => {
+					responseData = resp.data.data;
+			})
+	return responseData;
+};
+
 // Make enroll API call, and add that course to enrolledCourses
 export const enrollCourse = async (courseId, callBack) => {
 	localforage.getItem('authResponse', (error, value) => {
@@ -71,6 +88,24 @@ export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
 				childExerciseId += 1) {
 				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
 					return exercises[exerciseId].childExercises[childExerciseId].githubLink;
+				}
+			}
+		}
+	}
+};
+
+export const getExerciseReviewTypeFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return exercises[exerciseId].reviewType;
+		}
+		if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return exercises[exerciseId].childExercises[childExerciseId].reviewType;
 				}
 			}
 		}
