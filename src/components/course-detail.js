@@ -253,7 +253,7 @@ class CourseDetail extends React.Component {
 					<br/>
 						{/*previously submitted notes*/}
 						{
-							(previousNotesData.submitterNotes == null)?
+							(previousNotesData.submitterNotes)?
 							<Card className={classes.content}>
 								<div>
 									{previousNotesData.submitterNotes}
@@ -263,7 +263,7 @@ class CourseDetail extends React.Component {
 						}
 						{/*submission form*/}
 						{
-							!(reviewType in reviewrs)?
+							(reviewType in reviewrs)?
 							<form autoComplete='off'>
 								<TextField
 									multiline={true}
