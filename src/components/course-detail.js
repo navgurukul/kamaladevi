@@ -15,10 +15,14 @@ import { fetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
-				 getExerciseGithubLinkFromSlug
+				 getExerciseGithubLinkFromSlug,
+				 getExerciseReviewTypeFromSlug,
+				 exerciseSubmission,
+				 getExerciseSubmission
 			 } from '../services/courses';
-import CourseDetailSideNav from './course-detail-sidenav';
 
+import CourseDetailSideNav from './course-detail-sidenav';
+import { getExerciseIdFromSlug } from '../services/courses';
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
 // Parse markdown content
@@ -90,7 +94,8 @@ const styles = theme => {
 		paddingTop: theme.spacing.unit * 20,
 	},
 	editLink: {
-		float:'right'
+		float:'right',
+		marginTop:theme.spacing.unit*2
 	},
 	navigationBtnDiv: {
 		width: '100%',
@@ -114,9 +119,13 @@ const navigateToExercise = id => (slug) => {
 class CourseDetail extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			prefetchedData: false,
 			content: '',
+			notes:'',
+			previousNotesData:'',
+			exerciseId:0
 		};
 		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
@@ -139,10 +148,24 @@ class CourseDetail extends React.Component {
 		return courseDetail.body.innerHTML;
 	}
 
+	// submit the exercise notes
+	submitExercise = (event) => {
+			const {notes, exerciseId} = this.state;
+			const { id, exercises, slug } = this.props;
+			exerciseSubmission(id, exerciseId, notes);
+			this.loadExercise();
+	}
+
+	// handle the text in the input
+	handleChange = (event) => {
+			const name = event.target.name;
+			this.setState({
+				[name]:event.target.value
+			});
+	}
 
 	componentDidMount() {
 		this.loadExercise(this.props.slug);
-
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -153,8 +176,8 @@ class CourseDetail extends React.Component {
 	}
 
 	async loadExercise() {
-		let value;
-		let response;
+		let value, response;
+
 		try {
 			value = await localforage.getItem('authResponse');
 			if (!value) {
@@ -166,8 +189,9 @@ class CourseDetail extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
-		const { id, slug } = this.props;
+		const { id, slug, exercises } = this.props;
 		const { jwt } = value;
+		const { exerciseId } = this.state;
 		try {
 			response = (
 				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
@@ -176,18 +200,37 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
+		// gettuing exersise notes
+		const query = {
+			submissionUsers: 'current',
+			submissionState: 'all',
+		};
+
+		// get the exerciseId for the exercise
+		const { selectedvalue } = getExerciseIdFromSlug(slug, exercises);
+
+		const previousNotesData = await getExerciseSubmission(id , selectedvalue);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
+
 		this.setState({
 			content,
 			prefetchedData: true,
+			notes:'',
+			previousNotesData:previousNotesData,
+			exerciseId: selectedvalue
 		});
 	}
 
 	render() {
+		// const
 		const {
 			classes, exercises, id, slug,
 		} = this.props;
-		const { prefetchedData, content } = this.state;
+
+		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
+		const reviewrs = ['peer', 'facilitator', 'automatic']
+
+		const { prefetchedData, content, previousNotesData } = this.state;
 		if (!prefetchedData) {
 			return (
 				<div className={classes.loaderRoot}>
@@ -207,8 +250,43 @@ class CourseDetail extends React.Component {
 						{/* eslint-disable-next-line react/no-danger */}
 						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
-					<br />
-
+					<br/>
+						{/*previously submitted notes*/}
+						{
+							(previousNotesData.submitterNotes)?
+							<Card className={classes.content}>
+								<div>
+									{previousNotesData.submitterNotes}
+								</div>
+							</Card>
+							:null
+						}
+						{/*submission form*/}
+						{
+							(reviewType in reviewrs)?
+							<form autoComplete='off'>
+								<TextField
+									multiline={true}
+									fullWidth
+									value={this.state.notes}
+									label={'Exercise Submission'}
+									onChange={this.handleChange}
+									name='notes'
+								/>
+								<br />
+								<br />
+								<Button
+									variant="raised"
+									color="primary"
+									fullWidth
+									className={classes.floatRight}
+									onClick={this.submitExercise}
+								>
+									Submit Exercise
+								</Button>
+							</form>
+							:null
+						}
 					{/*link to github page*/}
 					<div className={classes.editLink}>
 						<a href={githubLink} target='_blank'>
@@ -237,7 +315,7 @@ class CourseDetail extends React.Component {
 								variant="raised"
 								color="primary"
 								onClick={() => {
-									navigateToExercise(id)(nextSlug);
+										navigateToExercise(id)(nextSlug);
 								}}
 								>
 								Next

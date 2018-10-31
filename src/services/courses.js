@@ -23,6 +23,33 @@ export const addEnrolledCourses = (courseId) => {
 	});
 };
 
+// Make notes submission api call to submit notes for students
+export const exerciseSubmission = async (courseId, exerciseId, notes) => {
+	localforage.getItem('authResponse', (error, value)=>{
+		const { jwt } =  value;
+	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+			.then((response)=>{
+					console.log(response);
+			});
+	});
+};
+
+// Make notes submission api call to get submitted notes
+export const getExerciseSubmission = async (courseId, exerciseId) => {
+	let responseData;
+	const { jwt } = await localforage.getItem('authResponse');
+	const query = {
+			submissionUsers: 'current',
+			submissionState: 'all',
+	};
+
+	await fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query , { Authorization: jwt })
+			.then( resp => {
+					responseData = resp.data.data;
+			})
+	return responseData;
+};
+
 // Make enroll API call, and add that course to enrolledCourses
 export const enrollCourse = async (courseId, callBack) => {
 	localforage.getItem('authResponse', (error, value) => {
@@ -48,6 +75,43 @@ export const isEnrolled = (courseId, callBack) => {
 	});
 };
 
+//gets gihtub Link for each exercise
+export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return exercises[exerciseId].githubLink;
+		}
+		if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return exercises[exerciseId].childExercises[childExerciseId].githubLink;
+				}
+			}
+		}
+	}
+};
+
+export const getExerciseReviewTypeFromSlug = (slug, exercises) => {
+	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
+		if (exercises[exerciseId].slug === slug) {
+			return exercises[exerciseId].reviewType;
+		}
+		if (exercises[exerciseId].childExercises.length) {
+			for (
+				let childExerciseId = 0;
+				childExerciseId < exercises[exerciseId].childExercises.length;
+				childExerciseId += 1) {
+				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
+					return exercises[exerciseId].childExercises[childExerciseId].reviewType;
+				}
+			}
+		}
+	}
+};
+
 // Get location in exercises list for currently active exercise
 export const getExerciseIdFromSlug = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
@@ -69,24 +133,6 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 						selectedvalue: exercises[exerciseId].id,
 						selectedchildExercise: exercises[exerciseId].childExercises[childExerciseId].id,
 					};
-				}
-			}
-		}
-	}
-};
-
-export const getExerciseGithubLinkFromSlug = (slug, exercises) => {
-	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
-		if (exercises[exerciseId].slug === slug) {
-			return exercises[exerciseId].githubLink;
-		}
-		if (exercises[exerciseId].childExercises.length) {
-			for (
-				let childExerciseId = 0;
-				childExerciseId < exercises[exerciseId].childExercises.length;
-				childExerciseId += 1) {
-				if (exercises[exerciseId].childExercises[childExerciseId].slug === slug) {
-					return exercises[exerciseId].childExercises[childExerciseId].githubLink;
 				}
 			}
 		}
