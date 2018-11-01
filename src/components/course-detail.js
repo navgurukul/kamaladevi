@@ -247,7 +247,6 @@ class CourseDetail extends React.Component {
 		const reviewrs = ['peer', 'facilitator', 'automatic']
 
 		const { prefetchedData, content, previousNotesData } = this.state;
-		console.log(previousNotesData[0]);
 		if (!prefetchedData) {
 			return (
 				<div className={classes.loaderRoot}>
