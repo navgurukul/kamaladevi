@@ -83,7 +83,10 @@ const styles = theme => {
 	},
 	content: {
 		padding: theme.spacing.unit * 2.5,
-		paddingTop: theme.spacing.unit * 1,
+		paddingTop: theme.spacing.unit * 3,
+	},
+	submitBox:{
+		marginTop:theme.spacing.unit * 2,
 	},
 	progress: {
 		margin: theme.spacing.unit * 2,
@@ -130,14 +133,12 @@ class CourseDetail extends React.Component {
 	}
 
 	updateLinks = (htmlFromServer) => {
-
 		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
    	const anchorList = courseDetail.querySelectorAll('a');
-
 		// setting links inside courseDetail to be open in new tab
 		anchorList.forEach(anchor	 => {
 			if (anchor.innerText === 'Saral'){
-				return;
+				return false;
 			}
 			else {
 				anchor.setAttribute('target', '_blank');
@@ -145,6 +146,7 @@ class CourseDetail extends React.Component {
 		});
 		return courseDetail.body.innerHTML;
 	}
+
 	isSubmissionTypeValidated = (submissionType, notes) => {
 		if (submissionType == 'number'){
 			return !(isNaN(notes));
@@ -269,9 +271,10 @@ class CourseDetail extends React.Component {
 						{
 							(previousNotesData[0])?
 							<Card className={classes.content}>
-								<div>
-									{previousNotesData[0].submitterNotes}
-								</div>
+									<b>Apke phele ka submission :</b>
+									<div className={classes.submitBox}>
+										{previousNotesData[0].submitterNotes}
+									</div>
 							</Card>
 							:null
 						}
@@ -280,7 +283,7 @@ class CourseDetail extends React.Component {
 							// TODO: Input box should be generated based on submissionType
 						}
 						{
-							!(reviewType in reviewrs)?
+							(reviewrs.includes(reviewType))?
 							<form autoComplete='off'>
 								<TextField
 									multiline={true}
