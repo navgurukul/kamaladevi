@@ -15,10 +15,9 @@ import { fetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
-				 getExerciseGithubLinkFromSlug,
-				 getExerciseReviewTypeFromSlug,
 				 exerciseSubmission,
-				 getExerciseSubmission
+				 getExerciseSubmission,
+				 getExerciseDetailFromSlug
 			 } from '../services/courses';
 
 import CourseDetailSideNav from './course-detail-sidenav';
@@ -84,7 +83,10 @@ const styles = theme => {
 	},
 	content: {
 		padding: theme.spacing.unit * 2.5,
-		paddingTop: theme.spacing.unit * 1,
+		paddingTop: theme.spacing.unit * 3,
+	},
+	submitBox:{
+		marginTop:theme.spacing.unit * 2,
 	},
 	progress: {
 		margin: theme.spacing.unit * 2,
@@ -125,21 +127,18 @@ class CourseDetail extends React.Component {
 			content: '',
 			notes:'',
 			previousNotesData:'',
-			exerciseId:0
 		};
 		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
 	updateLinks = (htmlFromServer) => {
-
 		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
    	const anchorList = courseDetail.querySelectorAll('a');
-
 		// setting links inside courseDetail to be open in new tab
 		anchorList.forEach(anchor	 => {
 			if (anchor.innerText === 'Saral'){
-				return;
+				return false;
 			}
 			else {
 				anchor.setAttribute('target', '_blank');
@@ -148,10 +147,33 @@ class CourseDetail extends React.Component {
 		return courseDetail.body.innerHTML;
 	}
 
+	isSubmissionTypeValidated = (submissionType, notes) => {
+		if (submissionType == 'number'){
+			return !(isNaN(notes));
+		}
+		else if (submissionType == 'text'){
+			return notes.length <= 100;
+		}
+		else if (submissionType == 'text_large'){
+			return notes.length <= 1000;
+		}
+		else if (submissionType == 'url'){
+			return 	notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+		}
+		return true
+	}
 	// submit the exercise notes
 	submitExercise = (event) => {
-			const {notes, exerciseId} = this.state;
+			const {notes} = this.state;
 			const { id, exercises, slug } = this.props;
+			const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+
+			// here should be the validation
+			if (!this.isSubmissionTypeValidated(submissionType, notes)){
+				 // TODO: something to alert user
+					alert(`Invalid data required ${submissionType}`);
+					return false
+			}
 			exerciseSubmission(id, exerciseId, notes);
 			this.loadExercise();
 	}
@@ -165,12 +187,12 @@ class CourseDetail extends React.Component {
 	}
 
 	componentDidMount() {
-		this.loadExercise(this.props.slug);
+		this.loadExercise();
 	}
 
 	shouldComponentUpdate(nextProps) {
 		if (nextProps.slug !== this.props.slug) {
-			this.loadExercise(nextProps.slug);
+			this.loadExercise();
 		}
 		return true;
 	}
@@ -207,17 +229,15 @@ class CourseDetail extends React.Component {
 		};
 
 		// get the exerciseId for the exercise
-		const { selectedvalue } = getExerciseIdFromSlug(slug, exercises);
-
-		const previousNotesData = await getExerciseSubmission(id , selectedvalue);
+		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+		const previousNotesData = await getExerciseSubmission(id , exerciseId);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
 
 		this.setState({
 			content,
 			prefetchedData: true,
 			notes:'',
-			previousNotesData:previousNotesData,
-			exerciseId: selectedvalue
+			previousNotesData:previousNotesData
 		});
 	}
 
@@ -227,7 +247,7 @@ class CourseDetail extends React.Component {
 			classes, exercises, id, slug,
 		} = this.props;
 
-		const reviewType = getExerciseReviewTypeFromSlug(slug, exercises);
+		const {reviewType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
 		const reviewrs = ['peer', 'facilitator', 'automatic']
 
 		const { prefetchedData, content, previousNotesData } = this.state;
@@ -240,8 +260,6 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
-		const githubLink = getExerciseGithubLinkFromSlug(slug, exercises);
-
 
 		return (
 			<Grid container spacing={0} className={classes.root}>
@@ -253,17 +271,23 @@ class CourseDetail extends React.Component {
 					<br/>
 						{/*previously submitted notes*/}
 						{
-							(previousNotesData.submitterNotes)?
+							(previousNotesData[0])?
 							<Card className={classes.content}>
-								<div>
-									{previousNotesData.submitterNotes}
-								</div>
+									<b>Apke phele ka submission :</b>
+									<div className={classes.submitBox}>
+										{previousNotesData[0].submitterNotes}
+									</div>
 							</Card>
 							:null
 						}
-						{/*submission form*/}
 						{
-							(reviewType in reviewrs)?
+              /*submission form*/
+            }
+						{
+							// TODO: Input box should be generated based on submissionType
+						}
+						{
+							(reviewrs.includes(reviewType))?
 							<form autoComplete='off'>
 								<TextField
 									multiline={true}
