@@ -289,9 +289,9 @@ class CourseDetail extends React.Component {
 						}
 					{/*link to github page*/}
 					<div className={classes.editLink}>
-						<a href={githubLink} target='_blank'>
-							edit
-						</a>
+					  <a href={githubLink} target='_blank'>
+							Edit
+						</a> on GitHub
 					</div>
 
 					<div className={classes.navigationBtnDiv}>
