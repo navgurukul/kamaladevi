@@ -126,7 +126,7 @@ class CourseDetail extends React.Component {
 			prefetchedData: false,
 			content: '',
 			notes:'',
-			previousNotesData:''
+			previousNotesData:'',
 		};
 		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
@@ -213,6 +213,7 @@ class CourseDetail extends React.Component {
 		}
 		const { id, slug, exercises } = this.props;
 		const { jwt } = value;
+		const { exerciseId } = this.state;
 		try {
 			response = (
 				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
@@ -231,6 +232,7 @@ class CourseDetail extends React.Component {
 		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
 		const previousNotesData = await getExerciseSubmission(id , exerciseId);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
+
 		this.setState({
 			content,
 			prefetchedData: true,
@@ -278,7 +280,9 @@ class CourseDetail extends React.Component {
 							</Card>
 							:null
 						}
-						{/*submission form*/}
+						{
+              /*submission form*/
+            }
 						{
 							// TODO: Input box should be generated based on submissionType
 						}
