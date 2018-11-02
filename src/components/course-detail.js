@@ -213,7 +213,6 @@ class CourseDetail extends React.Component {
 		}
 		const { id, slug, exercises } = this.props;
 		const { jwt } = value;
-		const { exerciseId } = this.state;
 		try {
 			response = (
 				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
