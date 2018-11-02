@@ -155,7 +155,7 @@ class CourseDetail extends React.Component {
 			return notes.length <= 100;
 		}
 		else if (submissionType == 'text_large'){
-			return notes.length <= 1000;
+			return notes.length <= 1500;
 		}
 		else if (submissionType == 'url'){
 			return 	notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
@@ -171,7 +171,20 @@ class CourseDetail extends React.Component {
 			// here should be the validation
 			if (!this.isSubmissionTypeValidated(submissionType, notes)){
 				 // TODO: something to alert user
-					alert(`Invalid data required ${submissionType}`);
+				 	let message;
+					if (submissionType == 'number'){
+						message = `App nich ek integer value hi dal sakte hai`;
+					}
+					else if (submissionType == 'text'){
+						message = `App niche 100 se jada character nhi dal sakte hai`;
+					}
+					else if (submissionType == 'text_large'){
+						message = `App niche 1500 se jada character nhi dal sakte hai`;
+					}
+					else if (submissionType == 'url'){
+						message = `Apko niche ek url ka link dalna hai`;
+					}
+					alert(message);
 					return false
 			}
 			exerciseSubmission(id, exerciseId, notes);
