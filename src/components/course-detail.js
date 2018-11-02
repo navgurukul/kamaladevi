@@ -68,7 +68,7 @@ const styles = theme => {
 	floatButtonRight:{
 		marginLeft:'auto'
 	},
-	floatRight:{
+	submitExercise:{
 		float:'right'
 	},
 	sidebar: {
@@ -97,7 +97,8 @@ const styles = theme => {
 	},
 	editLink: {
 		float:'right',
-		marginTop:theme.spacing.unit*2
+		marginTop:theme.spacing.unit*2,
+		marginRight:theme.spacing.unit
 	},
 	navigationBtnDiv: {
 		width: '100%',
@@ -259,7 +260,7 @@ class CourseDetail extends React.Component {
 			classes, exercises, id, slug,
 		} = this.props;
 
-		const {reviewType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
+		const {reviewType, submissionType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
 		const reviewrs = ['peer', 'facilitator', 'automatic']
 
 		const { prefetchedData, content, previousNotesData } = this.state;
@@ -299,7 +300,7 @@ class CourseDetail extends React.Component {
 							// TODO: Input box should be generated based on submissionType
 						}
 						{
-							(reviewrs.includes(reviewType))?
+							(reviewrs.includes(reviewType) && submissionType != null)?
 							<form autoComplete='off'>
 								<TextField
 									multiline={true}
@@ -313,9 +314,8 @@ class CourseDetail extends React.Component {
 								<br />
 								<Button
 									variant="raised"
-									color="primary"
-									fullWidth
-									className={classes.floatRight}
+									color="secondary"
+									className={classes.submitExercise}
 									onClick={this.submitExercise}
 								>
 									Submit Exercise
