@@ -17,9 +17,7 @@ import Divider from '@material-ui/core/Divider';
 import { fetchApi } from '../services/api';
 import { setEnrolledCourses } from '../services/courses';
 
-const styles = theme => {
-	console.log(theme)
-	return ({
+const styles = theme => ({
 	rootLoader: {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
@@ -81,14 +79,14 @@ const styles = theme => {
 	progress: {
 		margin: theme.spacing.unit * 2,
 	},
-})};
+});
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
 class CourseList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			prefetchedData: true ,
+			prefetchedData: false,
 			availableCourses: [],
 			// For future uses
 			enrolledCourses: [],
@@ -110,7 +108,6 @@ class CourseList extends React.Component {
 								prefetchedData: true,
 								...response.data,
 							});
-							console.log(data);
 						})
 						.catch(() => { /* TODO: Handle network error cases */ });
 				}
