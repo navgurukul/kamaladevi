@@ -63,14 +63,18 @@ class LandingPage extends React.Component {
 			// This catch block is for SSR. Since, on serverside, no storage service will
 			// be found, and this will be safety cushion for that exception
 		});
-		// Show loader if auth is success, and waiting for Router to take to home
-		if (this.state.loading) {
-			return (
-				<div className={classes.root}>
-					<CircularProgress className={classes.progress} size={50} />
-				</div>
-			);
-		}
+
+
+			// Show loader if auth is success, and waiting for Router to take to home
+			// if (this.state.loading) {
+			// 	return (
+			// 		<div className={classes.root}>
+			// 			<CircularProgress className={classes.progress} size={50} />
+			// 		</div>
+			// 	);
+			// }
+
+
 		return (
 			<div className={classes.root}>
 				<Paper className={classes.paper}>
