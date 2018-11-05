@@ -64,7 +64,7 @@ const styles = theme => ({
 	},
 	image:{
 		paddingTop:theme.spacing.unit * 3,
-		marginLeft: theme.spacing.unit * 2,
+		marginLeft: theme.spacing.unit * 1,
 	},
 	cardGrid: {
 		marginBottom: 10,
@@ -109,7 +109,6 @@ class CourseList extends React.Component {
 					const { jwt } = value;
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
-							console.log(response);
 							setEnrolledCourses(response.data);
 							this.setState({
 								prefetchedData: true,
