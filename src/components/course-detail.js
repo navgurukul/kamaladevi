@@ -56,7 +56,7 @@ const styles = theme => {
 		}
 	},
 	utterances: {
-		width: '100%'
+		width: '100%',
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
