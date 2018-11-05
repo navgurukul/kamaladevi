@@ -1,10 +1,9 @@
 // Course list
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-/*import EnglishDiscussionEmbed from './comments';*/
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,9 +11,16 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ReactUtterences from "react-utterances";
 import { fetchApi } from '../services/api';
-import { getSlugOfPreviousCourse, getSlugOfNextCourse } from '../services/courses';
-import CourseDetailSideNav from './course-detail-sidenav';
+import {
+	       getSlugOfPreviousCourse,
+				 getSlugOfNextCourse,
+				 exerciseSubmission,
+				 getExerciseSubmission,
+				 getExerciseDetailFromSlug
+			 } from '../services/courses';
 
+import CourseDetailSideNav from './course-detail-sidenav';
+import { getExerciseIdFromSlug } from '../services/courses';
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
 // Parse markdown content
@@ -56,10 +62,17 @@ const styles = theme => {
 		}
 	},
 	utterances: {
+<<<<<<< HEAD
 		width: '100%',
+=======
+		width: '100%'
+>>>>>>> c2f1ff175afd70f8bce62649687fbabf2d34b752
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
+	},
+	submitExercise:{
+		float:'right'
 	},
 	sidebar: {
 		paddingLeft: theme.spacing.unit,
@@ -73,7 +86,10 @@ const styles = theme => {
 	},
 	content: {
 		padding: theme.spacing.unit * 2.5,
-		paddingTop: theme.spacing.unit * 1,
+		paddingTop: theme.spacing.unit * 3,
+	},
+	submitBox:{
+		marginTop:theme.spacing.unit * 2,
 	},
 	progress: {
 		margin: theme.spacing.unit * 2,
@@ -82,15 +98,20 @@ const styles = theme => {
 		textAlign: 'center',
 		paddingTop: theme.spacing.unit * 20,
 	},
+	editLink: {
+		float:'right',
+		marginTop:theme.spacing.unit*2,
+		marginRight:theme.spacing.unit
+	},
 	navigationBtnDiv: {
 		width: '100%',
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		paddingTop: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 1,
 		marginBottom: '10%'
 	},
-}
+ }
 }
 
 const navigateToExercise = id => (slug) => {
@@ -104,23 +125,24 @@ const navigateToExercise = id => (slug) => {
 class CourseDetail extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			prefetchedData: false,
 			content: '',
+			notes:'',
+			previousNotesData:'',
 		};
 		this.courseDetail = React.createRef();
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
 	updateLinks = (htmlFromServer) => {
-
 		let courseDetail = new DOMParser().parseFromString(htmlFromServer, 'text/html');
    	const anchorList = courseDetail.querySelectorAll('a');
-
 		// setting links inside courseDetail to be open in new tab
 		anchorList.forEach(anchor	 => {
 			if (anchor.innerText === 'Saral'){
-				return;
+				return false;
 			}
 			else {
 				anchor.setAttribute('target', '_blank');
@@ -129,22 +151,72 @@ class CourseDetail extends React.Component {
 		return courseDetail.body.innerHTML;
 	}
 
+	isSubmissionTypeValidated = (submissionType, notes) => {
+		if (submissionType == 'number'){
+			return !(isNaN(notes));
+		}
+		else if (submissionType == 'text'){
+			return notes.length <= 100;
+		}
+		else if (submissionType == 'text_large'){
+			return notes.length <= 1500;
+		}
+		else if (submissionType == 'url'){
+			return 	notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+		}
+		return true
+	}
+	// submit the exercise notes
+	submitExercise = (event) => {
+			const {notes} = this.state;
+			const { id, exercises, slug } = this.props;
+			const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+
+			// here should be the validation
+			if (!this.isSubmissionTypeValidated(submissionType, notes)){
+				 // TODO: something to alert user
+				 	let message;
+					if (submissionType == 'number'){
+						message = `App nich ek integer value hi dal sakte hai`;
+					}
+					else if (submissionType == 'text'){
+						message = `App niche 100 se jada character nhi dal sakte hai`;
+					}
+					else if (submissionType == 'text_large'){
+						message = `App niche 1500 se jada character nhi dal sakte hai`;
+					}
+					else if (submissionType == 'url'){
+						message = `Apko niche ek url ka link dalna hai`;
+					}
+					alert(message);
+					return false
+			}
+			exerciseSubmission(id, exerciseId, notes);
+			this.loadExercise();
+	}
+
+	// handle the text in the input
+	handleChange = (event) => {
+			const name = event.target.name;
+			this.setState({
+				[name]:event.target.value
+			});
+	}
 
 	componentDidMount() {
-		this.loadExercise(this.props.slug);
-
+		this.loadExercise();
 	}
 
 	shouldComponentUpdate(nextProps) {
 		if (nextProps.slug !== this.props.slug) {
-			this.loadExercise(nextProps.slug);
+			this.loadExercise();
 		}
 		return true;
 	}
 
 	async loadExercise() {
-		let value;
-		let response;
+		let value, response;
+
 		try {
 			value = await localforage.getItem('authResponse');
 			if (!value) {
@@ -156,7 +228,7 @@ class CourseDetail extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
-		const { id, slug } = this.props;
+		const { id, slug, exercises } = this.props;
 		const { jwt } = value;
 		try {
 			response = (
@@ -166,18 +238,35 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
+		// gettuing exersise notes
+		const query = {
+			submissionUsers: 'current',
+			submissionState: 'all',
+		};
+
+		// get the exerciseId for the exercise
+		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+		const previousNotesData = await getExerciseSubmission(id , exerciseId);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
+
 		this.setState({
 			content,
 			prefetchedData: true,
+			notes:'',
+			previousNotesData:previousNotesData
 		});
 	}
 
 	render() {
+		// const
 		const {
 			classes, exercises, id, slug,
 		} = this.props;
-		const { prefetchedData, content } = this.state;
+
+		const {reviewType, submissionType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
+		const reviewrs = ['peer', 'facilitator', 'automatic']
+
+		const { prefetchedData, content, previousNotesData } = this.state;
 		if (!prefetchedData) {
 			return (
 				<div className={classes.loaderRoot}>
@@ -187,6 +276,10 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c2f1ff175afd70f8bce62649687fbabf2d34b752
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
@@ -194,6 +287,55 @@ class CourseDetail extends React.Component {
 						{/* eslint-disable-next-line react/no-danger */}
 						<div id='course' dangerouslySetInnerHTML={{ __html: this.updateLinks(md.render(content)) }}/>
 					</Card>
+					<br/>
+						{/*previously submitted notes*/}
+						{
+							(previousNotesData[0])?
+							<Card className={classes.content}>
+									<b>Apke phele ka submission :</b>
+									<div className={classes.submitBox}>
+										{previousNotesData[0].submitterNotes}
+									</div>
+							</Card>
+							:null
+						}
+						{
+              /*submission form*/
+            }
+						{
+							// TODO: Input box should be generated based on submissionType
+						}
+						{
+							(reviewrs.includes(reviewType) && submissionType != null)?
+							<form autoComplete='off'>
+								<TextField
+									multiline={true}
+									fullWidth
+									value={this.state.notes}
+									label={'Exercise Submission'}
+									onChange={this.handleChange}
+									name='notes'
+								/>
+								<br />
+								<br />
+								<Button
+									variant="raised"
+									color="secondary"
+									className={classes.submitExercise}
+									onClick={this.submitExercise}
+								>
+									Submit Exercise
+								</Button>
+							</form>
+							:null
+						}
+					{/*link to github page*/}
+					<div className={classes.editLink}>
+					  <a href={githubLink} target='_blank'>
+							Edit
+						</a> on GitHub
+					</div>
+
 					<div className={classes.navigationBtnDiv}>
 						{
 							previousSlug?
@@ -211,11 +353,11 @@ class CourseDetail extends React.Component {
 						{
 							nextSlug?
 							<Button
-              	className={classes.floatButtonRight}
+        				className={classes.floatButtonRight}
 								variant="raised"
 								color="primary"
 								onClick={() => {
-									navigateToExercise(id)(nextSlug);
+										navigateToExercise(id)(nextSlug);
 								}}
 								>
 								Next

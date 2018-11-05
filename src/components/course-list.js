@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
+import Router from 'next/router';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
