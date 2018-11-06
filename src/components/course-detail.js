@@ -9,6 +9,7 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import ReactUtterences from "react-utterances";
 import { fetchApi } from '../services/api';
 import {
@@ -62,11 +63,7 @@ const styles = theme => {
 		}
 	},
 	utterances: {
-<<<<<<< HEAD
 		width: '100%',
-=======
-		width: '100%'
->>>>>>> c2f1ff175afd70f8bce62649687fbabf2d34b752
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
@@ -276,10 +273,6 @@ class CourseDetail extends React.Component {
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c2f1ff175afd70f8bce62649687fbabf2d34b752
 		return (
 			<Grid container spacing={0} className={classes.root}>
 				<Grid item xs={12} md={8} className={classes.content}>
