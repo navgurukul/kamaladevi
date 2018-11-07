@@ -63,7 +63,7 @@ const styles = theme => {
 		}
 	},
 	utterances: {
-		width: '100%'
+		width: '100%',
 	},
 	floatButtonRight:{
 		marginLeft:'auto'
@@ -272,7 +272,6 @@ class CourseDetail extends React.Component {
 		}
 		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
 		const nextSlug = getSlugOfNextCourse(slug, exercises);
-
 
 		return (
 			<Grid container spacing={0} className={classes.root}>

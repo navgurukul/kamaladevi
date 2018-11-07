@@ -60,6 +60,13 @@ const styles = theme => ({
 		},
 		cursor:'pointer'
 	},
+	imageContainer:{
+		display: 'flex',
+	},
+	image:{
+		paddingTop:theme.spacing.unit * 3,
+		marginLeft: theme.spacing.unit * 1,
+	},
 	cardGrid: {
 		marginBottom: 10,
 	},
@@ -77,7 +84,7 @@ const styles = theme => ({
 		justifyContent: 'center',
 	},
 	progress: {
-		margin: theme.spacing.unit * 2,
+		margin: theme.spacing.unit * 1,
 	},
 });
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
@@ -202,15 +209,17 @@ class CourseList extends React.Component {
 											? classes.cardMarginRightBot
 											: classes.cardMarginLeftBot}
 											>
-											<CardContent>
-												<Typography variant="headline" component="h2">
-													{value.name}
-												</Typography>
-												<Typography color="textSecondary">
-													{value.shortDescription}
-												</Typography>
-											</CardContent>
-
+											<div className={classes.imageContainer} >
+												<img className={classes.image} src={value.logo} width="30" height="55" />
+												<CardContent>
+													<Typography variant="headline" component="h2">
+														{value.name}
+													</Typography>
+													<Typography color="textSecondary">
+														{value.shortDescription}
+													</Typography>
+												</CardContent>
+											</div>
 										</Card>
 								</Link>
 							</Grid>
