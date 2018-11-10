@@ -7,8 +7,8 @@ import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
-import PeerReviewSidenav from './peer-review-sidenav';
-import PeerReviewDetails from './peer-review-details';
+import PeerReviewSidenav from "./peer-review-sidenav";
+import PeerReviewDetails from "./peer-review-details";
 
 const drawerWidth = 240;
 
@@ -25,53 +25,54 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
     marginTop: "60px",
-    [theme.breakpoints.up("md")]: { 
+    [theme.breakpoints.up("md")]: {
       position: "relative",
       marginTop: "0px"
     }
   }
 });
 
-
 class Peereview extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			peer:[],
-			mobileOpen: false
-		};
-	}
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      peer: [],
+      mobileOpen: false
+    };
+  }
+
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
   async componentDidMount() {
-    let value,response
-		try {
-			value = await localforage.getItem('authResponse');
-			if (!value) {
-				// No access tokens saved
-				Router.replace('/');
-				return;
-			}
-		} catch (e) {
-			console.log(e)
-		}
+    let value, response;
+    try {
+      value = await localforage.getItem("authResponse");
+      if (!value) {
+        // No access tokens saved
+        Router.replace("/");
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+    }
     const { jwt } = value;
-		try {
-			response = (
-				await fetchApi(`/assignments/peerReview`, {}, { Authorization: jwt })
+    try {
+      response = await fetchApi(
+        `/assignments/peerReview`,
+        {},
+        { Authorization: jwt }
       );
-      const data = await response.data;
+      const data = await response.data.data;
       this.setState({ peer: data });
-      console.log(data)
-		} catch (e) {
-			console.log(e)
-		}
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
   render() {
-  const { classes } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -90,7 +91,7 @@ class Peereview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer}/>
+            <PeerReviewSidenav peer={this.state.peer} />
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -101,11 +102,11 @@ class Peereview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer}/>
+            <PeerReviewSidenav peer={this.state.peer} />
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <PeerReviewDetails/>
+          <PeerReviewDetails />
         </main>
       </div>
     );
@@ -113,8 +114,7 @@ class Peereview extends React.Component {
 }
 
 Peereview.propTypes = {
-    classes: PropTypes.object.isRequired
-  };
-  
-  export default withStyles(styles)(Peereview);
-  
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(Peereview);

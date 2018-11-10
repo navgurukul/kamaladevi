@@ -26,13 +26,13 @@ function PeerReviewSidenav(props) {
   console.log(props)
   return (
     <Card className={classes.blocks}>
-      {/* {props.peer.map((value, key) => (
+      {props.peer.map((value, key) => (
         <CardContent key={value.id}>
           <Typography className={classes.cardText}>{value.name}</Typography>
           <Typography>June 29, 2018</Typography>
           <Typography className={classes.studentName}>Komal Bhatt</Typography>
         </CardContent>
-      ))} */}
+      ))} 
     </Card>
   );
 }

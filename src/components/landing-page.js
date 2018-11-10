@@ -65,14 +65,14 @@ class LandingPage extends React.Component {
 		});
 
 
-			// Show loader if auth is success, and waiting for Router to take to home
-			// if (this.state.loading) {
-			// 	return (
-			// 		<div className={classes.root}>
-			// 			<CircularProgress className={classes.progress} size={50} />
-			// 		</div>
-			// 	);
-			// }
+		// Show loader if auth is success, and waiting for Router to take to home
+		// if (this.state.loading) {
+		// 	return (
+		// 		<div className={classes.root}>
+		// 			<CircularProgress className={classes.progress} size={50} />
+		// 		</div>
+		// 	);
+		// }
 
 
 		return (
