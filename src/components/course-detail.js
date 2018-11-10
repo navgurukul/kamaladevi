@@ -221,7 +221,7 @@ class CourseDetail extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
-		// gettuing exersise notes
+		// getting exersise notes
 		const query = {
 			submissionUsers: 'current',
 			submissionState: 'all',

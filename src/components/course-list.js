@@ -25,7 +25,7 @@ const styles = theme => ({
 	root: {
 		display: 'flex',
 		justifyContent: 'center',
-		paddingBottom: 50,
+		paddingBottom: theme.spacing.unit * 5,
 	},
 	rootContent: {
 		paddingTop: theme.spacing.unit * 5,

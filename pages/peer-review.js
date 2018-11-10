@@ -3,12 +3,12 @@
 import React from 'react';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import PeerReviewSidenav from '../src/components/peer-review-sidenav';
+import Peereview from '../src/components/peer-review/Peer-Review';
+
 
 const PeerReview = () => (
 	<div>
-		<Header />
-    <PeerReviewSidenav />
+    	<Peereview />
 	</div>
 
 );
