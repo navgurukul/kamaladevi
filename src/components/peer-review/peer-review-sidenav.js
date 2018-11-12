@@ -23,17 +23,26 @@ const styles = {
 function PeerReviewSidenav(props) {
   const { classes } = props;
   console.log("PeerReviewSideNav");
-  console.log(props)
+  console.log('peer',props.peer);
   return (
-    <Card className={classes.blocks}>
+    <React.Fragment>
       {props.peer.map((value, key) => (
-        <CardContent key={value.id}>
-          <Typography className={classes.cardText}>{value.name}</Typography>
-          <Typography>June 29, 2018</Typography>
-          <Typography className={classes.studentName}>Komal Bhatt</Typography>
-        </CardContent>
-      ))} 
-    </Card>
+        <Card className={classes.blocks} key={value.id} onClick={PeerReviewDetails}>
+              {/* {console.log(this.state.peer)} */}
+              {console.log(PeerReviewDetails)}
+
+          <CardContent>
+            <Typography className={classes.cardText}>
+              {value.exerciseName}
+            </Typography>
+            <Typography>{value.submittedAt}</Typography>
+            <Typography className={classes.studentName}>
+              {value.submitterName}
+            </Typography>
+          </CardContent>
+        </Card>
+      ))}
+    </React.Fragment>
   );
 }
 

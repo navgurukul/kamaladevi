@@ -106,7 +106,7 @@ class Peereview extends React.Component {
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <PeerReviewDetails />
+          <PeerReviewDetails peer={this.state.peer}/>
         </main>
       </div>
     );

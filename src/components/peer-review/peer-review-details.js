@@ -26,13 +26,21 @@ const styles = {
 function PeerReviewDetails(props) {
     const { classes } = props;
     return (
-      <Card>
+      <React.Fragment>
+      {props.peer.map((value,key)=>(
+      <Card key={value.id}>
         <CardContent>
           <Typography className={classes.pendingReviewHeading}>
-            "Question 9" assignments ko approve karo
+            {value.exerciseName}
+          </Typography>
+          <Typography className={classes.pendingReviewHeading}>
+            assignments ko approve karo
           </Typography>
           <Typography className={classes.pendingReviewHeading}>
             Notes
+          </Typography>
+          <Typography className={classes.pendingReviewHeading}>
+          {value.submitterNotes}
           </Typography>
           <Typography>
             Apna accept ya reject karne ka reason neeche diye gaye text box mein
@@ -55,6 +63,8 @@ function PeerReviewDetails(props) {
           </Button>
         </CardContent>
       </Card>
+       ))}
+      </React.Fragment>
     );
 }
 
