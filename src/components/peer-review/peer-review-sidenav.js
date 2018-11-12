@@ -27,9 +27,9 @@ function PeerReviewSidenav(props) {
   return (
     <React.Fragment>
       {props.peer.map((value, key) => (
-        <Card className={classes.blocks} key={value.id} onClick={PeerReviewDetails}>
+        <Card className={classes.blocks} key={value.id} >
               {/* {console.log(this.state.peer)} */}
-              {console.log(PeerReviewDetails)}
+              {/* {console.log(PeerReviewDetails)} */}
 
           <CardContent>
             <Typography className={classes.cardText}>

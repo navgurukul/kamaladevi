@@ -110,7 +110,7 @@ class Peereview extends React.Component {
         </main>
       </div>
     );
-  }
+  }x  
 }
 
 Peereview.propTypes = {
