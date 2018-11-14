@@ -159,7 +159,8 @@ class CourseDetail extends React.Component {
 			return notes.length <= 1500;
 		}
 		else if (submissionType == 'url'){
-			return 	notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+			let urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+			return 	notes.match(urlRegex) != null;
 		}
 		return true
 	}
@@ -292,12 +293,8 @@ class CourseDetail extends React.Component {
 							</Card>
 							:null
 						}
-						{
-              /*submission form*/
-            }
-						{
-							// TODO: Input box should be generated based on submissionType
-						}
+						{/*submission form*/}
+						{/* TODO: Input box should be generated based on submissionType*/}
 						{
 							(reviewrs.includes(reviewType) && submissionType != null)?
 							<form autoComplete='off'>
