@@ -260,9 +260,9 @@ class CourseDetail extends React.Component {
 		const {
 			classes, exercises, id, slug,
 		} = this.props;
-
+		const repo = 'navgurukul/newton';
 		const {reviewType, submissionType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
-		const reviewrs = ['peer', 'facilitator', 'automatic']
+		const reviewrs = ['peer', 'facilitator', 'automatic'];
 
 		const { prefetchedData, content, previousNotesData } = this.state;
 		if (!prefetchedData) {
@@ -355,7 +355,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
-					<ReactUtterences className={classes.utterances} repo={'navgurukul/newton'} type={'title'} />
+					<ReactUtterences className={classes.utterances} repo={repo} type={'title'} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
