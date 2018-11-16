@@ -20,30 +20,36 @@ const styles = {
   }
 };
 
-function PeerReviewSidenav(props) {
-  const { classes } = props;
-  console.log("PeerReviewSideNav");
-  console.log('peer',props.peer);
-  return (
-    <React.Fragment>
-      {props.peer.map((value, key) => (
-        <Card className={classes.blocks} key={value.id} >
-              {/* {console.log(this.state.peer)} */}
-              {/* {console.log(PeerReviewDetails)} */}
+class PeerReviewSidenav extends React.Component {
+  constructor(){
+    super();
+    this.state={
+    }
+  }
 
-          <CardContent>
-            <Typography className={classes.cardText}>
-              {value.exerciseName}
-            </Typography>
-            <Typography>{value.submittedAt}</Typography>
-            <Typography className={classes.studentName}>
-              {value.submitterName}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
-    </React.Fragment>
-  );
+
+  render() {
+    const { classes, peer } = this.props;
+    console.log("PeerReviewSideNav");
+    console.log("peer",peer);
+    return (
+      <React.Fragment>
+        {peer.map((value, key) => (
+          <Card className={classes.blocks} key={value.id}>
+            <CardContent>
+              <Typography className={classes.cardText}>
+                {value.exerciseName}
+              </Typography>
+              <Typography>{value.submittedAt}</Typography>
+              <Typography className={classes.studentName}>
+                {value.submitterName}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </React.Fragment>
+    );
+  }
 }
 
 PeerReviewSidenav.propTypes = {

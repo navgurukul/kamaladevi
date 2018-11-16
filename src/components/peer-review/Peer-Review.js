@@ -37,8 +37,14 @@ class Peereview extends React.Component {
     super(props);
     this.state = {
       peer: [],
-      mobileOpen: false
+      mobileOpen: false,
+      selectedCard:{}
     };
+  }
+  updatedSelectedCard = (value) => {
+    this.setState({
+      selectedCard:value
+    })
   }
 
   handleDrawerToggle = () => {
@@ -71,6 +77,7 @@ class Peereview extends React.Component {
       console.log(e);
     }
   }
+  
   render() {
     const { classes } = this.props;
 
@@ -106,7 +113,7 @@ class Peereview extends React.Component {
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <PeerReviewDetails peer={this.state.peer}/>
+          <PeerReviewDetails peer={this.state.peer} selectedCard/>
         </main>
       </div>
     );

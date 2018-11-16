@@ -8,6 +8,7 @@ import Peereview from '../src/components/peer-review/Peer-Review';
 
 const PeerReview = () => (
 	<div>
+		<Header/>
     	<Peereview />
 	</div>
 
