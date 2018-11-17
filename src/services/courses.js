@@ -27,20 +27,20 @@ export const addEnrolledCourses = (courseId) => {
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
-	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'put')
-			.then((response)=>{
+	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+			.then((response) => {
 					console.log(response);
+			})
+			.catch((error) => {
+					console.log(error);
 			});
 	});
 };
 
 export const saveCoursesSequence = (payload) => {
-	localforage.getItem('authResponse', (error, value)=>{
+	return localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
-	  fetchApi(`/courses/sequenceNum`, {courses: payload}, { Authorization: jwt }, 'post')
-			.then((response) => {
-				console.log(response);
-			});
+	  return fetchApi(`/courses/sequenceNum`, {"courses": payload}, { Authorization: jwt }, 'put')
 	});
 };
 
@@ -210,6 +210,13 @@ export const getSlugOfNextCourse = (slug, exercises) => {
 	}
 };
 
+export const sortSequenceNumOfCourses = courses => {
+	let sortedCourses = Array.from(courses);
+	sortedCourses.sort((a,b)=>{
+		return a.sequenceNum - b.sequenceNum;
+	});
+	return sortedCourses;
+}
 // Get slug of the previous course to navigate using next button
 export const getSlugOfPreviousCourse = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {

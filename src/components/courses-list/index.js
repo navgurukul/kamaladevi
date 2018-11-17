@@ -14,7 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../../services/api';
-import { setEnrolledCourses } from '../../services/courses';
+import { setEnrolledCourses, sortSequenceNumOfCourses } from '../../services/courses';
 
 import CourseListCategory from './course-list-category';
 import CourseListDragAndDrop from './course-list-dragdrop';
@@ -51,7 +51,7 @@ const styles = theme => ({
 	},
 	goBackButton:{
 		float:'left',
-		width: theme.spacing.unit * 15
+		width: theme.spacing.unit * 15,
 	},
 	courseSequenceEditRootContent:{
 		width:'40%',
@@ -79,6 +79,7 @@ class CourseList extends React.Component {
 			// For future uses
 			enrolledCourses: [],
 			facilitatingCourses: [],
+			isAdmin: false
 		};
 	}
 
@@ -94,13 +95,14 @@ class CourseList extends React.Component {
 				if (value === null) {
 					Router.replace('/');
 				} else {
-					const { jwt } = value;
+					const { jwt, user } = value;
 					console.log(value);
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
 							setEnrolledCourses(response.data);
 							this.setState({
 								prefetchedData: true,
+								isAdmin: user.isAdmin,
 								...response.data,
 							});
 						})
@@ -114,9 +116,13 @@ class CourseList extends React.Component {
 
 	render() {
 		const { classes } = this.props;
-		const isAdmin = true;
 		const {
-			availableCourses, enrolledCourses, facilitatingCourses, prefetchedData, editCourseSequence
+			availableCourses,
+			enrolledCourses,
+			facilitatingCourses,
+			prefetchedData,
+			editCourseSequence,
+			isAdmin
 		} = this.state;
 		if (!prefetchedData) {
 			return (
@@ -139,7 +145,7 @@ class CourseList extends React.Component {
 						</Button>
 						<CourseListDragAndDrop
 							headline={'Aapke courses'}
-							courses={[...availableCourses, ...enrolledCourses]}
+							courses={sortSequenceNumOfCourses([...availableCourses, ...enrolledCourses])}
 							paddingTop
 							/>
 					</div>
@@ -174,7 +180,7 @@ class CourseList extends React.Component {
 						enrolledCourses.length?
 						<CourseListCategory
 							headline={'Courses jis mein aap enrolled hai'}
-							courses={enrolledCourses}
+							courses={sortSequenceNumOfCourses(enrolledCourses)}
 							showProgress
 							/>
 						:''
@@ -191,7 +197,7 @@ class CourseList extends React.Component {
 						availableCourses.length?
 						<CourseListCategory
 						headline={'Aap yeh courses mein enroll kar skte hai'}
-						courses={availableCourses}
+						courses={sortSequenceNumOfCourses(availableCourses)}
 						paddingTop
 						/>
 						:''
@@ -202,7 +208,7 @@ class CourseList extends React.Component {
 						facilitatingCourses.length?
 						<CourseListCategory
 							headline={'Aap yeh courses ko facilitate kar rahe hai'}
-							courses={facilitatingCourses}
+							courses={sortSequenceNumOfCourses(facilitatingCourses)}
 							paddingTop
 							/>
 						:''

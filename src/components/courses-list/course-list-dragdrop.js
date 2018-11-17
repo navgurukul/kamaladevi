@@ -6,8 +6,11 @@ import localforage from 'localforage';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
+import CloseIcon from '@material-ui/icons/Close';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -40,6 +43,35 @@ const styles = theme => ({
 			wordWrap: 'break-word',
 		},
 	},
+	close: {
+	 padding: theme.spacing.unit,
+ 	},
+	cancelButton:{
+		float:'left',
+		minWidth : theme.spacing.unit * 25,
+		margin: '0',
+		top: 'auto',
+		right: 'auto',
+		bottom: theme.spacing.unit * 2,
+		left: theme.spacing.unit * 2,
+		position: 'fixed',
+		[theme.breakpoints.down('sm')]: {
+			minWidth : theme.spacing.unit * 15,
+		},
+	},
+	saveButton:{
+		float:'right',
+		minWidth : theme.spacing.unit * 25,
+		margin: '0',
+		top: 'auto',
+		right: theme.spacing.unit * 2,
+		bottom: theme.spacing.unit * 2,
+		left: 'auto',
+		position: 'fixed',
+		[theme.breakpoints.down('sm')]: {
+			minWidth : theme.spacing.unit * 15,
+		},
+	}
 });
 
 const reorder = (courses, startIndex, endIndex) => {
@@ -49,24 +81,17 @@ const reorder = (courses, startIndex, endIndex) => {
   return newCourseSequence;
 };
 
+
 class CourseListDragAndDrop extends React.Component {
 	constructor(props){
 		super(props);
 		const { courses } = this.props;
-		const sortedCourses = this.sortCoursesToSequenceNum(courses);
 		this.state = {
-			originalCoursesSequence : sortedCourses,
-			currentCoursesSequence : sortedCourses,
+			originalCoursesSequence : courses,
+			currentCoursesSequence : courses,
+			isSequenceUpdated:false,
+			notifcationMessage:'',
 		}
-	}
-
-	sortCoursesToSequenceNum = courses => {
-		let sortedCourses = Array.from(courses);
-		sortedCourses.sort((a,b)=>{
-			return a.sequenceNum - b.sequenceNum;
-		});
-		console.log(sortedCourses);
-		return sortedCourses;
 	}
 
 	extractSequenceNum = (courses) => {
@@ -83,6 +108,7 @@ class CourseListDragAndDrop extends React.Component {
 		return payload
 	}
 
+	//Resets the sequence
 	cancelUpdate = () => {
 		const {originalCoursesSequence} = this.state;
 		this.setState({
@@ -90,15 +116,37 @@ class CourseListDragAndDrop extends React.Component {
 		})
 	}
 
+	// Saves the current sequence
 	saveUpdate = () => {
 		const { currentCoursesSequence } = this.state;
 		let payload = this.extractSequenceNum(currentCoursesSequence)
 		// call the api and update the course sequence
-		saveCoursesSequence(payload);
-		this.setState({shouldSaveUpdate: false});
-
+		saveCoursesSequence(payload)
+			.then((response) => {
+					// show data saved in backend.
+					this.setState({
+						isSequenceUpdated:true,
+						notifcationMessage:'Sequence Saved Successfully',
+					});
+			})
+			.catch((error) => {
+					// got some error show it in sanackbar.
+					console.log(error);
+					const notifcationMessage = window.navigator.onLine?
+									'Internet connected nhi hai!':'Ek error Ayi hue hai. Console check kare!';
+					this.setState({
+						isSequenceUpdated:false,
+						notifcationMessage,
+					});
+			});
 	}
 
+	handleCloseSaveNotification = () => {
+		this.setState({
+			isSequenceUpdated: false,
+			notifcationMessage: ''
+		})
+	}
 
 	updateSequenceNumber = courses => {
 		// update sequence
@@ -139,19 +187,25 @@ class CourseListDragAndDrop extends React.Component {
 				showProgress,
 				paddingTop
 			} = this.props;
-			const { currentCoursesSequence } = this.state;
+
+			const {
+				currentCoursesSequence,
+				isSequenceUpdated,
+				notifcationMessage
+			} = this.state;
+
 			return (
 				<div className={classes.root}>
 					<Button
-						variant="outlined"
+						variant="raised"
 						color="primary"
-						className={classes.cancelbutton}
+						className={classes.cancelButton}
 						onClick={() => this.cancelUpdate()}
 						>
 						Cancel
 					</Button>
 					<Button
-						variant="outlined"
+						variant="raised"
 						color="primary"
 						className={classes.saveButton}
 						onClick={() => this.saveUpdate()}
@@ -194,6 +248,24 @@ class CourseListDragAndDrop extends React.Component {
 									</Droppable>
 								</Grid>
 					</DragDropContext>
+					<Snackbar
+						anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+						open={isSequenceUpdated}
+						message={notifcationMessage}
+						autoHideDuration={6000}
+						onClose={this.handleCloseSnackBar}
+						action={[
+							<IconButton
+								key="close"
+								aria-label="Close"
+								color="inherit"
+								className={classes.close}
+								onClick={this.handleCloseSaveNotification}
+							>
+							<CloseIcon />
+							</IconButton>
+						]}
+					/>
 				</div>
 		);
 	}
