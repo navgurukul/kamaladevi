@@ -27,9 +27,19 @@ export const addEnrolledCourses = (courseId) => {
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
-	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'put')
 			.then((response)=>{
 					console.log(response);
+			});
+	});
+};
+
+export const saveCoursesSequence = (payload) => {
+	localforage.getItem('authResponse', (error, value)=>{
+		const { jwt } =  value;
+	  fetchApi(`/courses/sequenceNum`, {courses: payload}, { Authorization: jwt }, 'post')
+			.then((response) => {
+				console.log(response);
 			});
 	});
 };

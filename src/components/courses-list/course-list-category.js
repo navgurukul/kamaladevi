@@ -21,7 +21,33 @@ const styles = theme => ({
 	},
 	avbCoursesContainer: {
 			paddingTop: theme.spacing.unit * 5,
-		},
+	},
+	cardMarginRightBot: {
+    marginRight: 25,
+		minHeight:theme.spacing.unit * 16,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    cursor:'pointer',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 2.5,
+			wordWrap: 'break-word',
+    },
+  },
+  cardMarginLeftBot: {
+    marginLeft: 25,
+		minHeight:theme.spacing.unit * 16,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+		cursor:'pointer',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 2.5,
+			wordWrap: 'break-word',
+    },
+  }
 });
 
 const CourseListCategory = (props) => {
@@ -36,14 +62,21 @@ const CourseListCategory = (props) => {
 		<div className={classes.root}>
 			<Grid container spacing={0} className={ paddingTop?classes.avbCoursesContainer:'' }>
 				<Grid item xs={12} className={classes.containerHeadingItem}>
-					{courses.length ? (
-						<Typography variant="headline" component="h2" align="center" gutterBottom>
-							{headline}
-						</Typography>
-					) : ''}
+					<Typography variant="headline" component="h2" align="center" gutterBottom>
+						{headline}
+					</Typography>
 				</Grid>
 				{courses.map((value, key) => (
-					<CourseListCard key={value.id} value={value} index={key} showProgress={showProgress} />
+					<CourseListCard
+						key={value.id}
+						value={value}
+						index={key}
+						showProgress={showProgress}
+						cardClass={
+              (key % 2 === 0)
+                ? classes.cardMarginRightBot
+                : classes.cardMarginLeftBot}
+						/>
 				))}
 			</Grid>
 		</div>

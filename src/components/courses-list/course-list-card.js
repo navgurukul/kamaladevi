@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+
 import { withStyles } from '@material-ui/core/styles';
 
 
@@ -58,9 +59,16 @@ const styles = theme => ({
 });
 
 const CourseListCard = (props) => {
-	const { classes, value, showProgress, index } = props;
+	const {
+				classes,
+				value,
+				showProgress,
+				index,
+				cardClass,
+				gridSize,
+			} = props;
 	return (
-      <Grid item xs={6} className={classes.root}>
+      <Grid item xs={gridSize} className={classes.root}>
         <Link
           href={{
             pathname: '/course',
@@ -69,35 +77,32 @@ const CourseListCard = (props) => {
           >
           <Card
             variant="raised"
-            className={
-              (index % 2 === 0)
-                ? classes.cardMarginRightBot
-                : classes.cardMarginLeftBot}
+						className={cardClass}
           >
 					<Grid container spacing={16}>
-						<Grid	item xs={2} sm md={2}>
-							<img className={classes.image} src={value.logo} />
-						</Grid>
-						<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
-							<CardContent>
-								<Typography variant="headline" component="h2">
-									{value.name}
-								</Typography>
-								<Typography color="textSecondary">
-									{value.shortDescription}
-								</Typography>
-								{
-									showProgress?
-									<div className={classes.enrolledProgress}>
-										<LinearProgress
-											variant="determinate"
-											value={(value.completedSubmissions * 100) / value.totalExercises}
-											/>
-									</div>
-									:null
-								}
-							</CardContent>
-						</Grid>
+							<Grid	item xs={2} sm md={2}>
+									<img className={classes.image} src={value.logo} />
+							</Grid>
+							<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
+									<CardContent>
+											<Typography variant="headline" component="h2">
+												{value.name}
+											</Typography>
+											<Typography color="textSecondary">
+												{value.shortDescription}
+											</Typography>
+											{
+												showProgress?
+												<div className={classes.enrolledProgress}>
+													<LinearProgress
+														variant="determinate"
+														value={(value.completedSubmissions * 100) / value.totalExercises}
+														/>
+												</div>
+												:null
+											}
+									</CardContent>
+							</Grid>
 					</Grid>
           </Card>
         </Link>
@@ -110,10 +115,13 @@ CourseListCard.propTypes = {
 	value: PropTypes.object.isRequired,
 	showProgress: PropTypes.bool,
 	index: PropTypes.number.isRequired,
+	cardClass: PropTypes.string.isRequired,
+	gridSize: PropTypes.number
 };
 
 
 CourseListCard.defaultProps = {
 	showProgress: false,
+	gridSize: 6
 }
 export default withStyles(styles)(CourseListCard);
