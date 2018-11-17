@@ -249,7 +249,7 @@ class CourseListDragAndDrop extends React.Component {
 								</Grid>
 					</DragDropContext>
 					<Snackbar
-						anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+						anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
 						open={isSequenceUpdated}
 						message={notifcationMessage}
 						autoHideDuration={6000}
