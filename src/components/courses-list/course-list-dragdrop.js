@@ -11,12 +11,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 import { withStyles } from '@material-ui/core/styles';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import CourseListCard from './course-list-card';
+import CourseDeleteAlert from './course-delete-alert';
 import { saveCoursesSequence } from '../../services/courses';
 
 
@@ -30,10 +33,22 @@ const styles = theme => ({
 	avbCoursesContainer: {
 			paddingTop: theme.spacing.unit * 5,
 	},
-	cardMargin: {
+	deleteButton:{
+		margin: theme.spacing.unit * 3,
+	},
+	bgDelete:{
+		background:'red',
+	},
+	cardSize:{
 		width:'100%',
+	},
+	cardSizeOnDrag:{
+		width:'40%'
+	},
+	cardMargin: {
 		height: '100%',
 		display: 'flex',
+		minHeight: theme.spacing.unit * 17,
 		flexDirection: 'column',
 		justifyContent: 'space-between',
 		cursor:'pointer',
@@ -43,17 +58,22 @@ const styles = theme => ({
 			wordWrap: 'break-word',
 		},
 	},
+	displayNone:{
+		display:'none'
+	},
 	close: {
 	 padding: theme.spacing.unit,
  	},
 	cancelButton:{
 		float:'left',
-		minWidth : theme.spacing.unit * 25,
-		margin: '0',
-		top: 'auto',
 		right: 'auto',
 		bottom: theme.spacing.unit * 2,
 		left: theme.spacing.unit * 2,
+	},
+	floatButton:{
+		minWidth : theme.spacing.unit * 25,
+		margin: '0',
+		top: 'auto',
 		position: 'fixed',
 		[theme.breakpoints.down('sm')]: {
 			minWidth : theme.spacing.unit * 15,
@@ -61,16 +81,9 @@ const styles = theme => ({
 	},
 	saveButton:{
 		float:'right',
-		minWidth : theme.spacing.unit * 25,
-		margin: '0',
-		top: 'auto',
 		right: theme.spacing.unit * 2,
 		bottom: theme.spacing.unit * 2,
 		left: 'auto',
-		position: 'fixed',
-		[theme.breakpoints.down('sm')]: {
-			minWidth : theme.spacing.unit * 15,
-		},
 	}
 });
 
@@ -80,6 +93,16 @@ const reorder = (courses, startIndex, endIndex) => {
   newCourseSequence.splice(endIndex, 0, removed);
   return newCourseSequence;
 };
+
+const remove = (courses, index) => {
+	const newCourseSequence =  Array.from(courses);
+	const [removed] = newCourseSequence.splice(index, 1);
+
+	return {
+		newCourseSequence,
+		removed
+	};
+}
 
 
 class CourseListDragAndDrop extends React.Component {
@@ -91,6 +114,9 @@ class CourseListDragAndDrop extends React.Component {
 			currentCoursesSequence : courses,
 			isSequenceUpdated:false,
 			notifcationMessage:'',
+			deletableCourseIndex: null,
+			showConfirmDeleteBox:false,
+			deleteButtonShow:false,
 		}
 	}
 
@@ -104,9 +130,9 @@ class CourseListDragAndDrop extends React.Component {
 				sequenceNum
 			});
 		}
-		console.log(payload);
 		return payload
 	}
+
 
 	//Resets the sequence
 	cancelUpdate = () => {
@@ -133,12 +159,40 @@ class CourseListDragAndDrop extends React.Component {
 					// got some error show it in sanackbar.
 					console.log(error);
 					const notifcationMessage = window.navigator.onLine?
-									'Internet connected nhi hai!':'Ek error Ayi hue hai. Console check kare!';
+									'Internet connected nhi hai!':
+									'Ek error Ayi hue hai. Console check kare!';
 					this.setState({
-						isSequenceUpdated:false,
+						isSequenceUpdated:true,
 						notifcationMessage,
 					});
 			});
+	}
+
+	// delete a course here
+	deleteCourse = () => {
+		const { deletableCourseIndex, currentCoursesSequence } = this.state;
+		const {
+						newCourseSequence,
+						removed,
+					} = remove(currentCoursesSequence,deletableCourseIndex);
+		// call the api with the id
+		// call update the main course
+		// update the state with new courses
+		const notifcationMessage = `${removed.name} course deleted.`
+		this.setState({
+			currentCoursesSequence: newCourseSequence,
+			deletableCourseIndex: null,
+			showConfirmDeleteBox:false,
+			isSequenceUpdated:true,
+			notifcationMessage,
+		})
+	}
+
+	cancelCourseDelete = () => {
+		this.setState({
+			deletableCourseIndex: null,
+			showConfirmDeleteBox:false
+		})
 	}
 
 	handleCloseSaveNotification = () => {
@@ -157,26 +211,42 @@ class CourseListDragAndDrop extends React.Component {
 		return updatedCourse;
 	}
 
+
+	toggleCourseDeleteButton = () => {
+		this.setState((prevState) => {
+			return {
+				deleteButtonShow:!prevState.deleteButtonShow
+			}
+		});
+	}
+
 	onDragEnd = result => {
-			if (!result.destination) {
+		if (!result.destination) {
       	return;
     	}
 
-			if (result.source.index === result.destination.index){
-				return;
-			}
-
-	    let newCourseSequence = reorder(
-	      this.state.currentCoursesSequence,
-	      result.source.index,
-	      result.destination.index
-	    );
-
-			newCourseSequence = this.updateSequenceNumber(newCourseSequence);
-
+		if (result.source.index === result.destination.index){
+			return;
+		}
+		if (result.destination.droppableId === 'delete'){
 			this.setState({
-	      currentCoursesSequence: newCourseSequence,
-	    });
+				deletableCourseIndex: result.source.index,
+				showConfirmDeleteBox:true
+			})
+			return;
+		}
+
+    let newCourseSequence = reorder(
+      this.state.currentCoursesSequence,
+      result.source.index,
+      result.destination.index
+    );
+
+		newCourseSequence = this.updateSequenceNumber(newCourseSequence);
+
+		this.setState({
+      currentCoursesSequence: newCourseSequence,
+    });
 	}
 
 	render(){
@@ -191,15 +261,22 @@ class CourseListDragAndDrop extends React.Component {
 			const {
 				currentCoursesSequence,
 				isSequenceUpdated,
-				notifcationMessage
+				notifcationMessage,
+				showConfirmDeleteBox,
+				deleteButtonShow,
+				deletableCourseIndex
 			} = this.state;
 
 			return (
-				<div className={classes.root}>
+			<div className={classes.root}>
+				<DragDropContext
+					onDragEnd={this.onDragEnd}
+
+					>
 					<Button
 						variant="raised"
 						color="primary"
-						className={classes.cancelButton}
+						className={`${classes.cancelButton} ${classes.floatButton}`}
 						onClick={() => this.cancelUpdate()}
 						>
 						Cancel
@@ -207,53 +284,93 @@ class CourseListDragAndDrop extends React.Component {
 					<Button
 						variant="raised"
 						color="primary"
-						className={classes.saveButton}
+						className={`${classes.saveButton} ${classes.floatButton}`}
 						onClick={() => this.saveUpdate()}
 						>
 						Save
 					</Button>
-					<DragDropContext onDragEnd={this.onDragEnd}>
 								{/*Heading of the course*/}
-								<Grid className={ paddingTop?classes.avbCoursesContainer:'' }>
-									<Grid item xs={12} className={classes.containerHeadingItem}>
-										<Typography variant="headline" component="h2" align="center" gutterBottom>
-											{headline}
-										</Typography>
-									</Grid>
-									{/*Courses List and the box till where courses can  be drop*/}
-									<Droppable droppableId="courses">
-										{(provided) => (
-												<div ref={provided.innerRef} {...provided.droppableProps}	>
-													{/*Each courses that can be dragged*/}
-														{
-															currentCoursesSequence.map((value, key) => (
-																<Draggable key={value.id} draggableId={value.id} index={key}>
-								                  {(provided) => (
-								                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
-																			<CourseListCard
-																				key={value.id}
-																				value={value}
-																				index={key}
-																				gridSize={12}
-																				cardClass={classes.cardMargin}
-																				showProgress={showProgress}
-																				/>
-								                    </div>
-								                  )}
-								                </Draggable>
-															))
-														}
-												</div>
-											)}
-									</Droppable>
-								</Grid>
-					</DragDropContext>
+					<Grid className={ paddingTop?classes.avbCoursesContainer:'' }>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
+							<Typography
+								variant="headline"
+								component="h2"
+								align="center"
+								gutterBottom
+							>
+								{headline}
+							</Typography>
+						</Grid>
+						{/*Courses List and the box till where courses can  be drop*/}
+						<Droppable droppableId="courses">
+							{(provided) => (
+									<div ref={provided.innerRef} {...provided.droppableProps}	>
+										{/*Each courses that can be dragged*/}
+											{
+												currentCoursesSequence.map((value, key) => (
+													<Draggable
+														key={value.id}
+														draggableId={value.id}
+														index={key}
+														>
+					                  {(provided, snapshot) => {
+															let cardClass = `${classes.cardMargin} ${snapshot.isDragging?
+																classes.cardSizeOnDrag:
+																classes.cardSize} `
+															cardClass += `${snapshot.draggingOver === 'delete'?
+																						classes.bgDelete:''
+																				} `;
+															return (
+						                    <div
+																	ref={provided.innerRef}
+																	{...provided.draggableProps}
+																	{...provided.dragHandleProps}
+																	>
+
+																	<CourseListCard
+																		key={value.id}
+																		value={value}
+																		index={key}
+																		gridSize={12}
+																		cardClass={
+																			cardClass
+																		}
+																		showProgress={showProgress}
+																		/>
+						                    </div>
+					                  )}
+													}
+					                </Draggable>
+												))
+											}
+											{provided.placeholder}
+									</div>
+								)}
+						</Droppable>
+							<Droppable droppableId="delete">
+								{(provided, snapshot) => {
+									return (
+										<div
+											ref={provided.innerRef}
+											{...provided.droppableProps}
+											>
+												<Button
+													variant='fab'
+													className={classes.deleteButton}
+													>
+													<DeleteIcon/>
+												</Button>
+											{provided.placeholder}
+										</div>
+									)}}
+								</Droppable>
+					</Grid>
 					<Snackbar
 						anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
 						open={isSequenceUpdated}
 						message={notifcationMessage}
 						autoHideDuration={6000}
-						onClose={this.handleCloseSnackBar}
+						onClose={this.handleCloseSaveNotification}
 						action={[
 							<IconButton
 								key="close"
@@ -266,7 +383,19 @@ class CourseListDragAndDrop extends React.Component {
 							</IconButton>
 						]}
 					/>
-				</div>
+				</DragDropContext>
+				{
+					showConfirmDeleteBox?
+					<CourseDeleteAlert
+						open={showConfirmDeleteBox}
+						cancelCourseDelete={this.cancelCourseDelete}
+						deleteCourse={this.deleteCourse}
+						course={currentCoursesSequence[deletableCourseIndex]}
+						/>
+					:null
+				}
+				// Modal here as hidden
+			</div>
 		);
 	}
 }

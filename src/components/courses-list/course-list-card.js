@@ -17,30 +17,6 @@ const styles = theme => ({
 		marginBottom: 10,
 		flexGrow: 1,
 	},
-  cardMarginRightBot: {
-    marginRight: 25,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    cursor:'pointer',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 2.5,
-			wordWrap: 'break-word',
-    },
-  },
-  cardMarginLeftBot: {
-    marginLeft: 25,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 2.5,
-			wordWrap: 'break-word',
-    },
-    cursor:'pointer'
-  },
 	cardContent:{
 		display: 'inline',
 		width: '120%',

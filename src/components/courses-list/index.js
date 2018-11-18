@@ -83,20 +83,17 @@ class CourseList extends React.Component {
 		};
 	}
 
-	stopCourseSequenceEditing = () => {
-		this.setState({
-			editCourseSequence: false,
-		});
+	componentDidMount() {
+		this.getCoursesUpdated();
 	}
 
-	componentDidMount() {
+	getCoursesUpdated = () => {
 		localforage.getItem('authResponse', (error, value) => {
 			if (!error) {
 				if (value === null) {
 					Router.replace('/');
 				} else {
 					const { jwt, user } = value;
-					console.log(value);
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
 							setEnrolledCourses(response.data);
@@ -111,6 +108,12 @@ class CourseList extends React.Component {
 			} else {
 				// TODO: Handle error cases
 			}
+		});
+	}
+	stopCourseSequenceEditing = () => {
+		this.getCoursesUpdated();
+		this.setState({
+			editCourseSequence: false,
 		});
 	}
 
