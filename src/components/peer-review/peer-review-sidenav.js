@@ -5,7 +5,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
-const styles = {
+const styles = theme => ({
   cardText: {
     float: "left",
     paddingRight: "18px"
@@ -14,11 +14,15 @@ const styles = {
     marginTop: "20px"
   },
   blocks: {
-    marginLeft: "6px",
-    marginTop: "12px",
-    width: "225px"
+    marginLeft: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2,
+    width: theme.spacing.unit * 25,
+    minHeight: theme.spacing.unit * 15,
+    [theme.breakpoints.down('sm')]: {
+			height: theme.spacing.unit * 30
+		},
   }
-};
+});
 
 class PeerReviewSidenav extends React.Component {
   constructor(){
@@ -29,13 +33,11 @@ class PeerReviewSidenav extends React.Component {
 
 
   render() {
-    const { classes, peer } = this.props;
-    console.log("PeerReviewSideNav");
-    console.log("peer",peer);
+    const { classes, peer, updatedSelectedCard } = this.props;
     return (
       <React.Fragment>
         {peer.map((value, key) => (
-          <Card className={classes.blocks} key={value.id}>
+          <Card className={classes.blocks} onClick={() => updatedSelectedCard(value)} key={value.id}>
             <CardContent>
               <Typography className={classes.cardText}>
                 {value.exerciseName}

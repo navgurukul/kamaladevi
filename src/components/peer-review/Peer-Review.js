@@ -32,7 +32,7 @@ const styles = theme => ({
   }
 });
 
-class Peereview extends React.Component {
+class PeerReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,9 +41,9 @@ class Peereview extends React.Component {
       selectedCard:{}
     };
   }
-  updatedSelectedCard = (value) => {
+  updatedSelectedCard = (selectedCardDetail) => {
     this.setState({
-      selectedCard:value
+      selectedCard:selectedCardDetail
     })
   }
 
@@ -70,9 +70,11 @@ class Peereview extends React.Component {
         {},
         { Authorization: jwt }
       );
-      const data = await response.data.data;
-      this.setState({ peer: data });
-      console.log(data);
+      const peerReview = await response.data.data;
+      this.setState({ 
+        peer: peerReview,
+        selectedCard: peerReview[0]
+      });
     } catch (e) {
       console.log(e);
     }
@@ -98,7 +100,7 @@ class Peereview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer} />
+            <PeerReviewSidenav peer={this.state.peer} updatedSelectedCard={this.updatedSelectedCard} />
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -109,19 +111,19 @@ class Peereview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer} />
+            <PeerReviewSidenav peer={this.state.peer} updatedSelectedCard={this.updatedSelectedCard} />
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <PeerReviewDetails peer={this.state.peer} selectedCard/>
+          <PeerReviewDetails selectedCard={this.state.selectedCard}/>
         </main>
       </div>
     );
   }x  
 }
 
-Peereview.propTypes = {
+PeerReview.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Peereview);
+export default withStyles(styles)(PeerReview);

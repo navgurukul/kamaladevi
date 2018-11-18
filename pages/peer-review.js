@@ -3,15 +3,15 @@
 import React from 'react';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import Peereview from '../src/components/peer-review/Peer-Review';
+import PeerReview from '../src/components/peer-review/Peer-Review';
 
 
-const PeerReview = () => (
+const PeerReviewPage = () => (
 	<div>
 		<Header/>
-    	<Peereview />
+    	<PeerReview />
 	</div>
 
 );
 
-export default withRoot(PeerReview);
+export default withRoot(PeerReviewPage);

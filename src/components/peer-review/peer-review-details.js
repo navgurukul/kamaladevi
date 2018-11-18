@@ -26,11 +26,8 @@ const styles = {
 
 class PeerReviewDetails extends React.Component {
   render() {
-    const { classes, peer } = this.props;
+    const { classes, selectedCard:value } = this.props;
     return (
-      <React.Fragment>
-        {peer.map((value, key) => (
-          // openComp = prefetchedData => {
           <Card key={value.id}>
             <CardContent>
               <Typography className={classes.pendingReviewHeading}>
@@ -49,7 +46,6 @@ class PeerReviewDetails extends React.Component {
                 Apna accept ya reject karne ka reason neeche diye gaye text box
                 mein likhe
               </Typography>
-              <form className={classes.container} noValidate autoComplete="off">
                 <TextField
                   id="outlined-email-input"
                   label="feedback"
@@ -59,7 +55,7 @@ class PeerReviewDetails extends React.Component {
                   margin="normal"
                   variant="outlined"
                 />
-              </form>
+              <br></br>
               <Button
                 variant="contained"
                 color="primary"
@@ -76,8 +72,6 @@ class PeerReviewDetails extends React.Component {
               </Button>
             </CardContent>
           </Card>
-        ))}
-      </React.Fragment>
     );
   }
 }
