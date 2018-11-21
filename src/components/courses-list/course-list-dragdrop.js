@@ -23,7 +23,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import CourseListCard from './course-list-card';
 import CourseDeleteAlert from './course-delete-alert';
-import { saveCoursesSequence, deleteCourse } from '../../services/courses';
+import { saveCoursesSequence, deleteCourseAPI } from '../../services/courses';
 
 
 const styles = theme => {
@@ -201,7 +201,7 @@ class CourseListDragAndDrop extends React.Component {
 					} = remove(currentCoursesSequence,deletableCourseIndex);
 		let notifcationMessage;
 
-		deleteCourse(removed.id)
+		deleteCourseAPI(removed.id)
 			.then((response) => {
 					notifcationMessage = `${removed.name} course deleted.`
 					this.setState({
