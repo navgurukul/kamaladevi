@@ -149,7 +149,7 @@ class CourseList extends React.Component {
 				</div>);
 		}
 
-		if (editCourseSequence === false){
+		if (editCourseSequence === true){
 			return (
 				<div className={classes.root}>
 					<div className={`${classes.rootContent} ${classes.courseSequenceEditRootContent}`}>
