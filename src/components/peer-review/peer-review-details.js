@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import {reviewerFeedbackSubmission} from '../../services/courses';
 
 const styles = {
   pendingReviewHeading: {
@@ -25,6 +26,30 @@ const styles = {
 };
 
 class PeerReviewDetails extends React.Component {
+constructor(props) {
+  super(props);
+  this.state = {
+    reviewerFeedback: '',
+  }
+
+}
+
+inputHandler = (e) => {
+    this.setState({ reviewerFeedback : e.target.value }) 
+}
+
+validatingReviewerFeedbackField = () => {
+  if (this.state.reviewerFeedback == '') {
+    alert('Aap apna feedback dijiye!!!')
+  }
+}
+
+submitAssignment = (isApproved) => {
+this.validatingReviewerFeedbackField()
+reviewerFeedbackSubmission(this.state.reviewerFeedback,value.id)
+}
+
+
   render() {
     const { classes, selectedCard:value } = this.props;
     return (
@@ -54,12 +79,14 @@ class PeerReviewDetails extends React.Component {
                   name="text"
                   margin="normal"
                   variant="outlined"
+                  onChange={this.inputHandler}
                 />
               <br></br>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                onClick = {()=>this.submitAssignment(true)}
               >
                 Approve Assignment
               </Button>
@@ -67,8 +94,10 @@ class PeerReviewDetails extends React.Component {
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                onClick ={this.validatingReviewerFeedbackField}
+                onClick = {()=>this.submitAssignment(false)}
               >
-                Dis-Approve Assignment
+                Reject Assignment
               </Button>
             </CardContent>
           </Card>

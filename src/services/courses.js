@@ -34,6 +34,17 @@ export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	});
 };
 
+// this api call for submit the reviewer feedback
+export const reviewerFeedbackSubmission = async (reviewerFeedback,id)=>{
+	localforage.getItem('authResponse', (error,value)=>{
+		const {jwt} =value;
+	   fetchApi(`/assignments/peerReview/${id}`,{reviewerFeedback},{Authorization:jwt},'put')
+			.then((response)=>{
+				console.log(response);
+			})
+	})
+}
+
 // Make notes submission api call to get submitted notes
 export const getExerciseSubmission = async (courseId, exerciseId) => {
 	let responseData;
