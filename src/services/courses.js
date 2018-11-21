@@ -44,7 +44,7 @@ export const saveCoursesSequence = (payload) => {
 	});
 };
 
-export const deleteCourse = (courseId) => {
+export const deleteCourseAPI = (courseId) => {
 	return localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
 	  return fetchApi(`/courses/${courseId}/delete`, {}, { Authorization: jwt }, 'delete')

@@ -200,9 +200,7 @@ class CourseListDragAndDrop extends React.Component {
 						removed,
 					} = remove(currentCoursesSequence,deletableCourseIndex);
 		let notifcationMessage;
-		// call the api with the id
-		// call update the main course
-		// update the state with new courses
+
 		deleteCourse(removed.id)
 			.then((response) => {
 					notifcationMessage = `${removed.name} course deleted.`
