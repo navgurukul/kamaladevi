@@ -69,6 +69,21 @@ const styles = theme => ({
 });
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
+const navigateToEditMode = () => {
+	Router.push({
+		pathname:'/home',
+		query: {
+			edit: true
+		}
+	})
+};
+
+const navigateToHome = () => {
+	Router.push({
+		pathname:'/home'
+	})
+}
+
 class CourseList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -142,7 +157,10 @@ class CourseList extends React.Component {
 							variant="outlined"
 							color="primary"
 							className={classes.goBackButton}
-							onClick={this.stopCourseSequenceEditing}
+							onClick={() => {
+								this.stopCourseSequenceEditing();
+								navigateToHome();
+							}}
 							>
 							{'<< Go Back'}
 						</Button>
@@ -171,6 +189,7 @@ class CourseList extends React.Component {
 								className={classes.courseEditButton}
 								onClick={()=>{
 									this.setState({editCourseSequence:true});
+									navigateToEditMode();
 								}}
 								>
 								Edit Course Sequence

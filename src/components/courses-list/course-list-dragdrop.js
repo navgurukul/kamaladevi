@@ -5,14 +5,17 @@ import localforage from 'localforage';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
+import Switch from '@material-ui/core/Switch';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
+
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -33,8 +36,20 @@ const styles = theme => ({
 	avbCoursesContainer: {
 			paddingTop: theme.spacing.unit * 5,
 	},
+	deleteArea:{
+		padding: '170px 1%', // 12 and 15
+		marginTop: '-80px',
+		// border:'1px solid red',
+		position:'fixed',
+		[theme.breakpoints.down('sm')]: {
+			padding:'180px 6%'
+		},
+		[theme.breakpoints.down('xs')]: {
+			padding:'180px 2%'
+		},
+	},
 	deleteButton:{
-		margin: theme.spacing.unit * 3,
+		marginTop: -theme.spacing.unit * 4.5
 	},
 	bgDelete:{
 		background:'red',
@@ -43,7 +58,7 @@ const styles = theme => ({
 		width:'100%',
 	},
 	cardSizeOnDrag:{
-		width:'40%'
+		width:'100%'
 	},
 	cardMargin: {
 		height: '100%',
@@ -53,13 +68,13 @@ const styles = theme => ({
 		justifyContent: 'space-between',
 		cursor:'pointer',
 		[theme.breakpoints.down('sm')]: {
-			minHeight: theme.spacing.unit * 16,
+			minHeight: theme.spacing.unit * 18,
 			marginRight: 2.5,
 			wordWrap: 'break-word',
 		},
 	},
-	displayNone:{
-		display:'none'
+	floatRight:{
+		float:'right'
 	},
 	close: {
 	 padding: theme.spacing.unit,
@@ -225,14 +240,15 @@ class CourseListDragAndDrop extends React.Component {
       	return;
     	}
 
-		if (result.source.index === result.destination.index){
-			return;
-		}
 		if (result.destination.droppableId === 'delete'){
 			this.setState({
 				deletableCourseIndex: result.source.index,
 				showConfirmDeleteBox:true
 			})
+			return;
+		}
+
+		if (result.source.index === result.destination.index){
 			return;
 		}
 
@@ -249,7 +265,7 @@ class CourseListDragAndDrop extends React.Component {
     });
 	}
 
-	render(){
+	render() {
 			const {
 				classes,
 				headline,
@@ -266,12 +282,19 @@ class CourseListDragAndDrop extends React.Component {
 				deleteButtonShow,
 				deletableCourseIndex
 			} = this.state;
-
+			const courseGridSize = deleteButtonShow?9:12; //make space for delete button
 			return (
 			<div className={classes.root}>
+				<Button
+					variant="raised"
+					color="primary"
+					onClick={this.toggleCourseDeleteButton}
+					className={`${classes.floatRight} ${classes.deleteButton}`}
+					>
+						{	!deleteButtonShow? 'Delete Courses': 'Stop Deleting Courses'}
+				</Button>
 				<DragDropContext
 					onDragEnd={this.onDragEnd}
-
 					>
 					<Button
 						variant="raised"
@@ -301,69 +324,80 @@ class CourseListDragAndDrop extends React.Component {
 								{headline}
 							</Typography>
 						</Grid>
-						{/*Courses List and the box till where courses can  be drop*/}
-						<Droppable droppableId="courses">
-							{(provided) => (
-									<div ref={provided.innerRef} {...provided.droppableProps}	>
-										{/*Each courses that can be dragged*/}
-											{
-												currentCoursesSequence.map((value, key) => (
-													<Draggable
-														key={value.id}
-														draggableId={value.id}
-														index={key}
+						<Grid container>
+							{
+								deleteButtonShow?
+								<Grid item xs={3} sm={3}>
+									<div>
+										<Droppable droppableId="delete">
+											{(provided, snapshot) => {
+												return (
+													<div
+														ref={provided.innerRef}
+														{...provided.droppableProps}
+														className={classes.deleteArea}
 														>
-					                  {(provided, snapshot) => {
-															let cardClass = `${classes.cardMargin} ${snapshot.isDragging?
-																classes.cardSizeOnDrag:
-																classes.cardSize} `
-															cardClass += `${snapshot.draggingOver === 'delete'?
-																						classes.bgDelete:''
-																				} `;
-															return (
-						                    <div
-																	ref={provided.innerRef}
-																	{...provided.draggableProps}
-																	{...provided.dragHandleProps}
-																	>
-
-																	<CourseListCard
-																		key={value.id}
-																		value={value}
-																		index={key}
-																		gridSize={12}
-																		cardClass={
-																			cardClass
-																		}
-																		showProgress={showProgress}
-																		/>
-						                    </div>
-					                  )}
-													}
-					                </Draggable>
-												))
-											}
-											{provided.placeholder}
+														{snapshot.isDraggingOver?<DeleteForeverIcon />:<DeleteIcon />} <br />
+														To Delete <br />
+														Drag Here.
+														{provided.placeholder}
+													</div>
+												)}}
+											</Droppable>
 									</div>
-								)}
-						</Droppable>
-							<Droppable droppableId="delete">
-								{(provided, snapshot) => {
-									return (
-										<div
-											ref={provided.innerRef}
-											{...provided.droppableProps}
-											>
-												<Button
-													variant='fab'
-													className={classes.deleteButton}
-													>
-													<DeleteIcon/>
-												</Button>
-											{provided.placeholder}
-										</div>
-									)}}
+								</Grid>
+									:null
+							}
+							<Grid item xs={courseGridSize} sm={courseGridSize}>
+								{/*Courses List and the box till where courses can  be drop*/}
+								<Droppable droppableId="courses">
+									{(provided) => (
+											<div ref={provided.innerRef} {...provided.droppableProps}	>
+												{/*Each courses that can be dragged*/}
+													{
+														currentCoursesSequence.map((value, key) => (
+															<Draggable
+																key={value.id}
+																draggableId={value.id}
+																index={key}
+																>
+																{(provided, snapshot) => {
+																	let cardClass = `${classes.cardMargin} ${snapshot.isDragging?
+																		classes.cardSizeOnDrag:
+																		classes.cardSize} `
+																	cardClass += `${snapshot.draggingOver === 'delete'?
+																								classes.bgDelete:''
+																						} `;
+
+																	return (
+																		<div
+																			ref={provided.innerRef}
+																			{...provided.draggableProps}
+																			{...provided.dragHandleProps}
+																			>
+
+																			<CourseListCard
+																				key={value.id}
+																				value={value}
+																				index={key}
+																				gridSize={12}
+																				cardClass={
+																					cardClass
+																				}
+																				showProgress={showProgress}
+																				/>
+																		</div>
+																)}
+															}
+															</Draggable>
+														))
+													}
+													{provided.placeholder}
+											</div>
+										)}
 								</Droppable>
+							</Grid>
+						</Grid>
 					</Grid>
 					<Snackbar
 						anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -394,7 +428,6 @@ class CourseListDragAndDrop extends React.Component {
 						/>
 					:null
 				}
-				// Modal here as hidden
 			</div>
 		);
 	}
