@@ -23,10 +23,12 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import CourseListCard from './course-list-card';
 import CourseDeleteAlert from './course-delete-alert';
-import { saveCoursesSequence } from '../../services/courses';
+import { saveCoursesSequence, deleteCourse } from '../../services/courses';
 
 
-const styles = theme => ({
+const styles = theme => {
+	console.log(theme);
+	return({
 	root: {
 		flexGrow: 1,
 	},
@@ -37,19 +39,25 @@ const styles = theme => ({
 			paddingTop: theme.spacing.unit * 5,
 	},
 	deleteArea:{
-		padding: '170px 1%', // 12 and 15
+		padding: `15% 2%`,
 		marginTop: '-80px',
 		// border:'1px solid red',
 		position:'fixed',
 		[theme.breakpoints.down('sm')]: {
-			padding:'180px 6%'
+			padding:'18vh 6%'
 		},
 		[theme.breakpoints.down('xs')]: {
-			padding:'180px 2%'
+			padding:'18vh 2%'
+		},
+		[theme.breakpoints.up('xl')]: {
+			padding:'50vh 3.2%'
 		},
 	},
 	deleteButton:{
-		marginTop: -theme.spacing.unit * 4.5
+		marginTop: -theme.spacing.unit * 4.5,
+		[theme.breakpoints.down('xs')]: {
+			maxWidth:theme.spacing.unit * 15
+		},
 	},
 	bgDelete:{
 		background:'red',
@@ -89,9 +97,10 @@ const styles = theme => ({
 		minWidth : theme.spacing.unit * 25,
 		margin: '0',
 		top: 'auto',
+		zIndex:'100',
 		position: 'fixed',
 		[theme.breakpoints.down('sm')]: {
-			minWidth : theme.spacing.unit * 15,
+			minWidth : theme.spacing.unit * 10,
 		},
 	},
 	saveButton:{
@@ -100,7 +109,7 @@ const styles = theme => ({
 		bottom: theme.spacing.unit * 2,
 		left: 'auto',
 	}
-});
+})};
 
 const reorder = (courses, startIndex, endIndex) => {
   const newCourseSequence = Array.from(courses);
@@ -127,7 +136,7 @@ class CourseListDragAndDrop extends React.Component {
 		this.state = {
 			originalCoursesSequence : courses,
 			currentCoursesSequence : courses,
-			isSequenceUpdated:false,
+			showNotification:false,
 			notifcationMessage:'',
 			deletableCourseIndex: null,
 			showConfirmDeleteBox:false,
@@ -166,7 +175,7 @@ class CourseListDragAndDrop extends React.Component {
 			.then((response) => {
 					// show data saved in backend.
 					this.setState({
-						isSequenceUpdated:true,
+						showNotification:true,
 						notifcationMessage:'Sequence Saved Successfully',
 					});
 			})
@@ -177,7 +186,7 @@ class CourseListDragAndDrop extends React.Component {
 									'Internet connected nhi hai!':
 									'Ek error Ayi hue hai. Console check kare!';
 					this.setState({
-						isSequenceUpdated:true,
+						showNotification:true,
 						notifcationMessage,
 					});
 			});
@@ -190,18 +199,34 @@ class CourseListDragAndDrop extends React.Component {
 						newCourseSequence,
 						removed,
 					} = remove(currentCoursesSequence,deletableCourseIndex);
+		let notifcationMessage;
 		// call the api with the id
 		// call update the main course
 		// update the state with new courses
-		const notifcationMessage = `${removed.name} course deleted.`
-		this.setState({
-			currentCoursesSequence: newCourseSequence,
-			deletableCourseIndex: null,
-			showConfirmDeleteBox:false,
-			isSequenceUpdated:true,
-			notifcationMessage,
-		})
-	}
+		deleteCourse(removed.id)
+			.then((response) => {
+					notifcationMessage = `${removed.name} course deleted.`
+					this.setState({
+						currentCoursesSequence: newCourseSequence,
+						deletableCourseIndex: null,
+						showConfirmDeleteBox:false,
+						showNotification:true,
+						notifcationMessage,
+					});
+			})
+			.catch((error) => {
+					// show error if no internet connection or something else happened.
+					console.log(error);
+					notifcationMessage = window.navigator.onLine?
+									'Internet connected nhi hai!':
+									'Ek error Ayi hue hai. Console check kare!';
+					this.setState({
+						showNotification:true,
+						notifcationMessage,
+					})
+			});
+
+	};
 
 	cancelCourseDelete = () => {
 		this.setState({
@@ -212,7 +237,7 @@ class CourseListDragAndDrop extends React.Component {
 
 	handleCloseSaveNotification = () => {
 		this.setState({
-			isSequenceUpdated: false,
+			showNotification: false,
 			notifcationMessage: ''
 		})
 	}
@@ -276,7 +301,7 @@ class CourseListDragAndDrop extends React.Component {
 
 			const {
 				currentCoursesSequence,
-				isSequenceUpdated,
+				showNotification,
 				notifcationMessage,
 				showConfirmDeleteBox,
 				deleteButtonShow,
@@ -327,7 +352,7 @@ class CourseListDragAndDrop extends React.Component {
 						<Grid container>
 							{
 								deleteButtonShow?
-								<Grid item xs={3} sm={3}>
+								<Grid item xs={4} sm={3}>
 									<div>
 										<Droppable droppableId="delete">
 											{(provided, snapshot) => {
@@ -348,7 +373,7 @@ class CourseListDragAndDrop extends React.Component {
 								</Grid>
 									:null
 							}
-							<Grid item xs={courseGridSize} sm={courseGridSize}>
+							<Grid item xs={courseGridSize-1} sm={courseGridSize}>
 								{/*Courses List and the box till where courses can  be drop*/}
 								<Droppable droppableId="courses">
 									{(provided) => (
@@ -401,7 +426,7 @@ class CourseListDragAndDrop extends React.Component {
 					</Grid>
 					<Snackbar
 						anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-						open={isSequenceUpdated}
+						open={showNotification}
 						message={notifcationMessage}
 						autoHideDuration={6000}
 						onClose={this.handleCloseSaveNotification}

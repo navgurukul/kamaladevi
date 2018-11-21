@@ -44,6 +44,13 @@ export const saveCoursesSequence = (payload) => {
 	});
 };
 
+export const deleteCourse = (courseId) => {
+	return localforage.getItem('authResponse', (error, value)=>{
+		const { jwt } =  value;
+	  return fetchApi(`/courses/${courseId}/delete`, {}, { Authorization: jwt }, 'delete')
+	});
+};
+
 // Make notes submission api call to get submitted notes
 export const getExerciseSubmission = async (courseId, exerciseId) => {
 	let responseData;
