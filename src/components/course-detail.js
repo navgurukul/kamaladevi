@@ -18,12 +18,11 @@ import { fetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
-				 exerciseSubmission,
-				 getExerciseSubmission,
 				 getExerciseDetailFromSlug
-			 } from '../services/courses';
+				 getExerciseIdFromSlug,
+			 } from '../services/utils';
 
-import { getExerciseIdFromSlug } from '../services/courses';
+import { exerciseSubmissionAPI, getExerciseSubmissionAPI } from '../services/api';
 import CourseDetailSideNav from './course-detail-sidenav';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
@@ -193,7 +192,7 @@ class CourseDetail extends React.Component {
 					alert(message);
 					return false
 			}
-			exerciseSubmission(id, exerciseId, notes);
+			exerciseSubmissionAPI(id, exerciseId, notes);
 			this.loadExercise();
 	}
 
@@ -248,14 +247,14 @@ class CourseDetail extends React.Component {
 
 		// get the exerciseId for the exercise
 		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-		const previousNotesData = await getExerciseSubmission(id , exerciseId);
+		const previousNotesData = await getExerciseSubmissionAPI(id , exerciseId);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
 
 		this.setState({
 			content,
 			prefetchedData: true,
 			notes:'',
-			previousNotesData:previousNotesData
+			previousNotesData:previousNotesData.data.data
 		});
 	}
 

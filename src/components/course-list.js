@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 
 import { fetchApi } from '../services/api';
-import { setEnrolledCourses } from '../services/courses';
+import { setEnrolledCourses } from '../services/session';
 
 const styles = theme => ({
 	rootLoader: {
@@ -259,7 +259,7 @@ class CourseList extends React.Component {
 											</Typography>
 										</CardContent>
 									</Card>
-								</Link>	
+								</Link>
 							</Grid>
 						))}
 					</Grid>

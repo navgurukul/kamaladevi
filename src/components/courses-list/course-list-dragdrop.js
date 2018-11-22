@@ -2,6 +2,11 @@ import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
+import {
+				DragDropContext,
+				Draggable,
+				Droppable
+			} from 'react-beautiful-dnd';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -19,11 +24,11 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+
+import { saveCoursesSequenceAPI, deleteCourseAPI } from '../../services/api';
 
 import CourseListCard from './course-list-card';
 import CourseDeleteAlert from './course-delete-alert';
-import { saveCoursesSequence, deleteCourseAPI } from '../../services/courses';
 
 
 const styles = theme => {
@@ -171,7 +176,7 @@ class CourseListDragAndDrop extends React.Component {
 		const { currentCoursesSequence } = this.state;
 		let payload = this.extractSequenceNum(currentCoursesSequence)
 		// call the api and update the course sequence
-		saveCoursesSequence(payload)
+		saveCoursesSequenceAPI(payload)
 			.then((response) => {
 					// show data saved in backend.
 					this.setState({

@@ -24,11 +24,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import {
-	enrollCourse,
-	isEnrolled,
-	getExerciseIdFromSlug,
-} from '../services/courses';
+import { getExerciseIdFromSlug } from '../services/utils';
+import { isEnrolled } from '../services/session';
+import { enrollCourseAPI } from '../services/api';
 
 
 const styles = () => ({
@@ -177,7 +175,7 @@ class CourseDetailSideNav extends React.Component {
 							className={classes.enrollButton}
 							onClick={() => {
 								const { id } = Router.query;
-								enrollCourse(id, success => this.setState({ enrolled: success }));
+								enrollCourseAPI(id, success => this.setState({ enrolled: success }));
 								this.setState({showEnrolledNotification:true});
 							}}
 						>
