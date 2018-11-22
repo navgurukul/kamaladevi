@@ -1,14 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
+import localforage from 'localforage';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import { withStyles } from '@material-ui/core/styles';
+
 import GoogleLogin from 'react-google-login';
-import localforage from 'localforage';
 
 import { fetchApi } from '../services/api';
 import { setSession } from '../services/session';

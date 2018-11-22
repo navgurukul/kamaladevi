@@ -1,16 +1,19 @@
 // Course list
 import React from 'react';
-import Router from 'next/router';
 import Link from 'next/link';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 import Card from '@material-ui/core/Card';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { withStyles } from '@material-ui/core/styles';
 import ReactUtterences from "react-utterances";
+
 import { fetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
@@ -20,8 +23,9 @@ import {
 				 getExerciseDetailFromSlug
 			 } from '../services/courses';
 
-import CourseDetailSideNav from './course-detail-sidenav';
 import { getExerciseIdFromSlug } from '../services/courses';
+import CourseDetailSideNav from './course-detail-sidenav';
+
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
 // Parse markdown content
@@ -159,7 +163,8 @@ class CourseDetail extends React.Component {
 			return notes.length <= 1500;
 		}
 		else if (submissionType == 'url'){
-			return 	notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+			let urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+			return 	notes.match(urlRegex) != null;
 		}
 		return true
 	}
@@ -259,9 +264,9 @@ class CourseDetail extends React.Component {
 		const {
 			classes, exercises, id, slug,
 		} = this.props;
-
+		const repo = 'navgurukul/newton';
 		const {reviewType, submissionType, githubLink} = getExerciseDetailFromSlug(slug, exercises);
-		const reviewrs = ['peer', 'facilitator', 'automatic']
+		const reviewrs = ['peer', 'facilitator', 'automatic'];
 
 		const { prefetchedData, content, previousNotesData } = this.state;
 		if (!prefetchedData) {
@@ -292,12 +297,8 @@ class CourseDetail extends React.Component {
 							</Card>
 							:null
 						}
-						{
-              /*submission form*/
-            }
-						{
-							// TODO: Input box should be generated based on submissionType
-						}
+						{/*submission form*/}
+						{/* TODO: Input box should be generated based on submissionType*/}
 						{
 							(reviewrs.includes(reviewType) && submissionType != null)?
 							<form autoComplete='off'>
@@ -358,7 +359,7 @@ class CourseDetail extends React.Component {
 							:null
 						}
 					</div>
-					<ReactUtterences className={classes.utterances} repo={'navgurukul/newton'} type={'title'} />
+					<ReactUtterences className={classes.utterances} repo={repo} type={'title'} />
 				</Grid>
 				<Grid item xs={4} className={classes.sidebar}>
 					<CourseDetailSideNav
