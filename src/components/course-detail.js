@@ -14,7 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import ReactUtterences from "react-utterances";
 
-import { fetchApi } from '../services/api';
+import { authenticatedFetchApi } from '../services/api';
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
@@ -216,45 +216,26 @@ class CourseDetail extends React.Component {
 	}
 
 	async loadExercise() {
-		let value, response;
+		let response, previousNotesData;
+		const { id:courseId, slug, exercises } = this.props;
+		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
 
 		try {
-			value = await localforage.getItem('authResponse');
-			if (!value) {
-				// No access tokens saved
-				Router.replace('/');
-				return;
-			}
-		} catch (e) {
-			// TODO: Handle localforage error cases
-			return;
-		}
-		const { id, slug, exercises } = this.props;
-		const { jwt } = value;
-		try {
-			response = (
-				await fetchApi(`/courses/${id}/exercise/getBySlug`, { slug }, { Authorization: jwt })
-			);
+			response = await authenticatedFetchApi(`/courses/${id}/exercise/getBySlug`, { slug });
+			previousNotesData = await getExerciseSubmissionAPI(courseId , exerciseId).data.data;
 		} catch (e) {
 			// TODO: Handle network error cases
+			console.error(e);
 			return;
 		}
-		// gettuing exersise notes
-		const query = {
-			submissionUsers: 'current',
-			submissionState: 'all',
-		};
-
 		// get the exerciseId for the exercise
-		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-		const previousNotesData = await getExerciseSubmissionAPI(id , exerciseId);
 		const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, '');
 
 		this.setState({
 			content,
 			prefetchedData: true,
 			notes:'',
-			previousNotesData:previousNotesData.data.data
+			previousNotesData
 		});
 	}
 

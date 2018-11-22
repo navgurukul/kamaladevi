@@ -30,8 +30,20 @@ export fetchApi;
 
 export const authenticatedFetchApi = (endpoint, payload, method = 'get') =>{
 	return localforage.getItem('authResponse', (error, value)=>{
-			const { jwt } =  value;
-			return fetchApi(endpoint, payload, { Authorization: jwt }, method)
+		if (!error) {
+			if (value === null) {
+				Router.replace('/');
+			} else {
+				const { jwt } = value;
+				return fetchApi(endpoint, payload, { Authorization: jwt }, method)
+					.catch((error) => {
+							/* TODO: Handle network error cases */
+							console.error(error);
+					});
+			}
+		} else {
+			// TODO: Handle error cases
+		}
 	});
 }
 
