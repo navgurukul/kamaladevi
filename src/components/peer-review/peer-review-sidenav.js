@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 });
 
-class PeerReviewSidenav extends React.Component {
+class assigmentsReviewSidenav extends React.Component {
   constructor(){
     super();
     this.state={
@@ -33,10 +33,10 @@ class PeerReviewSidenav extends React.Component {
 
 
   render() {
-    const { classes, peer, updatedSelectedCard } = this.props;
+    const { classes, assigments, updatedSelectedCard } = this.props;
     return (
       <React.Fragment>
-        {peer.map((value) => (
+        {assigments.map((value) => (
           <Card 
             className={classes.blocks} 
             onClick={() => updatedSelectedCard(value)} 
@@ -58,8 +58,8 @@ class PeerReviewSidenav extends React.Component {
   }
 }
 
-PeerReviewSidenav.propTypes = {
+assigmentsReviewSidenav.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PeerReviewSidenav);
+export default withStyles(styles)(assigmentsReviewSidenav);

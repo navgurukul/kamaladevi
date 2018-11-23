@@ -25,7 +25,7 @@ const styles = theme => ({
   },
 });
 
-class PeerReviewDetails extends React.Component {
+class assigmentsReviewDetails extends React.Component {
 constructor(props) {
   super(props);
   this.state = {
@@ -124,8 +124,8 @@ submitAssignment = (isApprove) => {
   }
 }
 
-PeerReviewDetails.propTypes = {
+assigmentsReviewDetails.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PeerReviewDetails);
+export default withStyles(styles)(assigmentsReviewDetails);

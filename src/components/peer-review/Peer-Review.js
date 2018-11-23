@@ -7,8 +7,8 @@ import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
-import PeerReviewSidenav from "./peer-review-sidenav";
-import PeerReviewDetails from "./peer-review-details";
+import assigmentsReviewSidenav from "./assigments-review-sidenav";
+import assigmentsReviewDetails from "./assigments-review-details";
 
 const drawerWidth = 240;
 
@@ -32,11 +32,11 @@ const styles = theme => ({
   }
 });
 
-class PeerReview extends React.Component {
+class assigmentsReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      peer: [],
+      assigments: [],
       mobileOpen: false,
       selectedCard:{}
     };
@@ -66,31 +66,52 @@ class PeerReview extends React.Component {
     const { jwt } = value;
     try {
       response = await fetchApi(
-        `/assignments/peerReview`,
+        `/assignments/assigmentsReview`,
         {},
         { Authorization: jwt }
       );
-      const peerReview = await response.data.data;
-      console.log(peerReview);
+      const assigmentsReview = await response.data.data;
+      console.log(assigmentsReview);
       this.setState({ 
-        peer: peerReview,
-        selectedCard: peerReview[0],
+        assigments: assigmentsReview,
+        selectedCard: assigmentsReview[0],
       });
     } catch (e) {
       console.log(e);
     }
   } 
+  
+  // currentAssignment delete hona chaiye jab bi user Approve yeah Reject kare uske baad
+  // agla assignment show hona chaiye agar ha toh warna 
+  // Apke sare review ke kaam katam hogye display hona chaiye
 
-  removeCard = () => {
-  //user jab bhi approve ya reject karega tab list me se current card remove hona chahiye
-  //card ke remove hote hi ek nyaa list ayega (hamara list update hoga)
-  //agar pahla card delete hoga to agla card show ho jayega
-  //agar sabse last wala card delete hoga pichhe wala card show ho jayega
-  //agar bich me se card delete hota hai to aage ya pichhe ka card show ho jayega
-  //agar agla card bhi nhi hai to peerReviewDetail card me ek msg show ho jana chahiye
-  const {peer} = this.state;
-   
-
+  // humne yeh function kyu banaya hai aur ishe tumhe kya lagta ha kidar istamal karna chaiye?
+  // aur kab?
+  // function remove(cards, index){
+  //   const newCards = [ ];
+  //   for(let i =0; i<cards.length;i++){
+  //      if(i===index){
+  //         continue;
+  //      }
+  //      newCards.push(cards[i]);
+  //   }
+  //   return newCards;
+  // }
+  removeCard = (assignments,index) => {
+    const {assignments:assigments,selectedCard:index} = this.state;
+    const newAssigmentsList = []
+    for (let i = 0; i<assignments.length;i++){
+      if (i === selectedCard) {
+        continue
+      }
+      newAssigmentsList.push(assignments[i])
+    }
+    return newAssigmentsList
+    this.setState = (
+      {
+        
+      }
+    )
   }
   
   render() {
@@ -113,8 +134,8 @@ class PeerReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav 
-              peer={this.state.peer} 
+            <assigmentsReviewSidenav 
+              assigments={this.state.assigments} 
               updatedSelectedCard={this.updatedSelectedCard} 
             />
           </Drawer>
@@ -127,22 +148,22 @@ class PeerReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav 
-              peer={this.state.peer} 
+            <assigmentsReviewSidenav 
+              assigments={this.state.assigments} 
               updatedSelectedCard={this.updatedSelectedCard} 
             />
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <PeerReviewDetails selectedCard={this.state.selectedCard}/>
+          <assigmentsReviewDetails selectedCard={this.state.selectedCard}/>
         </main>
       </div>
     );
   }x  
 }
 
-PeerReview.propTypes = {
+assigmentsReview.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PeerReview);
+export default withStyles(styles)(assigmentsReview);
