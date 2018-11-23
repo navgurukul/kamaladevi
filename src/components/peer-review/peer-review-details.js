@@ -8,52 +8,73 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {reviewerFeedbackSubmission} from '../../services/courses';
 
-const styles = {
+const styles = theme => ({
+  root:{
+    // marginTop:theme.spacing.unit*5,
+    width:'80vw',
+    height:'90vh'
+  },
   pendingReviewHeading: {
     fontWeight: "400",
-    fontSize: "20px",
-    marginBottom: "10px"
+    fontSize: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 1.5
   },
   button: {
-    marginTop: "10px",
-    marginRight: "10px"
+    marginTop: theme.spacing.unit * 1.5,
+    marginRight: theme.spacing.unit * 1.5
   },
-  textarea: {
-    display: "block",
-    marginTop: "10px",
-    padding: "25px"
-  }
-};
+});
 
 class PeerReviewDetails extends React.Component {
 constructor(props) {
   super(props);
   this.state = {
-    reviewerFeedback: '',
+    notes: '',
   }
 
 }
 
 inputHandler = (e) => {
-    this.setState({ reviewerFeedback : e.target.value }) 
+    this.setState({ notes : e.target.value }) 
 }
 
-validatingReviewerFeedbackField = () => {
-  if (this.state.reviewerFeedback == '') {
-    alert('Aap apna feedback dijiye!!!')
+hasReviewerGivenFeedback = () => {
+  if (this.state.notes === '') {
+    return false
+  } else {
+    return true
   }
 }
 
-submitAssignment = (isApproved) => {
-this.validatingReviewerFeedbackField()
-reviewerFeedbackSubmission(this.state.reviewerFeedback,value.id)
-}
+submitAssignment = (isApprove) => {
+  // agar feedback me kuch data ha toh hi submit ho
+  // warna alert dikha do aur kuch bi submit maat karo
+  if(!this.hasReviewerGivenFeedback()){
+    alert('Aap apna feedback dijiye!!!'); 
+    return; 
+  }
+  
+  const submissionId = this.props.selectedCard.id;
+  const {notes} = this.state;
+  // id, notes, isApproved
+  reviewerFeedbackSubmission(notes, isApprove, submissionId)
+    .then(response => {
+      console.log(response)
+      this.setState({
+        notes:notes,
+      })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+  //api call hone ke baad kya hona chaiye
 
 
   render() {
     const { classes, selectedCard:value } = this.props;
     return (
-          <Card key={value.id}>
+          <Card className={classes.root}>
             <CardContent>
               <Typography className={classes.pendingReviewHeading}>
                 {value.exerciseName}
@@ -73,8 +94,7 @@ reviewerFeedbackSubmission(this.state.reviewerFeedback,value.id)
               </Typography>
                 <TextField
                   id="outlined-email-input"
-                  label="feedback"
-                  className={classes.textField}
+                  fullWidth
                   type="text"
                   name="text"
                   margin="normal"
@@ -94,7 +114,6 @@ reviewerFeedbackSubmission(this.state.reviewerFeedback,value.id)
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick ={this.validatingReviewerFeedbackField}
                 onClick = {()=>this.submitAssignment(false)}
               >
                 Reject Assignment

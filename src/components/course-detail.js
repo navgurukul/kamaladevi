@@ -149,7 +149,7 @@ class CourseDetail extends React.Component {
     return courseDetail.body.innerHTML;
   };
 
-  isSubmissionTypeValidated = (submissionType, notes) => {
+  isSubmissionTypeValid = (submissionType, notes) => {
     if (submissionType == "number") {
       return !isNaN(notes);
     } else if (submissionType == "text") {
@@ -175,7 +175,7 @@ class CourseDetail extends React.Component {
     );
 
     // here should be the validation
-    if (!this.isSubmissionTypeValidated(submissionType, notes)) {
+    if (!this.isSubmissionTypeValid(submissionType, notes)) {
       // TODO: something to alert user
       let message;
       if (submissionType == "number") {
@@ -188,7 +188,7 @@ class CourseDetail extends React.Component {
         message = `Apko niche ek url ka link dalna hai`;
       }
       alert(message);
-      return false;
+      return;
     }
     exerciseSubmission(id, exerciseId, notes);
     this.loadExercise();

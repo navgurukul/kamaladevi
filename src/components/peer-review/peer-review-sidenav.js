@@ -36,8 +36,12 @@ class PeerReviewSidenav extends React.Component {
     const { classes, peer, updatedSelectedCard } = this.props;
     return (
       <React.Fragment>
-        {peer.map((value, key) => (
-          <Card className={classes.blocks} onClick={() => updatedSelectedCard(value)} key={value.id}>
+        {peer.map((value) => (
+          <Card 
+            className={classes.blocks} 
+            onClick={() => updatedSelectedCard(value)} 
+            key={value.id}
+            >
             <CardContent>
               <Typography className={classes.cardText}>
                 {value.exerciseName}

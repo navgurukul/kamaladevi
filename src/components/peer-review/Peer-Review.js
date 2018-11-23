@@ -71,13 +71,26 @@ class PeerReview extends React.Component {
         { Authorization: jwt }
       );
       const peerReview = await response.data.data;
+      console.log(peerReview);
       this.setState({ 
         peer: peerReview,
-        selectedCard: peerReview[0]
+        selectedCard: peerReview[0],
       });
     } catch (e) {
       console.log(e);
     }
+  } 
+
+  removeCard = () => {
+  //user jab bhi approve ya reject karega tab list me se current card remove hona chahiye
+  //card ke remove hote hi ek nyaa list ayega (hamara list update hoga)
+  //agar pahla card delete hoga to agla card show ho jayega
+  //agar sabse last wala card delete hoga pichhe wala card show ho jayega
+  //agar bich me se card delete hota hai to aage ya pichhe ka card show ho jayega
+  //agar agla card bhi nhi hai to peerReviewDetail card me ek msg show ho jana chahiye
+  const {peer} = this.state;
+   
+
   }
   
   render() {
@@ -100,7 +113,10 @@ class PeerReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer} updatedSelectedCard={this.updatedSelectedCard} />
+            <PeerReviewSidenav 
+              peer={this.state.peer} 
+              updatedSelectedCard={this.updatedSelectedCard} 
+            />
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -111,7 +127,10 @@ class PeerReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <PeerReviewSidenav peer={this.state.peer} updatedSelectedCard={this.updatedSelectedCard} />
+            <PeerReviewSidenav 
+              peer={this.state.peer} 
+              updatedSelectedCard={this.updatedSelectedCard} 
+            />
           </Drawer>
         </Hidden>
         <main className={classes.content}>

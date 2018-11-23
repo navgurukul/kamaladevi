@@ -27,7 +27,7 @@ export const addEnrolledCourses = (courseId) => {
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
-	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
+	  	fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
 			.then((response)=>{
 					console.log(response);
 			});
@@ -35,13 +35,14 @@ export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 };
 
 // this api call for submit the reviewer feedback
-export const reviewerFeedbackSubmission = async (reviewerFeedback,id)=>{
-	localforage.getItem('authResponse', (error,value)=>{
+export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
+	return localforage.getItem('authResponse',(error,value)=>{
 		const {jwt} =value;
-	   fetchApi(`/assignments/peerReview/${id}`,{reviewerFeedback},{Authorization:jwt},'put')
-			.then((response)=>{
-				console.log(response);
-			})
+		const payload = {
+			notes:notes,
+			approve:isApprove
+		}
+	   return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
 	})
 }
 
