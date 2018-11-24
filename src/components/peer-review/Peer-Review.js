@@ -7,8 +7,8 @@ import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
-import assigmentsReviewSidenav from "./assigments-review-sidenav";
-import assigmentsReviewDetails from "./assigments-review-details";
+import AssignmentsReviewSidenav from "./peer-review-sidenav";
+import AssigmentsReviewDetails from "./peer-review-details";
 
 const drawerWidth = 240;
 
@@ -32,7 +32,7 @@ const styles = theme => ({
   }
 });
 
-class assigmentsReview extends React.Component {
+class AssignmentsReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,6 +70,7 @@ class assigmentsReview extends React.Component {
         {},
         { Authorization: jwt }
       );
+      console.log(response.data.data);
       const assigmentsReview = await response.data.data;
       console.log(assigmentsReview);
       this.setState({ 
@@ -81,37 +82,21 @@ class assigmentsReview extends React.Component {
     }
   } 
   
-  // currentAssignment delete hona chaiye jab bi user Approve yeah Reject kare uske baad
-  // agla assignment show hona chaiye agar ha toh warna 
-  // Apke sare review ke kaam katam hogye display hona chaiye
-
-  // humne yeh function kyu banaya hai aur ishe tumhe kya lagta ha kidar istamal karna chaiye?
-  // aur kab?
-  // function remove(cards, index){
-  //   const newCards = [ ];
-  //   for(let i =0; i<cards.length;i++){
-  //      if(i===index){
-  //         continue;
-  //      }
-  //      newCards.push(cards[i]);
-  //   }
-  //   return newCards;
-  // }
-  removeCard = (assignments,index) => {
-    const {assignments:assigments,selectedCard:index} = this.state;
-    const newAssigmentsList = []
-    for (let i = 0; i<assignments.length;i++){
-      if (i === selectedCard) {
-        continue
+  
+removeCard = () => {
+    const {peer, selectedCard} = this.state;
+    var update_assignment_list = [];
+    for (var i = 0; i < peer.length; i++) {
+      if (peer[i] === selectedCard) {
+          continue;
       }
-      newAssigmentsList.push(assignments[i])
+      update_assignment_list.push(peer[i]);
     }
-    return newAssigmentsList
-    this.setState = (
-      {
-        
-      }
-    )
+    // return update_assignment_list;
+    this.setState ({
+      peer : update_assignment_list,
+    });
+    this.updatedSelectedCard()
   }
   
   render() {
@@ -134,7 +119,7 @@ class assigmentsReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <assigmentsReviewSidenav 
+            <AssignmentsReviewSidenav 
               assigments={this.state.assigments} 
               updatedSelectedCard={this.updatedSelectedCard} 
             />
@@ -148,22 +133,22 @@ class assigmentsReview extends React.Component {
               paper: classes.drawerPaper
             }}
           >
-            <assigmentsReviewSidenav 
+            <AssignmentsReviewSidenav 
               assigments={this.state.assigments} 
               updatedSelectedCard={this.updatedSelectedCard} 
             />
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <assigmentsReviewDetails selectedCard={this.state.selectedCard}/>
+          <AssigmentsReviewDetails selectedCard={this.state.selectedCard}/>
         </main>
       </div>
     );
-  }x  
+  }
 }
 
-assigmentsReview.propTypes = {
+AssignmentsReview.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(assigmentsReview);
+export default withStyles(styles)(AssignmentsReview);

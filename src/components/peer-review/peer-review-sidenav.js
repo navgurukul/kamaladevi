@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 });
 
-class assigmentsReviewSidenav extends React.Component {
+class AssignmentsReviewSidenav extends React.Component {
   constructor(){
     super();
     this.state={
@@ -58,8 +58,8 @@ class assigmentsReviewSidenav extends React.Component {
   }
 }
 
-assigmentsReviewSidenav.propTypes = {
+AssignmentsReviewSidenav.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(assigmentsReviewSidenav);
+export default withStyles(styles)(AssignmentsReviewSidenav);
