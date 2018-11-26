@@ -25,7 +25,7 @@ const styles = theme => ({
   },
 });
 
-class assigmentsReviewDetails extends React.Component {
+class AssigmentsReviewDetails extends React.Component {
 constructor(props) {
   super(props);
   this.state = {
@@ -63,12 +63,14 @@ submitAssignment = (isApprove) => {
       this.setState({
         notes:notes,
       })
+      removeCard()
     })
     .catch(error => {
       console.log(error)
     })
   }
   //api call hone ke baad kya hona chaiye
+   
 
 
   render() {
@@ -124,8 +126,8 @@ submitAssignment = (isApprove) => {
   }
 }
 
-assigmentsReviewDetails.propTypes = {
+AssigmentsReviewDetails.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(assigmentsReviewDetails);
+export default withStyles(styles)(AssigmentsReviewDetails);

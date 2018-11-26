@@ -3,13 +3,13 @@
 import React from 'react';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import PeerReview from '../src/components/peer-review/Peer-Review';
+import AssignmentsReview from '../src/components/peer-review/Peer-Review';
 
 
 const PeerReviewPage = () => (
 	<div>
 		<Header/>
-    	<PeerReview />
+    	<AssignmentsReview />
 	</div>
 
 );
