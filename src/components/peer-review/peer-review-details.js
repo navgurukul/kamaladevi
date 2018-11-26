@@ -63,13 +63,14 @@ submitAssignment = (isApprove) => {
       this.setState({
         notes:notes,
       })
+      removeCard()
     })
     .catch(error => {
       console.log(error)
     })
   }
   //api call hone ke baad kya hona chaiye
-  // removeCard() 
+   
 
 
   render() {

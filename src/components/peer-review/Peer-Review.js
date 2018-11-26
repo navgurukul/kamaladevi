@@ -66,7 +66,7 @@ class AssignmentsReview extends React.Component {
     const { jwt } = value;
     try {
       response = await fetchApi(
-        `/assignments/assigmentsReview`,
+        `/assignments/peerReview`,
         {},
         { Authorization: jwt }
       );
