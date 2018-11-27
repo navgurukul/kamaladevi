@@ -71,45 +71,52 @@ const styles = theme => {
 }
 
 class AssignmentsReviewDetails extends React.Component {
-constructor(props) {
-  super(props);
-  this.state = {
-    notes: "",
+  constructor(props) {
+    super(props);
+    this.state = {
+      notes: "",
+    }
   }
-}
 
-inputHandler = (e) => {
-    this.setState({ notes : e.target.value })
-}
-
-hasReviewerGivenFeedback = () => {
-  if (this.state.notes === "") {
-    return false
-  } else {
-    return true
+  // helps to get the notes from the form to state
+  inputHandler = (e) => {
+      this.setState({ notes : e.target.value })
   }
-}
 
-submitAssignment = (isApprove) => {
-  // agar feedback me kuch data ha toh hi submit ho
-  // warna alert dikha do aur kuch bi submit maat karo
-  if(!this.hasReviewerGivenFeedback()){
-    alert("Phele aap apna reason dijiye.");
-    return;
+  // validate if there is any feedback given by user
+  // when he click approveOrDisApprove
+  hasReviewerGivenFeedback = () => {
+    if (this.state.notes === "") {
+      return false
+    } else {
+      return true
+    }
   }
+
+  // submit the user feedback to api
+  submitAssignment = (isApprove) => {
+    // check if user has given any feedback or not
+    if(!this.hasReviewerGivenFeedback()){
+      alert("Phele aap apna reason dijiye.");
+      return;
+    }
 
   const {selectedAssignment, removeCompletedAssignment} = this.props;
   const {notes} = this.state;
-  // id, notes, isApproved
+
+  //send the feedback to api
   reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
     .then(response => {
+      // empty the textfield after it has been submitted
       this.setState({
         notes:"",
       })
       alert("Feedback dene ke liye sukhriya.")
+      // remove the assignment from pending list
       removeCompletedAssignment()
     })
     .catch(error => {
+      // check if the user is connected to internet
       if(!window.navigator.onLine){
         alert("Aap Internet se connect nhi ho.");
       } else {
@@ -130,11 +137,9 @@ submitAssignment = (isApprove) => {
     return (
           <Card className={classes.root}>
             <CardContent>
-                  {/*
-                    Link to exercise
-                    Submitter pic and Name
-                  */}
+                  {/* Submitter Details */}
                   <img src={`${selectedAssignment.submitterProfilePicture}`} height="100" />
+
                   <Typography className={classes.typography}>
                     <span className={classes.titles}>
                       Submitted by:
@@ -148,19 +153,22 @@ submitAssignment = (isApprove) => {
                     </span>
                     {` ${submittedAt.toDateString()}`}
                   </Typography>
+
+                  {/*Exercise Details of submission*/}
                   <Typography className={classes.typography}>
                     <span className={classes.titles}>
                       Exercise Name:
                     </span>
                     {` ${selectedAssignment.exerciseName}`}
                   </Typography>
-
+                  
                   <Typography className={classes.typography}>
                     <a href={`/course?id=${courseId}&slug=${exerciseSlug}`} target="_blank">
                       Link to exercise
                     </a>
                   </Typography>
 
+                  {/*Student Solution*/}
                   <Typography>
                     <span className={classes.titles}>
                       Student ka solution:
@@ -176,6 +184,7 @@ submitAssignment = (isApprove) => {
                   </CardContent>
                     {/*// TODO: design a container for notes*/}
 
+                  {/*Reviewer feedback form*/}
                   <Typography>
                     <span className={classes.titles}>
                       Apna accept ya reject karne ka reason neeche diye gaye text box

@@ -53,6 +53,8 @@ class AssignmentsReview extends React.Component {
     };
   }
 
+  // On clicking to any assignment in sidebar
+  // it should be displayed in AssignmentsReviewDetails page
   showSelectedAssignment = (assignment) => {
     this.setState({
       selectedAssignment: assignment,
@@ -60,6 +62,7 @@ class AssignmentsReview extends React.Component {
     })
   }
 
+  // to open and close the sidebar in mobile view
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
@@ -83,9 +86,15 @@ class AssignmentsReview extends React.Component {
     }
   }
 
+  // remove a completed assignment
   removeCompletedAssignment = () => {
     const {assignments, selectedAssignment} = this.state;
-    let updateAssignmentList = [], removedAssignmentIndex, nextAssignmentIndex;
+    let updateAssignmentList = [],
+        removedAssignmentIndex,
+        nextAssignmentIndex;
+
+    // The assignment which is approve or rejected
+    // shall no longer be in pending list remove it.
     for (let i = 0; i < assignments.length; i++) {
       if (assignments[i] === selectedAssignment) {
           removedAssignmentIndex = i;
@@ -93,12 +102,17 @@ class AssignmentsReview extends React.Component {
       }
       updateAssignmentList.push(assignments[i]);
     }
+
+    // which assignment to be shown after removing the
+    // completed one in the main box
     nextAssignmentIndex = this.getNextAssignmentIndex(
           updateAssignmentList,
           removedAssignmentIndex
         );
+
     this.setState ({
       assignments : updateAssignmentList,
+      // what if there is no assignment left?
       selectedAssignment: (nextAssignmentIndex === null)?
               {} : updateAssignmentList[nextAssignmentIndex],
     });
@@ -112,6 +126,7 @@ class AssignmentsReview extends React.Component {
         {
           assignments.length?
           <React.Fragment>
+            {/* Side Drawer to display assignment list*/}
             <IconButton
               color="inherit"
               onClick={this.handleDrawerToggle}
@@ -119,6 +134,7 @@ class AssignmentsReview extends React.Component {
               >
               <MenuIcon />
             </IconButton>
+            {/*For mobile view*/}
             <Hidden mdUp>
               <Drawer
                 open={mobileOpen}
@@ -134,6 +150,7 @@ class AssignmentsReview extends React.Component {
                   />
               </Drawer>
             </Hidden>
+            {/*For desktop view*/}
             <Hidden smDown>
               <Drawer
                 variant="permanent"
@@ -149,7 +166,8 @@ class AssignmentsReview extends React.Component {
                   />
               </Drawer>
             </Hidden>
-            <main className={classes.content}>
+            {/*Feedback page*/}
+            <main>
                 <AssignmentsReviewDetails
                   selectedAssignment={selectedAssignment}
                   removeCompletedAssignment={this.removeCompletedAssignment}

@@ -1,10 +1,14 @@
+// To show the side nav bar for assignments
+
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   root:{
@@ -48,6 +52,7 @@ const AssignmentsReviewSidenav = (props) => {
     return (
       <div className={classes.root }>
         {
+          // displays the assignment in details
           assignments.map((assignment) => {
             const submittedAt = new Date(assignment.submittedAt).toDateString();
 
@@ -61,6 +66,7 @@ const AssignmentsReviewSidenav = (props) => {
                 onClick={() => showSelectedAssignment(assignment)}
                 key={assignment.id}
               >
+                {/*Main Content of Assignment*/}
                 <CardContent>
                   <Grid container>
                     <Grid item sm={3}>

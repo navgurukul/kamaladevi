@@ -23,7 +23,7 @@ export const addEnrolledCourses = (courseId) => {
 	});
 };
 
-// Make notes submission api call to submit notes for students
+// submit student assignment
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
@@ -34,7 +34,7 @@ export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	});
 };
 
-// this api call for submit the reviewer feedback
+// Submit the feedback for student assignment
 export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
 	return localforage.getItem('authResponse',(error,value)=>{
 		const {jwt} =value;
@@ -46,7 +46,7 @@ export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
 	})
 }
 
-// Make notes submission api call to get submitted notes
+// get the student old exercise solution submision details
 export const getExerciseSubmission = async (courseId, exerciseId) => {
 	let responseData;
 	const { jwt } = await localforage.getItem('authResponse');
@@ -133,6 +133,7 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 	}
 };
 
+// get the Title out of slug for the page
 export const getTitleFromSlug = (slug) => {
 	if (slug){
 		var title = slug.replace(/[-__/_]/g, ' ')
@@ -230,6 +231,7 @@ export const getSlugOfPreviousCourse = (slug, exercises) => {
 	}
 };
 
+// filters the pending assignment from the list
 export const filterPendingAssignment = (assignments) => {
 	let pendingAssignmentList = [];
 	for (let i = 0; i < assignments.length; i++) {
