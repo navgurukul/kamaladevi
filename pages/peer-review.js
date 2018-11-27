@@ -48,18 +48,17 @@ class AssignmentReview extends React.Component {
 			assignments:[]
 		}
 	}
+	componentDidMount() {
+		loadAssignments(assignments => this.setState({assignments}));
+	}
 
 	render() {
 		const { assignments } = this.state;
 		console.log(assignments);
-		if (!assignments.length){
-			loadAssignments(assignments => this.setState({assignments}));
-			return null;
-		}
 		return (
 			<div>
 				<Header/>
-		   		<AssignmentsReview assignments={assignments} />
+		   	<AssignmentsReview assignments={assignments} />
 			</div>
 
 		);

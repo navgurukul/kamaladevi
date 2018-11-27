@@ -9,44 +9,72 @@ import TextField from "@material-ui/core/TextField";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import {reviewerFeedbackSubmission} from '../../services/courses';
+import {reviewerFeedbackSubmission} from "../../services/courses";
 
-const styles = theme => ({
-  root:{
-    marginLeft: theme.spacing.unit*2,
-    minWidth:'70vw', // // TODO: Test is it responsive?
-    height:'90vh'
-  },
-  pendingReviewHeading: {
-    fontWeight: "400",
-    fontSize: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 1.5
-  },
-  button: {
-    marginTop: theme.spacing.unit * 1.5,
-    marginRight: theme.spacing.unit * 1.5
-  },
-  approveButton:{
-    float:'right'
-  },
-  rejectButton:{
-    float:'left'
-  },
-  titles:{
-    fontWeight:'bold'
-  },
-  typography:{
-    display:'block',
-    marginBottom:theme.spacing.unit * 3
-  }
+const styles = theme => {
 
-});
+  return ({
+    root:{
+      flexGrow:1,
+      marginLeft: theme.spacing.unit ,
+      height:"100%",
+      overFlow:"scroll",
+      marginBottom: theme.spacing.unit * 3,
+      width:"75vw",
+      [theme.breakpoints.down('md')]:{
+        width: "65vw"
+      },
+      [theme.breakpoints.down('sm')]:{
+        width: "90vw"
+      },
+      [theme.breakpoints.down('xs')]:{
+        width: "80vw",
+      }
+    },
+    submissionContent:{
+      background:theme.palette.grey['100'],
+      boxShadow:theme.shadows[2],
+      marginBottom:theme.spacing.unit * 4,
+      marginTop:theme.spacing.unit * 2,
+
+    },
+    pendingReviewHeading: {
+      fontWeight: "400",
+      fontSize: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 1.5
+    },
+    approveButton:{
+      marginTop: theme.spacing.unit * 1.5,
+      float:"right",
+      [theme.breakpoints.down("xs")]: {
+        float:"none",
+        width:theme.spacing.unit * 28,
+      },
+    },
+    rejectButton:{
+      marginTop: theme.spacing.unit * 1.5,
+      marginRight: theme.spacing.unit * 5,
+      float:"left",
+      [theme.breakpoints.down("xs")]: {
+        float:"none",
+        width:theme.spacing.unit * 28
+      },
+    },
+    titles:{
+      fontWeight:"bold"
+    },
+    typography:{
+      display:"block",
+      marginBottom:theme.spacing.unit * 3
+    }
+  })
+}
 
 class AssignmentsReviewDetails extends React.Component {
 constructor(props) {
   super(props);
   this.state = {
-    notes: '',
+    notes: "",
   }
 }
 
@@ -55,7 +83,7 @@ inputHandler = (e) => {
 }
 
 hasReviewerGivenFeedback = () => {
-  if (this.state.notes === '') {
+  if (this.state.notes === "") {
     return false
   } else {
     return true
@@ -66,7 +94,7 @@ submitAssignment = (isApprove) => {
   // agar feedback me kuch data ha toh hi submit ho
   // warna alert dikha do aur kuch bi submit maat karo
   if(!this.hasReviewerGivenFeedback()){
-    alert('Phele aap apna reason dijiye.');
+    alert("Phele aap apna reason dijiye.");
     return;
   }
 
@@ -76,16 +104,16 @@ submitAssignment = (isApprove) => {
   reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
     .then(response => {
       this.setState({
-        notes:'',
+        notes:"",
       })
-      alert('Feedback dene ke liye sukhriya.')
+      alert("Feedback dene ke liye sukhriya.")
       removeCompletedAssignment()
     })
     .catch(error => {
       if(!window.navigator.onLine){
-        alert('Aap Internet se connect nhi ho.');
+        alert("Aap Internet se connect nhi ho.");
       } else {
-        alert('Kuch problem ke karan apka data save nhi hua.')
+        alert("Kuch problem ke karan apka data save nhi hua.")
       }
 
       console.log(error)
@@ -94,8 +122,11 @@ submitAssignment = (isApprove) => {
 
   render() {
     const { classes, selectedAssignment } = this.props;
+    const {notes} = this.state;
     const { courseId, exerciseSlug } = selectedAssignment;
     // Need to improve the UI
+    const submittedAt = new Date(selectedAssignment.submittedAt);
+    const submitterNotes = selectedAssignment.submitterNotes;
     return (
           <Card className={classes.root}>
             <CardContent>
@@ -103,11 +134,25 @@ submitAssignment = (isApprove) => {
                     Link to exercise
                     Submitter pic and Name
                   */}
+                  <img src={`${selectedAssignment.submitterProfilePicture}`} height="100" />
+                  <Typography className={classes.typography}>
+                    <span className={classes.titles}>
+                      Submitted by:
+                    </span>
+                    {` ${selectedAssignment.submitterName}`}
+                  </Typography>
+
+                  <Typography className={classes.typography}>
+                    <span className={classes.titles}>
+                      Submitted At:
+                    </span>
+                    {` ${submittedAt.toDateString()}`}
+                  </Typography>
                   <Typography className={classes.typography}>
                     <span className={classes.titles}>
                       Exercise Name:
                     </span>
-                    {`"${selectedAssignment.exerciseName}"`}
+                    {` ${selectedAssignment.exerciseName}`}
                   </Typography>
 
                   <Typography className={classes.typography}>
@@ -116,16 +161,22 @@ submitAssignment = (isApprove) => {
                     </a>
                   </Typography>
 
-                  <Typography className={classes.typography}>
+                  <Typography>
                     <span className={classes.titles}>
-                      Student ka submission:
+                      Student ka solution:
                     </span>
-                    <br />
-                    {/*// TODO: design a container for notes*/}
-                    {`"${selectedAssignment.submitterNotes}"`}
                   </Typography>
+                  <CardContent className={classes.submissionContent}>
 
-                  <Typography className={classes.typography}>
+                    {
+                      submitterNotes.startsWith("http")?
+                      <a href={submitterNotes}>{submitterNotes}</a>
+                      :submitterNotes
+                    }
+                  </CardContent>
+                    {/*// TODO: design a container for notes*/}
+
+                  <Typography>
                     <span className={classes.titles}>
                       Apna accept ya reject karne ka reason neeche diye gaye text box
                       mein likhe:
@@ -134,28 +185,29 @@ submitAssignment = (isApprove) => {
                   <TextField
                     multiline
                     fullWidth
+                    label="Apka reason yahan likhe:"
                     rowsMax="10"
                     margin="normal"
                     variant="outlined"
-                    value={this.state.notes}
+                    value={notes}
                     onChange={this.inputHandler}
                   />
                   <br></br>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
-                    className={`${classes.button} ${classes.approveButton}`}
+                    className={classes.approveButton}
                     onClick = {()=>this.submitAssignment(true)}
                     >
                     Approve Assignment
                   </Button>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
-                    className={`${classes.button} ${classes.rejectButton}`}
+                    className={classes.rejectButton}
                     onClick = {()=>this.submitAssignment(false)}
                     >
-                    Reject Assignment
+                    Dis-Approve Assignment
                   </Button>
           </CardContent>
         </Card>
@@ -164,7 +216,8 @@ submitAssignment = (isApprove) => {
 }
 
 AssignmentsReviewDetails.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  selectedAssignment: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AssignmentsReviewDetails);

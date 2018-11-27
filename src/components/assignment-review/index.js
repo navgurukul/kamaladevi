@@ -1,15 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { fetchApi } from "../../services/api";
 import localforage from "localforage";
+
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
+
+import { withStyles } from "@material-ui/core/styles";
+
+import { fetchApi } from "../../services/api";
+import {filterPendingAssignment}  from "../../services/courses"
+
 import AssignmentsReviewSidenav from "./assignment-review-sidenav";
 import AssignmentsReviewDetails from "./assignment-review-details";
-import {filterPendingAssignment}  from "../../services/courses"
+import AssignmentsReviewCompleted from "./assignment-review-completed";
+
 
 const drawerWidth = 300;
 
@@ -100,57 +106,66 @@ class AssignmentsReview extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    const { assignments, selectedAssignment, mobileOpen} = this.state;
     return (
       <div className={classes.root}>
-        <IconButton
-          color="inherit"
-          onClick={this.handleDrawerToggle}
-          className={classes.navIconHide}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Hidden mdUp>
-          <Drawer
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            <AssignmentsReviewSidenav
-              assignments={this.state.assignments}
-              showSelectedAssignment={this.showSelectedAssignment}
-            />
-          </Drawer>
-        </Hidden>
-        <Hidden smDown>
-          <Drawer
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            <AssignmentsReviewSidenav
-              assignments={this.state.assignments}
-              showSelectedAssignment={this.showSelectedAssignment}
-            />
-          </Drawer>
-        </Hidden>
-        <main className={classes.content}>
-          <AssignmentsReviewDetails
-            selectedAssignment={this.state.selectedAssignment}
-            removeCompletedAssignment={this.removeCompletedAssignment}
-            />
-        </main>
+        {
+          assignments.length?
+          <React.Fragment>
+            <IconButton
+              color="inherit"
+              onClick={this.handleDrawerToggle}
+              className={classes.navIconHide}
+              >
+              <MenuIcon />
+            </IconButton>
+            <Hidden mdUp>
+              <Drawer
+                open={mobileOpen}
+                onClose={this.handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                >
+                <AssignmentsReviewSidenav
+                  assignments={assignments}
+                  selectedAssignment={selectedAssignment}
+                  showSelectedAssignment={this.showSelectedAssignment}
+                  />
+              </Drawer>
+            </Hidden>
+            <Hidden smDown>
+              <Drawer
+                variant="permanent"
+                open
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                >
+                <AssignmentsReviewSidenav
+                  assignments={assignments}
+                  selectedAssignment={selectedAssignment}
+                  showSelectedAssignment={this.showSelectedAssignment}
+                  />
+              </Drawer>
+            </Hidden>
+            <main className={classes.content}>
+                <AssignmentsReviewDetails
+                  selectedAssignment={selectedAssignment}
+                  removeCompletedAssignment={this.removeCompletedAssignment}
+                  />
+            </main>
+          </React.Fragment>
+          :<AssignmentsReviewCompleted />
+        }
       </div>
     );
   }
 }
 
 AssignmentsReview.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  assignments: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(AssignmentsReview);

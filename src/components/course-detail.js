@@ -1,17 +1,24 @@
 // Course list
 import React from "react";
-import Router from "next/router";
 import Link from "next/link";
+import Router from "next/router";
 import PropTypes from "prop-types";
 import localforage from "localforage";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import ReactUtterences from "react-utterances";
+
+
 import Card from "@material-ui/core/Card";
-import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import ReactUtterences from "react-utterances";
+import Typography from "@material-ui/core/Typography";
+import CardContent from "@material-ui/core/CardContent";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
+import { withStyles } from "@material-ui/core/styles";
+
 import { fetchApi } from "../services/api";
+
 import {
   getSlugOfPreviousCourse,
   getSlugOfNextCourse,
@@ -19,9 +26,13 @@ import {
   getExerciseSubmission,
   getExerciseDetailFromSlug
 } from "../services/courses";
+import CourseDetailSubmission from "./course-detail-submission";
+
+import { getExerciseIdFromSlug } from "../services/courses";
 
 import CourseDetailSideNav from "./course-detail-sidenav";
-import { getExerciseIdFromSlug } from "../services/courses";
+
+
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
 // Parse markdown content
@@ -270,6 +281,7 @@ class CourseDetail extends React.Component {
     const reviewrs = ["peer", "facilitator", "automatic"];
 
     const { prefetchedData, content, previousNotesData } = this.state;
+    console.log(previousNotesData);
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>
@@ -294,14 +306,11 @@ class CourseDetail extends React.Component {
           </Card>
           <br />
           {/*previously submitted notes*/}
-          {previousNotesData[0] ? (
-            <Card className={classes.content}>
-              <b>Apke phele ka submission :</b>
-              <div className={classes.submitBox}>
-                {previousNotesData[0].submitterNotes}
-              </div>
-            </Card>
-          ) : null}
+          {
+            previousNotesData[0] ?
+            <CourseDetailSubmission submissionDetails={previousNotesData[0]} />
+           : null
+          }
           {/*submission form*/}
           {
             // TODO: Input box should be generated based on submissionType
