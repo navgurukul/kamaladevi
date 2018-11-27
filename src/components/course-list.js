@@ -18,67 +18,74 @@ import { fetchApi } from "../services/api";
 import { setEnrolledCourses } from "../services/courses";
 
 const styles = theme => ({
-  rootLoader: {
-    textAlign: "center",
-    paddingTop: theme.spacing.unit * 20
-  },
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    paddingBottom: theme.spacing.unit * 5
-  },
-  rootContent: {
-    paddingTop: theme.spacing.unit * 5,
-    display: "flex",
-    flexDirection: "column",
-    width: "80%",
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      paddingLeft: 10,
-      paddingRight: 10
-    }
-  },
-  cardMarginRightBot: {
-    marginRight: 25,
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    cursor: "pointer",
-    [theme.breakpoints.down("sm")]: {
-      marginRight: 2.5
-    }
-  },
-  cardMarginLeftBot: {
-    marginLeft: 25,
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    [theme.breakpoints.down("sm")]: {
-      marginRight: 2.5
-    },
-    cursor: "pointer"
-  },
-  cardGrid: {
-    marginBottom: 10
-  },
-  avbCoursesContainer: {
-    paddingTop: theme.spacing.unit * 5
-  },
-  containerHeadingItem: {
-    paddingBottom: theme.spacing.unit * 2
-  },
-  enrolledProgress: {
-    paddingTop: theme.spacing.unit
-  },
-  dividerContainer: {
-    paddingTop: theme.spacing.unit * 2,
-    justifyContent: "center"
-  },
-  progress: {
-    margin: theme.spacing.unit * 2
-  }
+	rootLoader: {
+		textAlign: 'center',
+		paddingTop: theme.spacing.unit * 20,
+	},
+	root: {
+		display: 'flex',
+		justifyContent: 'center',
+		paddingBottom: 50,
+	},
+	rootContent: {
+		paddingTop: theme.spacing.unit * 5,
+		display: 'flex',
+		flexDirection: 'column',
+		width: '80%',
+		[theme.breakpoints.down('sm')]: {
+			width: '100%',
+			paddingLeft: 10,
+			paddingRight: 10,
+		},
+	},
+	cardMarginRightBot: {
+		marginRight: 25,
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		cursor:'pointer',
+		[theme.breakpoints.down('sm')]: {
+			marginRight: 2.5,
+		},
+	},
+	cardMarginLeftBot: {
+		marginLeft: 25,
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		[theme.breakpoints.down('sm')]: {
+			marginRight: 2.5,
+		},
+		cursor:'pointer'
+	},
+	imageContainer:{
+		display: 'flex',
+	},
+	image:{
+		paddingTop:theme.spacing.unit * 3,
+		marginLeft: theme.spacing.unit * 1,
+	},
+	cardGrid: {
+		marginBottom: 10,
+	},
+	avbCoursesContainer: {
+		paddingTop: theme.spacing.unit * 5,
+	},
+	containerHeadingItem: {
+		paddingBottom: theme.spacing.unit * 2,
+	},
+	enrolledProgress: {
+		paddingTop: theme.spacing.unit,
+	},
+	dividerContainer: {
+		paddingTop: theme.spacing.unit * 2,
+		justifyContent: 'center',
+	},
+	progress: {
+		margin: theme.spacing.unit * 1,
+	},
 });
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
@@ -198,94 +205,81 @@ class CourseList extends React.Component {
             </Grid>
           </Grid>
 
-          {/* Available courses list */}
-          <Grid container spacing={0} className={classes.avbCoursesContainer}>
-            <Grid item xs={12} className={classes.containerHeadingItem}>
-              {availableCourses.length ? (
-                <Typography
-                  variant="headline"
-                  component="h2"
-                  align="center"
-                  gutterBottom
-                >
-                  Aap yeh courses mein enroll kar skte hai
-                </Typography>
-              ) : (
-                ""
-              )}
-            </Grid>
-            {availableCourses.map((value, key) => (
-              <Grid item xs={6} key={value.id} className={classes.cardGrid}>
-                <Link
-                  href={{
-                    pathname: "/course",
-                    query: { id: value.id }
-                  }}
-                >
-                  <Card
-                    variant="raised"
-                    className={
-                      key % 2 === 0
-                        ? classes.cardMarginRightBot
-                        : classes.cardMarginLeftBot
-                    }
-                  >
-                    <CardContent>
-                      <Typography variant="headline" component="h2">
-                        {value.name}
-                      </Typography>
-                      <Typography color="textSecondary">
-                        {value.shortDescription}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </Grid>
-            ))}
-          </Grid>
+					{/* Available courses list */}
+					<Grid container spacing={0} className={classes.avbCoursesContainer}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
+							{availableCourses.length ? (
+								<Typography variant="headline" component="h2" align="center" gutterBottom>
+								Aap yeh courses mein enroll kar skte hai
+								</Typography>
+							) : ''}
+						</Grid>
+						{availableCourses.map((value, key) => (
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+								<Link
+									href={{
+										pathname: '/course',
+										query: { id: value.id },
+									}}
+									>
+									<Card
+										variant="raised"
+										className={
+											(key % 2 === 0)
+											? classes.cardMarginRightBot
+											: classes.cardMarginLeftBot}
+											>
+											<div className={classes.imageContainer} >
+												<img className={classes.image} src={value.logo} width="30" height="55" />
+												<CardContent>
+													<Typography variant="headline" component="h2">
+														{value.name}
+													</Typography>
+													<Typography color="textSecondary">
+														{value.shortDescription}
+													</Typography>
+												</CardContent>
+											</div>
+										</Card>
+								</Link>
+							</Grid>
+						))}
+					</Grid>
 
-          {/* Facilitating courses list */}
-          <Grid container spacing={0} className={classes.avbCoursesContainer}>
-            <Grid item xs={12} className={classes.containerHeadingItem}>
-              {facilitatingCourses.length ? (
-                <Typography
-                  variant="headline"
-                  component="h2"
-                  align="center"
-                  gutterBottom
-                >
-                  Aap yeh courses ko facilitate kar rahe hai
-                </Typography>
-              ) : (
-                ""
-              )}
-            </Grid>
-            {facilitatingCourses.map((value, key) => (
-              <Grid item xs={6} key={value.id} className={classes.cardGrid}>
-                <Card
-                  variant="raised"
-                  className={
-                    key % 2 === 0
-                      ? classes.cardMarginRightBot
-                      : classes.cardMarginLeftBot
-                  }
-                >
-                  <CardContent>
-                    <Typography variant="headline" component="h2">
-                      {value.name}
-                    </Typography>
-                    <Typography color="textSecondary">
-                      {value.shortDescription}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </div>
-    );
-  }
+					{/* Facilitating courses list */}
+					<Grid container spacing={0} className={classes.avbCoursesContainer}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
+							{facilitatingCourses.length ? (
+								<Typography variant="headline" component="h2" align="center" gutterBottom>
+								Aap yeh courses ko facilitate kar rahe hai
+								</Typography>
+							) : ''}
+						</Grid>
+						{facilitatingCourses.map((value, key) => (
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+								<Card
+									variant="raised"
+									className={
+										(key % 2 === 0)
+											? classes.cardMarginRightBot
+											: classes.cardMarginLeftBot}
+								>
+									<CardContent>
+										<Typography variant="headline" component="h2">
+											{value.name}
+										</Typography>
+										<Typography color="textSecondary">
+											{value.shortDescription}
+										</Typography>
+									</CardContent>
+								</Card>
+							</Grid>
+						))}
+					</Grid>
+				</div>
+			</div>
+		);
+	}
 }
 
 CourseList.propTypes = {
