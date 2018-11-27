@@ -14,7 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../../services/api';
-import { setEnrolledCourses, sortSequenceNumOfCourses } from '../../services/courses';
+import { setEnrolledCourses, sortCoursesBySequenceNum } from '../../services/courses';
 
 import CourseListCategory from './course-list-category';
 import CourseListDragAndDrop from './course-list-dragdrop';
@@ -202,7 +202,7 @@ class CourseList extends React.Component {
 						enrolledCourses.length?
 						<CourseListCategory
 							headline={'Courses jis mein aap enrolled hai'}
-							courses={sortSequenceNumOfCourses(enrolledCourses)}
+							courses={sortCoursesBySequenceNum(enrolledCourses)}
 							showProgress
 							/>
 						:''
@@ -219,7 +219,7 @@ class CourseList extends React.Component {
 						availableCourses.length?
 						<CourseListCategory
 						headline={'Aap yeh courses mein enroll kar skte hai'}
-						courses={sortSequenceNumOfCourses(availableCourses)}
+						courses={sortCoursesBySequenceNum(availableCourses)}
 						paddingTop
 						/>
 						:''
@@ -230,7 +230,7 @@ class CourseList extends React.Component {
 						facilitatingCourses.length?
 						<CourseListCategory
 							headline={'Aap yeh courses ko facilitate kar rahe hai'}
-							courses={sortSequenceNumOfCourses(facilitatingCourses)}
+							courses={sortCoursesBySequenceNum(facilitatingCourses)}
 							paddingTop
 							/>
 						:''
