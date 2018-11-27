@@ -257,22 +257,29 @@ class CourseList extends React.Component {
 						</Grid>
 						{facilitatingCourses.map((value, key) => (
 							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
-								<Card
-									variant="raised"
-									className={
-										(key % 2 === 0)
-											? classes.cardMarginRightBot
-											: classes.cardMarginLeftBot}
-								>
-									<CardContent>
-										<Typography variant="headline" component="h2">
-											{value.name}
-										</Typography>
-										<Typography color="textSecondary">
-											{value.shortDescription}
-										</Typography>
-									</CardContent>
-								</Card>
+								<Link
+									href={{
+										pathname: '/course',
+										query: { id: value.id },
+									}}
+									>
+									<Card
+										variant="raised"
+										className={
+											(key % 2 === 0)
+												? classes.cardMarginRightBot
+												: classes.cardMarginLeftBot}
+									>
+										<CardContent>
+											<Typography variant="headline" component="h2">
+												{value.name}
+											</Typography>
+											<Typography color="textSecondary">
+												{value.shortDescription}
+											</Typography>
+										</CardContent>
+									</Card>
+								</Link>	
 							</Grid>
 						))}
 					</Grid>

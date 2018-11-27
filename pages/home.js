@@ -2,7 +2,7 @@
 import React from 'react';
 
 import withRoot from '../src/with-root';
-import CourseList from '../src/components/course-list';
+import CourseList from '../src/components/courses-list';
 import Header from '../src/components/header';
 
 const Home = () => (
