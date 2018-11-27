@@ -40,7 +40,7 @@ export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
 		const {jwt} =value;
 		const payload = {
 			notes:notes,
-			approve:isApprove
+			approved:isApprove
 		}
 	   return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
 	})
@@ -229,3 +229,14 @@ export const getSlugOfPreviousCourse = (slug, exercises) => {
 		}
 	}
 };
+
+export const filterPendingAssignment = (assignments) => {
+	let pendingAssignmentList = [];
+	for (let i = 0; i < assignments.length; i++) {
+		let assignment = assignments[i];
+		if(!assignment.completed && assignment.state === 'pending'){
+			pendingAssignmentList.push(assignment)
+		}
+	}
+	return pendingAssignmentList
+}

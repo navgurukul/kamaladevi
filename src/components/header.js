@@ -38,6 +38,11 @@ function Header(props) {
             Saral
 						</a>
 					</Typography>
+					<IconButton className={classes.menuButton} color="inherit" aria-label="Review Assignments">
+						<a href='/peer-review'>
+							<img src='/static/icons/assignment-logo.png' height='45' />
+						</a>
+					</IconButton>
 				</Toolbar>
 			</AppBar>
 		</div>

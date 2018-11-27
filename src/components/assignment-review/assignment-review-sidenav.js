@@ -8,18 +8,19 @@ import Typography from "@material-ui/core/Typography";
 const styles = theme => ({
   cardText: {
     float: "left",
-    paddingRight: "18px"
+    paddingRight: theme.spacing.unit * 2.5
   },
   studentName: {
-    marginTop: "20px"
+    marginTop: theme.spacing.unit * 3
   },
   blocks: {
     marginLeft: theme.spacing.unit,
     marginTop: theme.spacing.unit * 2,
-    width: theme.spacing.unit * 25,
+    width: "100%",
+    maxWidth:theme.spacing.unit * 35,
     minHeight: theme.spacing.unit * 15,
     [theme.breakpoints.down('sm')]: {
-			height: theme.spacing.unit * 30
+			height: theme.spacing.unit * 15
 		},
   }
 });
@@ -33,13 +34,14 @@ class AssignmentsReviewSidenav extends React.Component {
 
 
   render() {
-    const { classes, assigments, updatedSelectedCard } = this.props;
+    // Need to improve cards
+    const { classes, assignments, showSelectedAssignment } = this.props;
     return (
       <React.Fragment>
-        {assigments.map((value) => (
-          <Card 
-            className={classes.blocks} 
-            onClick={() => updatedSelectedCard(value)} 
+        {assignments.map((value) => (
+          <Card
+            className={classes.blocks}
+            onClick={() => showSelectedAssignment(value)}
             key={value.id}
             >
             <CardContent>
