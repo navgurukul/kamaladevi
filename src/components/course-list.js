@@ -1,21 +1,21 @@
 // Course list
-import React from 'react';
-import Link from 'next/link';
-import PropTypes from 'prop-types';
-import localforage from 'localforage';
-import Router from 'next/router';
+import React from "react";
+import Link from "next/link";
+import PropTypes from "prop-types";
+import localforage from "localforage";
+import Router from "next/router";
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { withStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 
-import { fetchApi } from '../services/api';
-import { setEnrolledCourses } from '../services/courses';
+import { fetchApi } from "../services/api";
+import { setEnrolledCourses } from "../services/courses";
 
 const styles = theme => ({
 	rootLoader: {
@@ -90,91 +90,111 @@ const styles = theme => ({
 // change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
 class CourseList extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			prefetchedData: false,
-			availableCourses: [],
-			// For future uses
-			enrolledCourses: [],
-			facilitatingCourses: [],
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      prefetchedData: false,
+      availableCourses: [],
+      // For future uses
+      enrolledCourses: [],
+      facilitatingCourses: []
+    };
+  }
 
-	componentDidMount() {
-		localforage.getItem('authResponse', (error, value) => {
-			if (!error) {
-				if (value === null) {
-					Router.replace('/');
-				} else {
-					const { jwt } = value;
-					fetchApi('/courses', {}, { Authorization: jwt })
-						.then((response) => {
-							setEnrolledCourses(response.data);
-							this.setState({
-								prefetchedData: true,
-								...response.data,
-							});
-						})
-						.catch(() => { /* TODO: Handle network error cases */ });
-				}
-			} else {
-				// TODO: Handle error cases
-			}
-		});
-	}
+  componentDidMount() {
+    localforage.getItem("authResponse", (error, value) => {
+      if (!error) {
+        if (value === null) {
+          Router.replace("/");
+        } else {
+          const { jwt } = value;
+          fetchApi("/courses", {}, { Authorization: jwt })
+            .then(response => {
+              setEnrolledCourses(response.data);
+              this.setState({
+                prefetchedData: true,
+                ...response.data
+              });
+            })
+            .catch(() => {
+              /* TODO: Handle network error cases */
+            });
+        }
+      } else {
+        // TODO: Handle error cases
+      }
+    });
+  }
 
-	render() {
-		const { classes } = this.props;
-		const {
-			availableCourses, enrolledCourses, facilitatingCourses, prefetchedData,
-		} = this.state;
-		if (!prefetchedData) {
-			return (
-				<div className={classes.rootLoader}>
-					<CircularProgress className={classes.progress} size={50} />
-				</div>);
-		}
-		return (
+  render() {
+    const { classes } = this.props;
+    const {
+      availableCourses,
+      enrolledCourses,
+      facilitatingCourses,
+      prefetchedData
+    } = this.state;
+    if (!prefetchedData) {
+      return (
+        <div className={classes.rootLoader}>
+          <CircularProgress className={classes.progress} size={50} />
+        </div>
+      );
+    }
+    return (
 			<div className={classes.root}>
 				<div className={classes.rootContent}>
 					<Grid container spacing={0}>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
 							{enrolledCourses.length ? (
-								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Courses jis mein aap enrolled hai
+								<Typography
+									variant="headline"
+									component="h2"
+									align="center"
+									gutterBottom
+									>
+									Courses jis mein aap enrolled hai
 								</Typography>
-							) : ''}
+							) : (
+								""
+							)}
 						</Grid>
 						{/* Enrolled courses list  */}
 						{enrolledCourses.map((value, key) => (
 							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
 								<Link
 									href={{
-										pathname: '/course',
-										query: { id: value.id },
+										pathname: "/course",
+										query: { id: value.id }
 									}}
 									>
-								<Card
-									variant="raised"
-									className={
-										(key % 2 === 0)
+									<Card
+										variant="raised"
+										className={
+											key % 2 === 0
 											? classes.cardMarginRightBot
-											: classes.cardMarginLeftBot}
-								>
-									<CardContent>
-										<Typography variant="headline" component="h2">
-											{value.name}
-										</Typography>
-										<Typography color="textSecondary">
-											{value.shortDescription}
-										</Typography>
-										<div className={classes.enrolledProgress}>
-											<LinearProgress variant="determinate" value={(value.completedSubmissions * 100) / value.totalExercises} />
-										</div>
-									</CardContent>
-								</Card>
-							</Link>
+											: classes.cardMarginLeftBot
+										}
+										>
+										<CardContent>
+											<Typography variant="headline" component="h2">
+												{value.name}
+											</Typography>
+											<Typography color="textSecondary">
+												{value.shortDescription}
+											</Typography>
+											<div className={classes.enrolledProgress}>
+												<LinearProgress
+													variant="determinate"
+													value={
+														(value.completedSubmissions * 100) /
+														value.totalExercises
+													}
+													/>
+											</div>
+										</CardContent>
+									</Card>
+								</Link>
 							</Grid>
 						))}
 					</Grid>
@@ -190,7 +210,7 @@ class CourseList extends React.Component {
 						<Grid item xs={12} className={classes.containerHeadingItem}>
 							{availableCourses.length ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Aap yeh courses mein enroll kar skte hai
+									Aap yeh courses mein enroll kar skte hai
 								</Typography>
 							) : ''}
 						</Grid>
@@ -221,56 +241,56 @@ class CourseList extends React.Component {
 												</CardContent>
 											</div>
 										</Card>
-								</Link>
-							</Grid>
-						))}
-					</Grid>
-
-					{/* Facilitating courses list */}
-					<Grid container spacing={0} className={classes.avbCoursesContainer}>
-						<Grid item xs={12} className={classes.containerHeadingItem}>
-							{facilitatingCourses.length ? (
-								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Aap yeh courses ko facilitate kar rahe hai
-								</Typography>
-							) : ''}
+									</Link>
+								</Grid>
+							))}
 						</Grid>
-						{facilitatingCourses.map((value, key) => (
-							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
-								<Link
-									href={{
-										pathname: '/course',
-										query: { id: value.id },
-									}}
-									>
-									<Card
-										variant="raised"
-										className={
-											(key % 2 === 0)
+
+						{/* Facilitating courses list */}
+						<Grid container spacing={0} className={classes.avbCoursesContainer}>
+							<Grid item xs={12} className={classes.containerHeadingItem}>
+								{facilitatingCourses.length ? (
+									<Typography variant="headline" component="h2" align="center" gutterBottom>
+										Aap yeh courses ko facilitate kar rahe hai
+									</Typography>
+								) : ''}
+							</Grid>
+							{facilitatingCourses.map((value, key) => (
+								<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+									<Link
+										href={{
+											pathname: '/course',
+											query: { id: value.id },
+										}}
+										>
+										<Card
+											variant="raised"
+											className={
+												(key % 2 === 0)
 												? classes.cardMarginRightBot
 												: classes.cardMarginLeftBot}
-									>
-										<CardContent>
-											<Typography variant="headline" component="h2">
-												{value.name}
-											</Typography>
-											<Typography color="textSecondary">
-												{value.shortDescription}
-											</Typography>
-										</CardContent>
-									</Card>
-								</Link>	
+												>
+												<CardContent>
+													<Typography variant="headline" component="h2">
+														{value.name}
+													</Typography>
+													<Typography color="textSecondary">
+														{value.shortDescription}
+													</Typography>
+												</CardContent>
+											</Card>
+										</Link>
+									</Grid>
+								))}
 							</Grid>
-						))}
-					</Grid>
-				</div>
-			</div>
-		);
+						</div>
+					</div>
+				);
 	}
 }
 
 CourseList.propTypes = {
-	classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(CourseList);

@@ -54,7 +54,7 @@ const CourseListCard = (props) => {
           <Card
             variant="raised"
 						className={cardClass}
-          >
+          	>
 					<Grid container spacing={16}>
 							<Grid	item xs={2} sm md={2}>
 									<img className={classes.image} src={value.logo} />

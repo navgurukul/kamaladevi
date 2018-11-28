@@ -23,10 +23,11 @@ export const addEnrolledCourses = (courseId) => {
 	});
 };
 
-// Make notes submission api call to submit notes for students
+// submit student assignment
 export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
+
 	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
 			.then((response) => {
 					console.log(response);
@@ -37,6 +38,20 @@ export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 	});
 };
 
+// Submit the feedback for student assignment
+export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
+	return localforage.getItem('authResponse',(error,value)=>{
+		const {jwt} =value;
+		const payload = {
+			notes:notes,
+			approved:isApprove
+		}
+	   return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
+	})
+}
+
+
+// save course new sequenceNum
 export const saveCoursesSequence = (payload) => {
 	return localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
@@ -44,6 +59,7 @@ export const saveCoursesSequence = (payload) => {
 	});
 };
 
+// delete a course
 export const deleteCourseAPI = (courseId) => {
 	return localforage.getItem('authResponse', (error, value)=>{
 		const { jwt } =  value;
@@ -51,7 +67,7 @@ export const deleteCourseAPI = (courseId) => {
 	});
 };
 
-// Make notes submission api call to get submitted notes
+// get the student old exercise solution submision details
 export const getExerciseSubmission = async (courseId, exerciseId) => {
 	let responseData;
 	const { jwt } = await localforage.getItem('authResponse');
@@ -138,6 +154,7 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 	}
 };
 
+// get the Title out of slug for the page
 export const getTitleFromSlug = (slug) => {
 	if (slug){
 		var title = slug.replace(/[-__/_]/g, ' ')
@@ -217,7 +234,8 @@ export const getSlugOfNextCourse = (slug, exercises) => {
 	}
 };
 
-export const sortSequenceNumOfCourses = courses => {
+// sort the courses by sequenceNum
+export const sortCoursesBySequenceNum = courses => {
 	let sortedCourses = Array.from(courses);
 	sortedCourses.sort((a,b)=>{
 		return a.sequenceNum - b.sequenceNum;
@@ -241,3 +259,15 @@ export const getSlugOfPreviousCourse = (slug, exercises) => {
 		}
 	}
 };
+
+// filters the pending assignment from the list
+export const filterPendingAssignment = (assignments) => {
+	let pendingAssignmentList = [];
+	for (let i = 0; i < assignments.length; i++) {
+		let assignment = assignments[i];
+		if(!assignment.completed && assignment.state === 'pending'){
+			pendingAssignmentList.push(assignment)
+		}
+	}
+	return pendingAssignmentList
+}
