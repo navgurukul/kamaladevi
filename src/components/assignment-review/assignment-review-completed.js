@@ -18,7 +18,8 @@ const AssignmentsReviewCompleted = (props) => {
 	const { classes } = props;
 	return (
 		<div className={classes.root}>
-			No data left
+			Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye<br/>
+			aap apni padhai continue karsakte ha.	
 		</div>
 	);
 }

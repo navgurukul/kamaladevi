@@ -138,7 +138,7 @@ class CourseListDragAndDrop extends React.Component {
 			notifcationMessage:'',
 			deletableCourseIndex: null,
 			showConfirmDeleteBox:false,
-			deleteButtonShow:false,
+			showDeleteArea:false,
 		}
 	}
 
@@ -199,6 +199,7 @@ class CourseListDragAndDrop extends React.Component {
 					} = remove(currentCoursesSequence,deletableCourseIndex);
 		let notifcationMessage;
 
+		//API call for the course and show alert for type of response
 		deleteCourseAPI(removed.id)
 			.then((response) => {
 					notifcationMessage = `${removed.name} course deleted.`
@@ -224,6 +225,7 @@ class CourseListDragAndDrop extends React.Component {
 
 	};
 
+	// remove the selected id from deleting index
 	cancelCourseDelete = () => {
 		this.setState({
 			deletableCourseIndex: null,
@@ -231,6 +233,7 @@ class CourseListDragAndDrop extends React.Component {
 		})
 	}
 
+	// closes the notifcationMessage
 	handleCloseSaveNotification = () => {
 		this.setState({
 			showNotification: false,
@@ -238,6 +241,8 @@ class CourseListDragAndDrop extends React.Component {
 		})
 	}
 
+	// update the sequenceNum of each course
+	// when user clicks save
 	updateSequenceNumber = courses => {
 		// update sequence
 		const updatedCourse = Array.from(courses);
@@ -247,20 +252,25 @@ class CourseListDragAndDrop extends React.Component {
 		return updatedCourse;
 	}
 
-
+	// Does user want to delete courses or not?
+	// then toggle it.
 	toggleCourseDeleteButton = () => {
 		this.setState((prevState) => {
 			return {
-				deleteButtonShow:!prevState.deleteButtonShow
+				showDeleteArea:!prevState.showDeleteArea
 			}
 		});
 	}
 
+	// What should happen on dropping courses after we drag them
 	onDragEnd = result => {
+		// when the course is  picked but hasn't been moved out
+		// to destination
 		if (!result.destination) {
       	return;
     	}
 
+		// when the course is drop to delete it
 		if (result.destination.droppableId === 'delete'){
 			this.setState({
 				deletableCourseIndex: result.source.index,
@@ -269,10 +279,12 @@ class CourseListDragAndDrop extends React.Component {
 			return;
 		}
 
+		// when course is put back from where it was drag
 		if (result.source.index === result.destination.index){
 			return;
 		}
 
+		// reorder with new course sequenceNum
     let newCourseSequence = reorder(
       this.state.currentCoursesSequence,
       result.source.index,
@@ -300,10 +312,14 @@ class CourseListDragAndDrop extends React.Component {
 				showNotification,
 				notifcationMessage,
 				showConfirmDeleteBox,
-				deleteButtonShow,
+				showDeleteArea,
 				deletableCourseIndex
 			} = this.state;
-			const courseGridSize = deleteButtonShow?9:12; //make space for delete button
+
+			//make space for delete button
+			const courseGridSize = showDeleteArea?9:12;
+
+
 			return (
 			<div className={classes.root}>
 				<Button
@@ -312,7 +328,7 @@ class CourseListDragAndDrop extends React.Component {
 					onClick={this.toggleCourseDeleteButton}
 					className={`${classes.floatRight} ${classes.deleteButton}`}
 					>
-						{	!deleteButtonShow? 'Delete Courses': 'Stop Deleting Courses'}
+						{	!showDeleteArea? 'Delete Courses': 'Stop Deleting Courses'}
 				</Button>
 				<DragDropContext
 					onDragEnd={this.onDragEnd}
@@ -347,7 +363,7 @@ class CourseListDragAndDrop extends React.Component {
 						</Grid>
 						<Grid container>
 							{
-								deleteButtonShow?
+								showDeleteArea?
 								<Grid item xs={4} sm={3}>
 									<div>
 										<Droppable droppableId="delete">
@@ -358,9 +374,14 @@ class CourseListDragAndDrop extends React.Component {
 														{...provided.droppableProps}
 														className={classes.deleteArea}
 														>
-														{snapshot.isDraggingOver?<DeleteForeverIcon />:<DeleteIcon />} <br />
-														To Delete <br />
-														Drag Here.
+															{
+																snapshot.isDraggingOver?
+																<DeleteForeverIcon />
+																:<DeleteIcon />
+															} 
+																<br />
+																To Delete <br />
+																Drag Here.
 														{provided.placeholder}
 													</div>
 												)}}

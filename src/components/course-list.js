@@ -142,75 +142,75 @@ class CourseList extends React.Component {
       );
     }
     return (
-      <div className={classes.root}>
-        <div className={classes.rootContent}>
-          <Grid container spacing={0}>
-            <Grid item xs={12} className={classes.containerHeadingItem}>
-              {enrolledCourses.length ? (
-                <Typography
-                  variant="headline"
-                  component="h2"
-                  align="center"
-                  gutterBottom
-                >
-                  Courses jis mein aap enrolled hai
-                </Typography>
-              ) : (
-                ""
-              )}
-            </Grid>
-            {/* Enrolled courses list  */}
-            {enrolledCourses.map((value, key) => (
-              <Grid item xs={6} key={value.id} className={classes.cardGrid}>
-                <Link
-                  href={{
-                    pathname: "/course",
-                    query: { id: value.id }
-                  }}
-                >
-                  <Card
-                    variant="raised"
-                    className={
-                      key % 2 === 0
-                        ? classes.cardMarginRightBot
-                        : classes.cardMarginLeftBot
-                    }
-                  >
-                    <CardContent>
-                      <Typography variant="headline" component="h2">
-                        {value.name}
-                      </Typography>
-                      <Typography color="textSecondary">
-                        {value.shortDescription}
-                      </Typography>
-                      <div className={classes.enrolledProgress}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={
-                            (value.completedSubmissions * 100) /
-                            value.totalExercises
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </Grid>
-            ))}
-          </Grid>
+			<div className={classes.root}>
+				<div className={classes.rootContent}>
+					<Grid container spacing={0}>
+						<Grid item xs={12} className={classes.containerHeadingItem}>
+							{enrolledCourses.length ? (
+								<Typography
+									variant="headline"
+									component="h2"
+									align="center"
+									gutterBottom
+									>
+									Courses jis mein aap enrolled hai
+								</Typography>
+							) : (
+								""
+							)}
+						</Grid>
+						{/* Enrolled courses list  */}
+						{enrolledCourses.map((value, key) => (
+							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+								<Link
+									href={{
+										pathname: "/course",
+										query: { id: value.id }
+									}}
+									>
+									<Card
+										variant="raised"
+										className={
+											key % 2 === 0
+											? classes.cardMarginRightBot
+											: classes.cardMarginLeftBot
+										}
+										>
+										<CardContent>
+											<Typography variant="headline" component="h2">
+												{value.name}
+											</Typography>
+											<Typography color="textSecondary">
+												{value.shortDescription}
+											</Typography>
+											<div className={classes.enrolledProgress}>
+												<LinearProgress
+													variant="determinate"
+													value={
+														(value.completedSubmissions * 100) /
+														value.totalExercises
+													}
+													/>
+											</div>
+										</CardContent>
+									</Card>
+								</Link>
+							</Grid>
+						))}
+					</Grid>
 
-          <Grid container spacing={0} className={classes.dividerContainer}>
-            <Grid item xs={6}>
-              <Divider />
-            </Grid>
-          </Grid>
+					<Grid container spacing={0} className={classes.dividerContainer}>
+						<Grid item xs={6}>
+							<Divider />
+						</Grid>
+					</Grid>
 
 					{/* Available courses list */}
 					<Grid container spacing={0} className={classes.avbCoursesContainer}>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
 							{availableCourses.length ? (
 								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Aap yeh courses mein enroll kar skte hai
+									Aap yeh courses mein enroll kar skte hai
 								</Typography>
 							) : ''}
 						</Grid>
@@ -241,51 +241,51 @@ class CourseList extends React.Component {
 												</CardContent>
 											</div>
 										</Card>
-								</Link>
-							</Grid>
-						))}
-					</Grid>
-
-					{/* Facilitating courses list */}
-					<Grid container spacing={0} className={classes.avbCoursesContainer}>
-						<Grid item xs={12} className={classes.containerHeadingItem}>
-							{facilitatingCourses.length ? (
-								<Typography variant="headline" component="h2" align="center" gutterBottom>
-								Aap yeh courses ko facilitate kar rahe hai
-								</Typography>
-							) : ''}
+									</Link>
+								</Grid>
+							))}
 						</Grid>
-						{facilitatingCourses.map((value, key) => (
-							<Grid item xs={6} key={value.id} className={classes.cardGrid}>
-								<Link
-									href={{
-										pathname: '/course',
-										query: { id: value.id },
-									}}
-									>
-									<Card
-										variant="raised"
-										className={
-											(key % 2 === 0)
+
+						{/* Facilitating courses list */}
+						<Grid container spacing={0} className={classes.avbCoursesContainer}>
+							<Grid item xs={12} className={classes.containerHeadingItem}>
+								{facilitatingCourses.length ? (
+									<Typography variant="headline" component="h2" align="center" gutterBottom>
+										Aap yeh courses ko facilitate kar rahe hai
+									</Typography>
+								) : ''}
+							</Grid>
+							{facilitatingCourses.map((value, key) => (
+								<Grid item xs={6} key={value.id} className={classes.cardGrid}>
+									<Link
+										href={{
+											pathname: '/course',
+											query: { id: value.id },
+										}}
+										>
+										<Card
+											variant="raised"
+											className={
+												(key % 2 === 0)
 												? classes.cardMarginRightBot
 												: classes.cardMarginLeftBot}
-									>
-										<CardContent>
-											<Typography variant="headline" component="h2">
-												{value.name}
-											</Typography>
-											<Typography color="textSecondary">
-												{value.shortDescription}
-											</Typography>
-										</CardContent>
-									</Card>
-								</Link>	
+												>
+												<CardContent>
+													<Typography variant="headline" component="h2">
+														{value.name}
+													</Typography>
+													<Typography color="textSecondary">
+														{value.shortDescription}
+													</Typography>
+												</CardContent>
+											</Card>
+										</Link>
+									</Grid>
+								))}
 							</Grid>
-						))}
-					</Grid>
-				</div>
-			</div>
-		);
+						</div>
+					</div>
+				);
 	}
 }
 

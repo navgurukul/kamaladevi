@@ -27,6 +27,7 @@ const styles = theme => ({
     background:theme.palette.grey["50"],
     marginLeft: theme.spacing.unit,
     marginTop: theme.spacing.unit * 2.5,
+    marginBottom: theme.spacing.unit * 2.5,
     width: "100%",
     maxWidth:theme.spacing.unit * 33,
     minHeight: theme.spacing.unit * 15,
@@ -69,14 +70,14 @@ const AssignmentsReviewSidenav = (props) => {
                 {/*Main Content of Assignment*/}
                 <CardContent>
                   <Grid container>
-                    <Grid item sm={3}>
+                    <Grid item sm={3} md={3} xs={3}>
                       <img
                         className={classes.assignmentLogo}
                         src="/static/icons/assignment-logo.png"
                         height="40"
                       />
                     </Grid>
-                    <Grid item sm={9}>
+                    <Grid item sm={9} md={9} xs={9}>
                       <Typography className={classes.studentName}>
                         {assignment.submitterName}
                       </Typography>

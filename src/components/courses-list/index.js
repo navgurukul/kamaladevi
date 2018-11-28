@@ -67,7 +67,6 @@ const styles = theme => ({
 		margin: theme.spacing.unit * 1,
 	},
 });
-// change rootContent, cardMarginRightBot, cardMarginLeftBot, cardGrid different spacing
 
 const navigateToEditMode = () => {
 	Router.push({
@@ -187,7 +186,7 @@ class CourseList extends React.Component {
 								variant="outlined"
 								color="primary"
 								className={classes.courseEditButton}
-								onClick={()=>{
+								onClick={() => {
 									this.setState({editCourseSequence:true});
 									navigateToEditMode();
 								}}
