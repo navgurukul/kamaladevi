@@ -168,11 +168,11 @@ class CourseDetail extends React.Component {
     } else if (submissionType == "text_large") {
       return notes.length <= 1500;
     } else if (submissionType == "url") {
-      return (
-        notes.match(
-          /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-        ) != null
-      );
+      if (!notes.startsWith("http")){
+        return false
+      } else {
+        return notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+      }
     }
     return true;
   };
