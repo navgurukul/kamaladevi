@@ -190,13 +190,15 @@ class CourseDetail extends React.Component {
       // TODO: something to alert user
       let message;
       if (submissionType == "number") {
-        message = `App nich ek integer value hi dal sakte hai`;
+        message = `App nich ek integer value hi dal sakte hai.`;
       } else if (submissionType == "text") {
-        message = `App niche 100 se jada character nhi dal sakte hai`;
+        message = `App niche 100 se jada character nhi dal sakte hai.`;
       } else if (submissionType == "text_large") {
-        message = `App niche 1500 se jada character nhi dal sakte hai`;
+        message = `App niche 1500 se jada character nhi dal sakte hai.`;
       } else if (submissionType == "url") {
-        message = `Apko niche ek url ka link dalna hai`;
+          message =  (!notes.startsWith("http"))?
+                  `Link ke aage http:// yea https:// hona chaiye.`
+                  : `Apko niche ek url ka link dalna hai.`;
       }
       alert(message);
       return;
