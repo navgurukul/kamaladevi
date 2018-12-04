@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../../services/api';
@@ -43,9 +43,15 @@ const styles = theme => ({
 	courseEditButton:{
 		display:'block',
 		float:'right',
-		width: theme.spacing.unit * 30,
+		margin: "0",
+		top: "auto",
+		float:"right",
+		right: theme.spacing.unit * 4,
+		bottom: theme.spacing.unit * 4,
+		left: "auto",
+		zIndex:"100",
+		position: "fixed",
 		[theme.breakpoints.down('xs')]: {
-			width: '100%',
 			fontSize: theme.spacing.unit * 2
 		},
 	},
@@ -183,15 +189,16 @@ class CourseList extends React.Component {
 						isAdmin?
 						<div>
 							<Button
-								variant="outlined"
+								variant="fab"
 								color="primary"
+								title="Edit Course Sequence"
 								className={classes.courseEditButton}
 								onClick={() => {
 									this.setState({editCourseSequence:true});
 									navigateToEditMode();
 								}}
 								>
-								Edit Course Sequence
+								<EditIcon />
 							</Button>
 						</div>
 						:null
@@ -217,10 +224,10 @@ class CourseList extends React.Component {
 					{
 						availableCourses.length?
 						<CourseListCategory
-						headline={'Aap yeh courses mein enroll kar skte hai'}
-						courses={sortCoursesBySequenceNum(availableCourses)}
-						paddingTop
-						/>
+							headline={'Aap yeh courses mein enroll kar skte hai'}
+							courses={sortCoursesBySequenceNum(availableCourses)}
+							paddingTop
+							/>
 						:''
 					}
 
