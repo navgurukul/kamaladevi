@@ -17,7 +17,6 @@ import { withStyles } from "@material-ui/core/styles";
 import {reviewerFeedbackSubmission} from "../../services/courses";
 
 const styles = theme => {
-  console.log(theme);
   return ({
     root:{
       flexGrow:1,

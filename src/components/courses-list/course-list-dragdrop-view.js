@@ -22,7 +22,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import AlertNotification from '../alert-notification';
-import CourseListCard from './course-list-drag-drop-card';
+import CourseListCard from './course-list-dragdrop-card';
 import CourseDeleteAlert from './course-delete-alert';
 import { saveCoursesSequence, deleteCourseAPI } from '../../services/courses';
 

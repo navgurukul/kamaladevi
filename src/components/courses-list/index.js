@@ -16,8 +16,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { fetchApi } from '../../services/api';
 import { setEnrolledCourses, sortCoursesBySequenceNum } from '../../services/courses';
 
-import CourseListCategory from './course-list-category';
-import CourseListDragAndDrop from './course-list-dragdrop';
+import CourseListCategoryView from './course-list-category-view';
+import CourseListDragAndDrop from './course-list-dragdrop-view';
 
 const styles = theme => ({
 	rootLoader: {
@@ -195,7 +195,7 @@ class CourseList extends React.Component {
 					{/* Enrolled courses list  */}
 					{
 						enrolledCourses.length?
-						<CourseListCategory
+						<CourseListCategoryView
 							headline={'Courses jis mein aap enrolled hai'}
 							courses={sortCoursesBySequenceNum(enrolledCourses)}
 							showProgress
@@ -212,7 +212,7 @@ class CourseList extends React.Component {
 					{/* Available courses list */}
 					{
 						availableCourses.length?
-						<CourseListCategory
+						<CourseListCategoryView
 							headline={'Aap yeh courses mein enroll kar skte hai'}
 							courses={sortCoursesBySequenceNum(availableCourses)}
 							paddingTop
@@ -223,7 +223,7 @@ class CourseList extends React.Component {
 					{/* Facilitating courses list */}
 					{
 						facilitatingCourses.length?
-						<CourseListCategory
+						<CourseListCategoryView
 							headline={'Aap yeh courses ko facilitate kar rahe hai'}
 							courses={sortCoursesBySequenceNum(facilitatingCourses)}
 							paddingTop

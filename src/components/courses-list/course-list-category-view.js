@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import CourseListCard from './course-list-card';
+import CourseListCard from './course-list-category-card';
 
 
 
@@ -37,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-const CourseListCategory = (props) => {
+const CourseListCategoryView = (props) => {
 	const {
 		classes,
 	 	headline,
@@ -66,7 +66,7 @@ const CourseListCategory = (props) => {
 	);
 }
 
-CourseListCategory.propTypes = {
+CourseListCategoryView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	headline: PropTypes.string.isRequired,
 	courses: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -74,8 +74,8 @@ CourseListCategory.propTypes = {
 	paddingTop: PropTypes.bool
 };
 
-CourseListCategory.defaultProps = {
+CourseListCategoryView.defaultProps = {
 	showProgress: false,
 	paddingTop: false
 }
-export default withStyles(styles)(CourseListCategory);
+export default withStyles(styles)(CourseListCategoryView);
