@@ -37,6 +37,7 @@ const styles = theme => ({
     minWidth: drawerWidth,
     overFlow:'scroll',
     height:'90vh',
+    zIndex:theme.zIndex.appBar-1,
     marginTop: theme.spacing.unit * 7,
     [theme.breakpoints.up("md")]: {
       position: "relative",

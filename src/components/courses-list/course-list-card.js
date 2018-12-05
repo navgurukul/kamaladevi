@@ -29,7 +29,14 @@ const styles = theme => ({
 	image:{
 		paddingTop:theme.spacing.unit * 3,
 		marginLeft: 25,
-		width: 50,
+		width: "50px",
+		[theme.breakpoints.up('xl')]: {
+      	width: "100px",
+				paddingTop:theme.spacing.unit
+    },
+		[theme.breakpoints.down('sm')]: {
+      	width: "100px",
+    },
 	},
 	enrolledProgress: {
 		paddingTop: theme.spacing.unit,
@@ -41,6 +48,24 @@ const styles = theme => ({
 	},
 	deleteIcon:{
 		fontSize:theme.spacing.unit*2
+	},
+	cardMargin: {
+		marginRight:theme.spacing.unit*3,
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		cursor:'pointer',
+		[theme.breakpoints.down('sm')]: {
+			marginRight: 2.5,
+			// wordWrap: 'break-word',
+		},
+	},
+	headline:{
+		fontSize:theme.spacing.unit * 2,
+		[theme.breakpoints.down('md')]: {
+			fontSize:theme.spacing.unit*1.8
+		},
 	}
 });
 
@@ -50,99 +75,50 @@ const CourseListCard = (props) => {
 				value,
 				showProgress,
 				index,
-				cardClass,
-				gridSize,
-				showDelete,
-				displayDeleteNotification,
 			} = props;
-	if (showDelete){
-		return (
-			<Grid item xs={gridSize} className={classes.root}>
-        <Card
-          variant="raised"
-					className={`${cardClass} ${classes.deleteCourse}`}
-        	>
-					<Grid>
-						<IconButton
-							color="primary"
-							onClick={() => displayDeleteNotification(index)}
-							title="Delete This Course?"
-							className={classes.deleteCourseButton}
-							>
-							<CloseIcon className={classes.deleteIcon} />
-						</IconButton>
+
+
+	return (
+		<Grid item md={3} xs={6} className={classes.root}>
+			<Link
+				href={{
+					pathname: '/course',
+					query: { id: value.id },
+				}}
+				>
+				<Card
+					variant="raised"
+					className={classes.cardMargin}
+					>
+					<Grid container>
+						<Grid	item xs={2} sm md>
+							<img className={classes.image} src={value.logo} />
+						</Grid>
+						<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
+							<CardContent>
+								<Typography variant="headline" className={classes.headline}>
+									{value.name}
+								</Typography>
+								<Typography color="textSecondary">
+									{value.shortDescription}
+								</Typography>
+								{
+									showProgress?
+									<div className={classes.enrolledProgress}>
+										<LinearProgress
+											variant="determinate"
+											value={(value.completedSubmissions * 100) / value.totalExercises}
+											/>
+									</div>
+									:null
+								}
+							</CardContent>
+						</Grid>
 					</Grid>
-					<Grid container spacing={16}>
-							<Grid	item xs={2} sm md={2}>
-									<img className={classes.image} src={value.logo} />
-							</Grid>
-							<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
-									<CardContent>
-											<Typography variant="headline" component="h2">
-												{value.name}
-											</Typography>
-											<Typography color="textSecondary">
-												{value.shortDescription}
-											</Typography>
-											{
-												showProgress?
-												<div className={classes.enrolledProgress}>
-													<LinearProgress
-														variant="determinate"
-														value={(value.completedSubmissions * 100) / value.totalExercises}
-														/>
-												</div>
-												:null
-											}
-									</CardContent>
-							</Grid>
-					</Grid>
-        </Card>
-      </Grid>
-		);
-	} else {
-			return (
-				<Grid item xs={gridSize} className={classes.root}>
-					<Link
-						href={{
-							pathname: '/course',
-							query: { id: value.id },
-						}}
-						>
-						<Card
-							variant="raised"
-							className={cardClass}
-							>
-							<Grid container spacing={16}>
-								<Grid	item xs={2} sm md={2}>
-									<img className={classes.image} src={value.logo} />
-								</Grid>
-								<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
-									<CardContent>
-										<Typography variant="headline" component="h2">
-											{value.name}
-										</Typography>
-										<Typography color="textSecondary">
-											{value.shortDescription}
-										</Typography>
-										{
-											showProgress?
-											<div className={classes.enrolledProgress}>
-												<LinearProgress
-													variant="determinate"
-													value={(value.completedSubmissions * 100) / value.totalExercises}
-													/>
-											</div>
-											:null
-										}
-									</CardContent>
-								</Grid>
-							</Grid>
-						</Card>
-					</Link>
-				</Grid>
-			);
-		}
+				</Card>
+			</Link>
+		</Grid>
+	);
 }
 
 CourseListCard.propTypes = {
@@ -150,19 +126,10 @@ CourseListCard.propTypes = {
 	value: PropTypes.object.isRequired,
 	showProgress: PropTypes.bool,
 	index: PropTypes.number.isRequired,
-	cardClass: PropTypes.string.isRequired,
-
-	// drag and drop
-	gridSize: PropTypes.number,
-	showDelete: PropTypes.bool,
-	displayDeleteNotification: PropTypes.func
 };
 
 
 CourseListCard.defaultProps = {
 	showProgress: false,
-	gridSize: 6,
-	showDelete:false,
-	displayDeleteNotification:null
 }
 export default withStyles(styles)(CourseListCard);

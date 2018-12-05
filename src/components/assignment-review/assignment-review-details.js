@@ -51,13 +51,18 @@ const styles = theme => {
     approveButton:{
       marginTop: theme.spacing.unit * 1.5,
       float:"right",
-      backgroundColor:theme.palette.secondary.dark,
     },
     rejectButton:{
       marginTop: theme.spacing.unit * 1.5,
       marginRight: theme.spacing.unit,
       float:"right",
-      backgroundColor:theme.palette.primary.main,
+      background:theme.palette.error.main,
+      "&:hover":{
+        backgroundColor:theme.palette.error.dark,
+      },
+      "&:select":{
+        backgroundColor:theme.palette.error.dark,
+      }
     },
     titles:{
       fontWeight:"bold",
@@ -151,14 +156,14 @@ class AssignmentsReviewDetails extends React.Component {
             <CardContent>
                   {/* Submitter Details */}
                   <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={3} sm={2} md={1} >
                       <img
                         src={`${selectedAssignment.submitterProfilePicture}`}
                         height="50"
                         className={classes.profilePicture}
                         />
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={9} sm={10} md={11}>
                       <span className={classes.titles}>
                         Submitted by:
                       </span>
@@ -212,9 +217,9 @@ class AssignmentsReviewDetails extends React.Component {
                     value={notes}
                     onChange={this.inputHandler}
                   />
-                  <br></br>
                   <Button
                     variant="fab"
+                    color="secondary"
                     className={classes.approveButton}
                     onClick = {()=>this.submitAssignment(true)}
                     >

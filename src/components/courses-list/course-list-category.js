@@ -22,21 +22,8 @@ const styles = theme => ({
 	avbCoursesContainer: {
 			paddingTop: theme.spacing.unit * 5,
 	},
-	cardMarginRightBot: {
-    marginRight: 25,
-		minHeight:theme.spacing.unit * 16,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    cursor:'pointer',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 2.5,
-			wordWrap: 'break-word',
-    },
-  },
-  cardMarginLeftBot: {
-    marginLeft: 25,
+  cardMargin: {
+		marginRight: 25,
 		minHeight:theme.spacing.unit * 16,
     height: '100%',
     display: 'flex',
@@ -72,10 +59,6 @@ const CourseListCategory = (props) => {
 						value={value}
 						index={key}
 						showProgress={showProgress}
-						cardClass={
-              (key % 2 === 0)
-                ? classes.cardMarginRightBot
-                : classes.cardMarginLeftBot}
 						/>
 				))}
 			</Grid>

@@ -4,6 +4,8 @@ import { SheetsRegistry } from 'jss';
 import { createMuiTheme, createGenerateClassName } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
+import amber from '@material-ui/core/colors/amber';
+import blue from '@material-ui/core/colors/blue';
 import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
 
 
@@ -24,6 +26,16 @@ const theme = createMuiTheme({
 			main: green[500],
 			dark: green[700],
 		},
+		warning:{
+			light: amber[300],
+			main: amber[500],
+			dark: amber[700],
+		},
+		info:{
+			light: blue[300],
+			main: blue[500],
+			dark: blue[700],
+		}
 	},
 	typography: {
 		headline: {

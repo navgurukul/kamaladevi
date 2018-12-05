@@ -22,7 +22,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import AlertNotification from '../alert-notification';
-import CourseListCard from './course-list-card';
+import CourseListCard from './course-list-drag-drop-card';
 import CourseDeleteAlert from './course-delete-alert';
 import { saveCoursesSequence, deleteCourseAPI } from '../../services/courses';
 
@@ -41,20 +41,6 @@ const styles = theme => ({
 		marginTop: -theme.spacing.unit * 4.5,
 		[theme.breakpoints.down("xs")]: {
 			maxWidth:theme.spacing.unit * 15
-		},
-	},
-	cardMargin: {
-		height: "100%",
-		display: "flex",
-		width:"100%",
-		minHeight: theme.spacing.unit * 17,
-		flexDirection: "column",
-		justifyContent: "space-between",
-		cursor:"pointer",
-		[theme.breakpoints.down("sm")]: {
-			minHeight: theme.spacing.unit * 18,
-			marginRight: 2.5,
-			wordWrap: "break-word",
 		},
 	},
 	floatRight:{
@@ -80,6 +66,10 @@ const styles = theme => ({
 		left: "auto",
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 18,
+		background:theme.palette.warning.main,
+		"&:hover":{
+			backgroundColor:theme.palette.warning.dark,
+		},
 
 	},
 	floatButton:{
@@ -336,13 +326,7 @@ class CourseListDragAndDrop extends React.Component {
 																			<CourseListCard
 																				value={value}
 																				index={key}
-																				gridSize={12}
-																				cardClass={
-																					classes.cardMargin
-																				}
-																				showProgress={showProgress}
 																				displayDeleteNotification={this.displayDeleteNotification}
-																				showDelete
 																				/>
 																		</div>
 																)}
