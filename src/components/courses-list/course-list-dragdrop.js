@@ -8,19 +8,20 @@ import Grid from '@material-ui/core/Grid';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 
 import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
+import RestoreIcon from '@material-ui/icons/Restore';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-
+import AlertNotification from '../alert-notification';
 import CourseListCard from './course-list-card';
 import CourseDeleteAlert from './course-delete-alert';
 import { saveCoursesSequence, deleteCourseAPI } from '../../services/courses';
@@ -62,28 +63,31 @@ const styles = theme => ({
 	close: {
 	 padding: theme.spacing.unit,
  	},
-	cancelButton:{
-		float:"left",
-		right: "auto",
+	restoreButton:{
+		float:"right",
+		left: "auto",
 		bottom: theme.spacing.unit * 2,
-		left: theme.spacing.unit * 2,
+		right:theme.spacing.unit * 10,
+	},
+	saveButton:{
+		float:"right",
+		left: "auto",
+		bottom: theme.spacing.unit * 2,
+		right: theme.spacing.unit * 2,
+	},
+	goBackButton:{
+		float:"right",
+		left: "auto",
+		bottom: theme.spacing.unit * 2,
+		right: theme.spacing.unit * 18,
+
 	},
 	floatButton:{
-		minWidth : theme.spacing.unit * 25,
 		margin: "0",
 		top: "auto",
 		zIndex:"100",
 		position: "fixed",
-		[theme.breakpoints.down("sm")]: {
-			minWidth : theme.spacing.unit * 10,
-		},
 	},
-	saveButton:{
-		float:"right",
-		right: theme.spacing.unit * 2,
-		bottom: theme.spacing.unit * 2,
-		left: "auto",
-	}
 });
 
 const reorder = (courses, startIndex, endIndex) => {
@@ -113,13 +117,14 @@ class CourseListDragAndDrop extends React.Component {
 			currentCoursesSequence : courses,
 			showNotification:false,
 			notifcationMessage:"",
+			alertType:"",
 			deletableCourseIndex: null,
 			showConfirmDeleteBox:false,
 		}
 	}
 
 	extractSequenceNum = (courses) => {
-		// extract sequenceNum and id"s
+		// extract sequenceNum and id's
 		let payload = []
 		for(let i = 0; i < courses.length; i++){
 			const {id, sequenceNum} = courses[i];
@@ -133,7 +138,7 @@ class CourseListDragAndDrop extends React.Component {
 
 
 	//Resets the sequence
-	cancelUpdate = () => {
+	restoreSequence = () => {
 		const {originalCoursesSequence} = this.state;
 		this.setState({
 			currentCoursesSequence: originalCoursesSequence
@@ -143,6 +148,7 @@ class CourseListDragAndDrop extends React.Component {
 	// Saves the current sequence
 	saveUpdate = () => {
 		const { currentCoursesSequence } = this.state;
+
 		let payload = this.extractSequenceNum(currentCoursesSequence)
 		// call the api and update the course sequence
 		saveCoursesSequence(payload)
@@ -151,6 +157,7 @@ class CourseListDragAndDrop extends React.Component {
 					this.setState({
 						showNotification:true,
 						notifcationMessage:"Sequence Saved Successfully",
+						alertType:"success"
 					});
 			})
 			.catch((error) => {
@@ -162,6 +169,7 @@ class CourseListDragAndDrop extends React.Component {
 					this.setState({
 						showNotification:true,
 						notifcationMessage,
+						alertType:"error"
 					});
 			});
 	}
@@ -192,6 +200,7 @@ class CourseListDragAndDrop extends React.Component {
 						showConfirmDeleteBox:false,
 						showNotification:true,
 						notifcationMessage,
+						alertType:"success"
 					});
 			})
 			.catch((error) => {
@@ -203,6 +212,7 @@ class CourseListDragAndDrop extends React.Component {
 					this.setState({
 						showNotification:true,
 						notifcationMessage,
+						alertType:"error"
 					})
 			});
 
@@ -212,15 +222,15 @@ class CourseListDragAndDrop extends React.Component {
 	cancelCourseDelete = () => {
 		this.setState({
 			deletableCourseIndex: null,
-			showConfirmDeleteBox:false
+			showConfirmDeleteBox:false,
 		})
 	}
 
 	// closes the notifcationMessage
-	handleCloseSaveNotification = () => {
+	handleHideNotification = () => {
 		this.setState({
 			showNotification: false,
-			notifcationMessage: ""
+			notifcationMessage: "",
 		})
 	}
 
@@ -270,7 +280,8 @@ class CourseListDragAndDrop extends React.Component {
 				headline,
 				courses,
 				showProgress,
-				paddingTop
+				paddingTop,
+				stopCourseSequenceEditing
 			} = this.props;
 
 			const {
@@ -278,7 +289,8 @@ class CourseListDragAndDrop extends React.Component {
 				showNotification,
 				notifcationMessage,
 				showConfirmDeleteBox,
-				deletableCourseIndex
+				deletableCourseIndex,
+				alertType
 			} = this.state;
 
 			//make space for delete button
@@ -288,22 +300,6 @@ class CourseListDragAndDrop extends React.Component {
 				<DragDropContext
 					onDragEnd={this.onDragEnd}
 					>
-					<Button
-						variant="raised"
-						color="primary"
-						className={`${classes.cancelButton} ${classes.floatButton}`}
-						onClick={() => this.cancelUpdate()}
-						>
-						Cancel
-					</Button>
-					<Button
-						variant="raised"
-						color="primary"
-						className={`${classes.saveButton} ${classes.floatButton}`}
-						onClick={() => this.saveUpdate()}
-						>
-						Save
-					</Button>
 					{/*Heading of the course*/}
 					<Grid className={ paddingTop?classes.avbCoursesContainer:"" }>
 						<Grid item xs={12} className={classes.containerHeadingItem}>
@@ -360,25 +356,38 @@ class CourseListDragAndDrop extends React.Component {
 								</Droppable>
 							</Grid>
 					</Grid>
-					<Snackbar
-						anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-						open={showNotification}
-						message={notifcationMessage}
-						autoHideDuration={6000}
-						onClose={this.handleCloseSaveNotification}
-						action={[
-							<IconButton
-								key="close"
-								aria-label="Close"
-								color="inherit"
-								className={classes.close}
-								onClick={this.handleCloseSaveNotification}
-							>
-							<CloseIcon />
-							</IconButton>
-						]}
-					/>
 				</DragDropContext>
+				<AlertNotification
+					open={showNotification}
+					message={notifcationMessage}
+					autoHideDuration={6000}
+					variant={alertType}
+					onClose={this.handleHideNotification}
+					/>
+				<Button
+					variant="fab"
+					color="primary"
+					className={`${classes.floatButton} ${classes.goBackButton}`}
+					onClick={stopCourseSequenceEditing}
+					>
+					<ArrowBackIcon />
+				</Button>
+				<Button
+					variant="fab"
+					color="primary"
+					className={`${classes.restoreButton} ${classes.floatButton}`}
+					onClick={() => this.restoreSequence()}
+					>
+					<RestoreIcon />
+				</Button>
+				<Button
+					variant="fab"
+					color="secondary"
+					className={`${classes.saveButton} ${classes.floatButton}`}
+					onClick={() => this.saveUpdate()}
+					>
+					<CheckIcon />
+				</Button>
 				{
 					showConfirmDeleteBox?
 					<CourseDeleteAlert

@@ -55,10 +55,6 @@ const styles = theme => ({
 			fontSize: theme.spacing.unit * 2
 		},
 	},
-	goBackButton:{
-		float:'left',
-		width: theme.spacing.unit * 15,
-	},
 	courseSequenceEditRootContent:{
 		width:'40%',
 		[theme.breakpoints.down('sm')]: {
@@ -158,20 +154,13 @@ class CourseList extends React.Component {
 			return (
 				<div className={classes.root}>
 					<div className={`${classes.rootContent} ${classes.courseSequenceEditRootContent}`}>
-						<Button
-							variant="outlined"
-							color="primary"
-							className={classes.goBackButton}
-							onClick={() => {
-								this.stopCourseSequenceEditing();
-								navigateToHome();
-							}}
-							>
-							{'<< Go Back'}
-						</Button>
 						<CourseListDragAndDrop
 							headline={'Aapke courses'}
 							courses={sortCoursesBySequenceNum([...availableCourses, ...enrolledCourses])}
+							stopCourseSequenceEditing={ () => {
+								this.stopCourseSequenceEditing();
+								navigateToHome();
+							}}
 							paddingTop
 							/>
 					</div>

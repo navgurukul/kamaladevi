@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import localforage from "localforage";
 
 import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+
 import MenuIcon from "@material-ui/icons/Menu";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -12,9 +13,11 @@ import { withStyles } from "@material-ui/core/styles";
 import { fetchApi } from "../../services/api";
 import {filterPendingAssignment}  from "../../services/courses"
 
+import AlertNotification from "../alert-notification";
 import AssignmentsReviewSidenav from "./assignment-review-sidenav";
 import AssignmentsReviewDetails from "./assignment-review-details";
 import AssignmentsReviewCompleted from "./assignment-review-completed";
+
 
 
 const drawerWidth = 300;
@@ -49,7 +52,10 @@ class AssignmentsReview extends React.Component {
     this.state = {
       assignments: assignments,
       mobileOpen: false,
-      selectedAssignment:assignments.length?assignments[0]:{}
+      selectedAssignment:assignments.length?assignments[0]:{},
+      showNotification:false,
+      notifcationMessage:"",
+      alertType:""
     };
   }
 
@@ -62,6 +68,23 @@ class AssignmentsReview extends React.Component {
     })
   }
 
+  // Hide the Notification
+  handleHideNotification = () => {
+    this.setState({
+      showNotification: false,
+      notifcationMessage: "",
+    })
+  }
+
+  // show Notification to user
+  handleShowNotification = (message, alertType) => {
+    this.setState({
+      showNotification: true,
+      notifcationMessage: message,
+      alertType: alertType,
+    })
+  }
+
   // to open and close the sidebar in mobile view
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
@@ -69,11 +92,11 @@ class AssignmentsReview extends React.Component {
 
   getNextAssignmentIndex = (updateAssignmentList, removedAssignmentIndex) => {
     // if there is no assignment left
-    if (updateAssignmentList.length == 0){
+    if (updateAssignmentList.length === 0){
       return null;
     }
     // if there is only 1 assignment just show it
-    else if (updateAssignmentList.length == 1){
+    else if (updateAssignmentList.length === 1){
       return 0;
     }
     // if the approve assignment is the last one then
@@ -120,12 +143,20 @@ class AssignmentsReview extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { assignments, selectedAssignment, mobileOpen} = this.state;
+    const {
+      assignments,
+      selectedAssignment,
+      mobileOpen,
+      showNotification,
+      notifcationMessage,
+      alertType,
+    } = this.state;
     return (
       <div className={classes.root}>
         {
           assignments.length?
           <React.Fragment>
+
             {/* Side Drawer to display assignment list*/}
             <IconButton
               color="inherit"
@@ -171,8 +202,16 @@ class AssignmentsReview extends React.Component {
                 <AssignmentsReviewDetails
                   selectedAssignment={selectedAssignment}
                   removeCompletedAssignment={this.removeCompletedAssignment}
+                  showNotification={this.handleShowNotification}
                   />
             </main>
+            <AlertNotification
+              open={showNotification}
+              message={notifcationMessage}
+              variant={alertType}
+              autoHideDuration={6000}
+              onClose={this.handleHideNotification}
+            />
           </React.Fragment>
           :<AssignmentsReviewCompleted />
         }

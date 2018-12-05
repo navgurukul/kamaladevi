@@ -10,22 +10,23 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
+		marginBottom:theme.spacing.unit * 10,
 	},
 	flex: {
 		flex: 1,
 	},
 	menuButton: {
-		marginLeft: -12,
-		marginRight: 20,
+		marginLeft: -theme.spacing.unit * 2,
+		marginRight: theme.spacing.unit * 3,
 	},
 	link: {
 	  textDecoration: 'inherit',
 		color: 'inherit',
 	},
-};
+});
 
 class Header extends React.Component {
   constructor(props) {
@@ -68,11 +69,15 @@ class Header extends React.Component {
 		const {isAuthenticated} =  this.state;
 		return (
 			<div className={classes.root}>
-				<AppBar position="static">
+				<AppBar position="fixed">
 					<Toolbar>
-						{/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"> */}
-						{/* <MenuIcon /> */}
-						{/* </IconButton> */}
+						{
+							isAuthenticated?
+							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+								<MenuIcon />
+							</IconButton>
+							:null							
+						}
 						<Typography variant="title" color="inherit" className={classes.flex}>
 							<a href="/home" className={classes.link}>
 							Saral
