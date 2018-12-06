@@ -351,6 +351,7 @@ class CourseListDragAndDropView extends React.Component {
 				<Button
 					variant="fab"
 					color="primary"
+					title="Back to home"
 					className={`${classes.floatButton} ${classes.goBackButton}`}
 					onClick={stopCourseSequenceEditing}
 					>
@@ -359,6 +360,7 @@ class CourseListDragAndDropView extends React.Component {
 				<Button
 					variant="fab"
 					color="primary"
+					title="Restore the sequence"
 					className={`${classes.restoreButton} ${classes.floatButton}`}
 					onClick={() => this.restoreSequence()}
 					>
@@ -367,6 +369,7 @@ class CourseListDragAndDropView extends React.Component {
 				<Button
 					variant="fab"
 					color="secondary"
+					title="Update the sequence"
 					className={`${classes.saveButton} ${classes.floatButton}`}
 					onClick={() => this.saveUpdate()}
 					>
