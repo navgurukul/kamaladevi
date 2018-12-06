@@ -29,8 +29,8 @@ const styles = theme => {
 	drawerPaper: {
    	width: drawerWidth,
 		zIndex: theme.zIndex.appBar - 1,
-		// ...theme.mixins.toolbar,
-		backgroundColor:theme.palette.grey[100]
+		...theme.mixins.toolbar,
+		backgroundColor:theme.palette.grey[50]
 	},
 	link: {
 	  textDecoration: 'inherit',
