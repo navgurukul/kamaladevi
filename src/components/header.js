@@ -46,6 +46,7 @@ const styles = theme => {
 		cursor:"pointer",
 		padding:theme.spacing.unit,
 		borderRadius:"3px",
+		fontFamily:theme.typography.fontFamily,
 		"&:hover":{
 			backgroundColor:theme.palette.grey[300],
 			transition:theme.transitions.easing.easyInOut,
