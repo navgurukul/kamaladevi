@@ -17,7 +17,7 @@ import { fetchApi } from '../../services/api';
 import { setEnrolledCourses, sortCoursesBySequenceNum } from '../../services/courses';
 
 import CourseListCategoryView from './course-list-category-view';
-import CourseListDragAndDrop from './course-list-dragdrop-view';
+import CourseListDragAndDropView from './course-list-dragdrop-view';
 
 const styles = theme => ({
 	rootLoader: {
@@ -154,7 +154,7 @@ class CourseList extends React.Component {
 			return (
 				<div className={classes.root}>
 					<div className={`${classes.rootContent} ${classes.courseSequenceEditRootContent}`}>
-						<CourseListDragAndDrop
+						<CourseListDragAndDropView
 							headline={'Aapke courses'}
 							courses={sortCoursesBySequenceNum([...availableCourses, ...enrolledCourses])}
 							stopCourseSequenceEditing={ () => {

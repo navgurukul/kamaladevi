@@ -36,8 +36,8 @@ const styles = theme => ({
   drawerPaper: {
     minWidth: drawerWidth,
     overFlow:'scroll',
-    height:'90vh',
-    zIndex:theme.zIndex.appBar-1,
+    height:'92vh',
+    zIndex:theme.zIndex.appBar - 100,
     marginTop: theme.spacing.unit * 7,
     [theme.breakpoints.up("md")]: {
       position: "relative",
@@ -169,6 +169,7 @@ class AssignmentsReview extends React.Component {
             {/*For mobile view*/}
             <Hidden mdUp>
               <Drawer
+                variant="persistent"
                 open={mobileOpen}
                 onClose={this.handleDrawerToggle}
                 classes={{
@@ -185,7 +186,7 @@ class AssignmentsReview extends React.Component {
             {/*For desktop view*/}
             <Hidden smDown>
               <Drawer
-                variant="permanent"
+                variant="persistent"
                 open
                 classes={{
                   paper: classes.drawerPaper

@@ -79,7 +79,7 @@ const CourseListCard = (props) => {
 
 
 	return (
-		<Grid item md={3} xs={6} className={classes.root}>
+		<Grid item md={4} xs={6} className={classes.root}>
 			<Link
 				href={{
 					pathname: '/course',

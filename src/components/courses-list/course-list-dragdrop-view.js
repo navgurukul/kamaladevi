@@ -98,7 +98,7 @@ const remove = (courses, index) => {
 }
 
 
-class CourseListDragAndDrop extends React.Component {
+class CourseListDragAndDropView extends React.Component {
 	constructor(props){
 		super(props);
 		const { courses } = this.props;
@@ -387,7 +387,7 @@ class CourseListDragAndDrop extends React.Component {
 	}
 }
 
-CourseListDragAndDrop.propTypes = {
+CourseListDragAndDropView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	headline: PropTypes.string.isRequired,
 	courses: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -395,8 +395,8 @@ CourseListDragAndDrop.propTypes = {
 	paddingTop: PropTypes.bool,
 };
 
-CourseListDragAndDrop.defaultProps = {
+CourseListDragAndDropView.defaultProps = {
 	showProgress: false,
 	paddingTop: false
 }
-export default withStyles(styles)(CourseListDragAndDrop);
+export default withStyles(styles)(CourseListDragAndDropView);
