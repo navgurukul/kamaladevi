@@ -1,18 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
+
 import Card from "@material-ui/core/Card";
+import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
+
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { withStyles } from "@material-ui/core/styles";
 
 import {reviewerFeedbackSubmission} from "../../services/courses";
 
 const styles = theme => {
-
   return ({
     root:{
       flexGrow:1,
@@ -46,26 +50,29 @@ const styles = theme => {
     approveButton:{
       marginTop: theme.spacing.unit * 1.5,
       float:"right",
-      [theme.breakpoints.down("xs")]: {
-        float:"none",
-        width:theme.spacing.unit * 28,
-      },
     },
     rejectButton:{
       marginTop: theme.spacing.unit * 1.5,
-      marginRight: theme.spacing.unit * 5,
-      float:"left",
-      [theme.breakpoints.down("xs")]: {
-        float:"none",
-        width:theme.spacing.unit * 28
+      marginRight: theme.spacing.unit,
+      float:"right",
+      background:theme.palette.error.main,
+      "&:hover":{
+        backgroundColor:theme.palette.error.dark,
       },
+      "&:select":{
+        backgroundColor:theme.palette.error.dark,
+      }
     },
     titles:{
-      fontWeight:"bold"
+      fontWeight:"bold",
     },
     typography:{
       display:"block",
-      marginBottom:theme.spacing.unit * 3
+      marginBottom:theme.spacing.unit * 3,
+      marginTop:theme.spacing.unit,
+    },
+    profilePicture:{
+      display:"inline-block"
     }
   })
 }
@@ -95,36 +102,45 @@ class AssignmentsReviewDetails extends React.Component {
 
   // submit the user feedback to api
   submitAssignment = (isApprove) => {
+    const {
+      selectedAssignment,
+      removeCompletedAssignment,
+      showNotification
+    } = this.props;
+    let message;
     // check if user has given any feedback or not
     if(!this.hasReviewerGivenFeedback()){
-      alert("Phele aap apna reason dijiye.");
+      message = "Phele aap apna reason dijiye.";
+      showNotification(message, "warning");
       return;
     }
 
-  const {selectedAssignment, removeCompletedAssignment} = this.props;
-  const {notes} = this.state;
+    const {notes} = this.state;
 
-  //send the feedback to api
-  reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
-    .then(response => {
-      // empty the textfield after it has been submitted
-      this.setState({
-        notes:"",
+    //send the feedback to api
+    reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
+      .then(response => {
+        console.log(response);
+        // empty the textfield after it has been submitted
+        this.setState({
+          notes:"",
+        });
+        message = "Feedback dene ke liye sukhriya.";
+        showNotification(message, "success");
+        // remove the assignment from pending list
+        removeCompletedAssignment()
       })
-      alert("Feedback dene ke liye sukhriya.")
-      // remove the assignment from pending list
-      removeCompletedAssignment()
-    })
-    .catch(error => {
-      // check if the user is connected to internet
-      if(!window.navigator.onLine){
-        alert("Aap Internet se connect nhi ho.");
-      } else {
-        alert("Kuch problem ke karan apka data save nhi hua.")
-      }
-
-      console.log(error)
-    })
+      .catch(error => {
+        console.error(error);
+        // check if the user is connected to internet
+        if(!window.navigator.onLine){
+          message = "Aap Internet se connect nhi ho.";
+        } else {
+          message = "Kuch problem ke karan apka data save nhi hua.";
+        }
+        showNotification(message, "error")
+        console.log(error)
+      })
   }
 
   render() {
@@ -138,42 +154,42 @@ class AssignmentsReviewDetails extends React.Component {
           <Card className={classes.root}>
             <CardContent>
                   {/* Submitter Details */}
-                  <img src={`${selectedAssignment.submitterProfilePicture}`} height="100" />
-
-                  <Typography className={classes.typography}>
-                    <span className={classes.titles}>
-                      Submitted by:
-                    </span>
-                    {` ${selectedAssignment.submitterName}`}
-                  </Typography>
-
-                  <Typography className={classes.typography}>
-                    <span className={classes.titles}>
-                      Submitted At:
-                    </span>
-                    {` ${submittedAt.toDateString()}`}
-                  </Typography>
+                  <Grid container>
+                    <Grid item xs={3} sm={2} md={1} >
+                      <img
+                        src={`${selectedAssignment.submitterProfilePicture}`}
+                        height="50"
+                        className={classes.profilePicture}
+                        />
+                    </Grid>
+                    <Grid item xs={9} sm={10} md={11}>
+                      <span className={classes.titles}>
+                        Submitted by:
+                      </span>
+                      {` ${selectedAssignment.submitterName}`}
+                      <br />
+                      <span className={classes.titles}>
+                        Submitted At:
+                      </span>
+                      {` ${submittedAt.toDateString()}`}
+                    </Grid>
+                  </Grid>
 
                   {/*Exercise Details of submission*/}
                   <Typography className={classes.typography}>
                     <span className={classes.titles}>
                       Exercise Name:
                     </span>
-                    {` ${selectedAssignment.exerciseName}`}
-                  </Typography>
-                  
-                  <Typography className={classes.typography}>
+                    {` ${selectedAssignment.exerciseName} `}
                     <a href={`/course?id=${courseId}&slug=${exerciseSlug}`} target="_blank">
-                      Link to exercise
+                      (Link)
                     </a>
-                  </Typography>
-
-                  {/*Student Solution*/}
-                  <Typography>
+                    <br />
                     <span className={classes.titles}>
                       Student ka solution:
                     </span>
                   </Typography>
+                  {/*Student Solution*/}
                   <CardContent className={classes.submissionContent}>
 
                     {
@@ -182,7 +198,6 @@ class AssignmentsReviewDetails extends React.Component {
                       :submitterNotes
                     }
                   </CardContent>
-                    {/*// TODO: design a container for notes*/}
 
                   {/*Reviewer feedback form*/}
                   <Typography>
@@ -201,22 +216,20 @@ class AssignmentsReviewDetails extends React.Component {
                     value={notes}
                     onChange={this.inputHandler}
                   />
-                  <br></br>
                   <Button
-                    variant="outlined"
-                    color="primary"
+                    variant="fab"
+                    color="secondary"
                     className={classes.approveButton}
                     onClick = {()=>this.submitAssignment(true)}
                     >
-                    Approve Assignment
+                    <CheckIcon />
                   </Button>
                   <Button
-                    variant="outlined"
-                    color="primary"
+                    variant="fab"
                     className={classes.rejectButton}
                     onClick = {()=>this.submitAssignment(false)}
                     >
-                    Dis-Approve Assignment
+                    <CloseIcon />
                   </Button>
           </CardContent>
         </Card>
@@ -226,7 +239,8 @@ class AssignmentsReviewDetails extends React.Component {
 
 AssignmentsReviewDetails.propTypes = {
   classes: PropTypes.object.isRequired,
-  selectedAssignment: PropTypes.object.isRequired
+  selectedAssignment: PropTypes.object.isRequired,
+  handleShowNotification:PropTypes.func,
 };
 
 export default withStyles(styles)(AssignmentsReviewDetails);

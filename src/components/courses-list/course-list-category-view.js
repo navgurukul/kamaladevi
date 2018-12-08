@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import CourseListCard from './course-list-card';
+import CourseListCard from './course-list-category-card';
 
 
 
@@ -22,21 +22,8 @@ const styles = theme => ({
 	avbCoursesContainer: {
 			paddingTop: theme.spacing.unit * 5,
 	},
-	cardMarginRightBot: {
-    marginRight: 25,
-		minHeight:theme.spacing.unit * 16,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    cursor:'pointer',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 2.5,
-			wordWrap: 'break-word',
-    },
-  },
-  cardMarginLeftBot: {
-    marginLeft: 25,
+  cardMargin: {
+		marginRight: 25,
 		minHeight:theme.spacing.unit * 16,
     height: '100%',
     display: 'flex',
@@ -50,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-const CourseListCategory = (props) => {
+const CourseListCategoryView = (props) => {
 	const {
 		classes,
 	 	headline,
@@ -72,10 +59,6 @@ const CourseListCategory = (props) => {
 						value={value}
 						index={key}
 						showProgress={showProgress}
-						cardClass={
-              (key % 2 === 0)
-                ? classes.cardMarginRightBot
-                : classes.cardMarginLeftBot}
 						/>
 				))}
 			</Grid>
@@ -83,7 +66,7 @@ const CourseListCategory = (props) => {
 	);
 }
 
-CourseListCategory.propTypes = {
+CourseListCategoryView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	headline: PropTypes.string.isRequired,
 	courses: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -91,8 +74,8 @@ CourseListCategory.propTypes = {
 	paddingTop: PropTypes.bool
 };
 
-CourseListCategory.defaultProps = {
+CourseListCategoryView.defaultProps = {
 	showProgress: false,
 	paddingTop: false
 }
-export default withStyles(styles)(CourseListCategory);
+export default withStyles(styles)(CourseListCategoryView);

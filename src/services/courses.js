@@ -40,31 +40,34 @@ export const exerciseSubmission = async (courseId, exerciseId, notes) => {
 
 // Submit the feedback for student assignment
 export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
-	return localforage.getItem('authResponse',(error,value)=>{
-		const {jwt} =value;
-		const payload = {
-			notes:notes,
-			approved:isApprove
-		}
-	   return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
-	})
-}
+	return localforage.getItem('authResponse')
+		.then(value => {
+			const {jwt} =value;
+			const payload = {
+				notes:notes,
+				approved:isApprove
+			}
+			return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
+		})
+	}
 
 
 // save course new sequenceNum
 export const saveCoursesSequence = (payload) => {
-	return localforage.getItem('authResponse', (error, value)=>{
-		const { jwt } =  value;
-	  return fetchApi(`/courses/sequenceNum`, {"courses": payload}, { Authorization: jwt }, 'put')
-	});
+	return localforage.getItem('authResponse')
+		.then(value => {
+			const { jwt } =  value;
+		  return fetchApi(`/courses/sequenceNum`, {"courses": payload}, { Authorization: jwt }, 'put')
+		})
 };
 
 // delete a course
 export const deleteCourseAPI = (courseId) => {
-	return localforage.getItem('authResponse', (error, value)=>{
-		const { jwt } =  value;
-	  return fetchApi(`/courses/${courseId}/delete`, {}, { Authorization: jwt }, 'delete')
-	});
+	return localforage.getItem('authResponse')
+		.then(value => {
+			const { jwt } =  value;
+			return fetchApi(`/courses/${courseId}/delete`, {}, { Authorization: jwt }, 'delete')
+		})
 };
 
 // get the student old exercise solution submision details

@@ -6,9 +6,7 @@ const styles = theme => ({
 	root: {
 		display:"flex",
 		flexGrow: 1,
-		justifyContent:"center",
 		marginTop:"40vh",
-		alignItems:"center",
 		height:"100%"
 	},
 
@@ -18,8 +16,10 @@ const AssignmentsReviewCompleted = (props) => {
 	const { classes } = props;
 	return (
 		<div className={classes.root}>
-			Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye<br/>
-			aap apni padhai continue karsakte ha.	
+			<center>
+				Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye
+				aap apni padhai continue karsakte ha.
+			</center>
 		</div>
 	);
 }
