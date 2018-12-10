@@ -220,17 +220,6 @@ class CourseList extends React.Component {
 						:''
 					}
 
-					{/* Facilitating courses list */}
-					{
-						facilitatingCourses.length?
-						<CourseListCategoryView
-							headline={'Aap yeh courses ko facilitate kar rahe hai'}
-							courses={sortCoursesBySequenceNum(facilitatingCourses)}
-							paddingTop
-							/>
-						:''
-					}
-
 				</div>
 			</div>
 		);
