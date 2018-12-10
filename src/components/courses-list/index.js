@@ -8,7 +8,6 @@ import localforage from 'localforage';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
@@ -60,10 +59,6 @@ const styles = theme => ({
 		[theme.breakpoints.down('sm')]: {
 			width: '100%',
 		},
-	},
-	dividerContainer: {
-		paddingTop: theme.spacing.unit * 2,
-		justifyContent: 'center',
 	},
 	progress: {
 		margin: theme.spacing.unit * 1,
@@ -202,12 +197,6 @@ class CourseList extends React.Component {
 							/>
 						:''
 					}
-
-					<Grid container spacing={0} className={classes.dividerContainer}>
-						<Grid item xs={6}>
-							<Divider />
-						</Grid>
-					</Grid>
 
 					{/* Available courses list */}
 					{
