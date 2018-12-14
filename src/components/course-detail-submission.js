@@ -12,10 +12,9 @@ import { withStyles } from "@material-ui/core/styles";
 const styles = theme => {
   return {
     root: {
-      flexGrow: 1
-    },
-    content: {
-      paddingTop: theme.spacing.unit * 2
+      flexGrow: 1,
+      paddingTop: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 2,
     },
     submissionContent:{
       padding: theme.spacing.unit * 2,
@@ -49,7 +48,7 @@ const styles = theme => {
 const CourseDetailSubmission = (props) => {
   const { submissionDetails, classes } = props;
   return (
-      <Card className={classes.content}>
+      <Card className={classes.root}>
         <CardContent>
           <Typography variant="body2">
             <span className={classes.titles}>
