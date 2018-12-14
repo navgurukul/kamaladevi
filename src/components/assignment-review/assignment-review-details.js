@@ -50,14 +50,20 @@ const styles = theme => {
     approveButton:{
       marginTop: theme.spacing.unit * 1.5,
       float:"right",
+<<<<<<< HEAD
       color:'white'
+=======
+>>>>>>> master
     },
     rejectButton:{
       marginTop: theme.spacing.unit * 1.5,
       marginRight: theme.spacing.unit,
       float:"right",
       background:theme.palette.error.main,
+<<<<<<< HEAD
       color:'white',
+=======
+>>>>>>> master
       "&:hover":{
         backgroundColor:theme.palette.error.dark,
       },
