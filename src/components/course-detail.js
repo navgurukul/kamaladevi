@@ -261,7 +261,8 @@ class CourseDetail extends React.Component {
     // get the exerciseId for the exercise
     const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
     const previousNotesData = await getExerciseSubmission(id, exerciseId);
-    const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, "");
+    // console.log(previousNotesData);
+    const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
 
     this.setState({
       content,
@@ -283,7 +284,7 @@ class CourseDetail extends React.Component {
     const reviewrs = ["peer", "facilitator", "automatic"];
 
     const { prefetchedData, content, previousNotesData } = this.state;
-    console.log(previousNotesData);
+    // console.log(previousNotesData);
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>

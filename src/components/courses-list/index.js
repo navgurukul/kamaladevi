@@ -112,11 +112,12 @@ class CourseList extends React.Component {
 					const { jwt, user } = value;
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
-							setEnrolledCourses(response.data);
+							// console.log(response);
+							setEnrolledCourses(response);
 							this.setState({
 								prefetchedData: true,
 								isAdmin: user.isAdmin,
-								...response.data,
+								...response,
 							});
 						})
 						.catch(() => { /* TODO: Handle network error cases */ });
@@ -156,7 +157,7 @@ class CourseList extends React.Component {
 					<div className={`${classes.rootContent} ${classes.courseSequenceEditRootContent}`}>
 						<CourseListDragAndDropView
 							headline={'Aapke courses'}
-							courses={sortCoursesBySequenceNum([...availableCourses, ...enrolledCourses])}
+							courses={sortCoursesBySequenceNum([...availableCourses, ...enrolledCourses, ...facilitatingCourses])}
 							stopCourseSequenceEditing={ () => {
 								this.stopCourseSequenceEditing();
 								navigateToHome();

@@ -17,7 +17,6 @@ import { withStyles } from '@material-ui/core/styles';
 const drawerWidth = 240;
 
 const styles = theme => {
-	console.log(theme);
 	return ({
 	root: {
 		flexGrow: 1,
@@ -160,16 +159,16 @@ class Header extends React.Component {
 					>
 					<div className={classes.drawerContent} >
 						<List className={classes.sideNavList}>
+							<Link href='/home'>
 							<li className={classes.sideNavItem}>
-								<Link href='/home'>
 										<span>Home</span>
-								</Link>
 							</li>
+						</Link>
+						<Link href='/assignment-review'>
 							<li className={classes.sideNavItem}>
-								<Link href='/assignment-review'>
 										<span>PeerReview</span>
-								</Link>
 							</li>
+						</Link>
 						</List>
 					</div>
 				</SwipeableDrawer>

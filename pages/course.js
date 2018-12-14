@@ -35,7 +35,8 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		// TODO: Handle network error cases
 		return;
 	}
-	const exercises = response.data.data;
+	const exercises = response.data;
+
 	setExerciseCallback(exercises);
 	// If there is a slug in the URL, use that slug, else get the
 	// slug of the first exercise

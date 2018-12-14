@@ -110,6 +110,7 @@ class CourseList extends React.Component {
           const { jwt } = value;
           fetchApi("/courses", {}, { Authorization: jwt })
             .then(response => {
+							// console.log(response);
               setEnrolledCourses(response.data);
               this.setState({
                 prefetchedData: true,
