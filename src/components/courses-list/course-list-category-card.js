@@ -28,14 +28,13 @@ const styles = theme => ({
 	},
 	image:{
 		paddingTop:theme.spacing.unit * 3,
-		marginLeft: 25,
-		width: "50px",
+		marginLeft: 10,
+    marginRight: 10,
+    width: "100%",
 		[theme.breakpoints.up('xl')]: {
-      	width: "100px",
 				paddingTop:theme.spacing.unit
     },
 		[theme.breakpoints.down('sm')]: {
-      	width: "100px",
     },
 	},
 	enrolledProgress: {
@@ -50,15 +49,17 @@ const styles = theme => ({
 		fontSize:theme.spacing.unit*2
 	},
 	cardMargin: {
-		marginRight:theme.spacing.unit*3,
+    marginLeft: theme.spacing.unit*1,
+		marginRight:theme.spacing.unit*2,
 		height: '100%',
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
 		cursor:'pointer',
 		[theme.breakpoints.down('sm')]: {
-			marginRight: 2.5,
-			// wordWrap: 'break-word',
+      marginLeft: theme.spacing.unit*1,
+      marginRight: theme.spacing.unit*1,
+      // wordWrap: 'break-word',
 		},
 	},
 	headline:{
@@ -94,7 +95,7 @@ const CourseListCard = (props) => {
 						<Grid	item xs={2} sm md>
 							<img className={classes.image} src={value.logo} />
 						</Grid>
-						<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
+						<Grid item xs={9} sm={10} md={10} container className={classes.cardContent}>
 							<CardContent>
 								<Typography variant="headline" className={classes.headline}>
 									{value.name}

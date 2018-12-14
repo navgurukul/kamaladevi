@@ -136,15 +136,6 @@ class Header extends React.Component {
 							Saral
 							</a>
 						</Typography>
-						{
-							// isAuthenticated?
-							// <IconButton className={classes.menuButton} color="inherit" aria-label="Review Assignments">
-							// 	<a href='/assignment-review'>
-							// 		<img src='/static/icons/assignment-logo.png' height='45' />
-							// 	</a>
-							// </IconButton>
-							// :null
-						}
 					</Toolbar>
 				</AppBar>
 				{/*Drawer should be here.*/}
@@ -160,15 +151,15 @@ class Header extends React.Component {
 					<div className={classes.drawerContent} >
 						<List className={classes.sideNavList}>
 							<Link href='/home'>
-							<li className={classes.sideNavItem}>
-										<span>Home</span>
-							</li>
-						</Link>
-						<Link href='/assignment-review'>
-							<li className={classes.sideNavItem}>
-										<span>PeerReview</span>
-							</li>
-						</Link>
+								<div className={classes.sideNavItem}>
+											<span>Home</span>
+								</div>
+							</Link>
+							<Link href='/assignment-review'>
+								<div className={classes.sideNavItem}>
+											<span>PeerReview</span>
+								</div>
+							</Link>
 						</List>
 					</div>
 				</SwipeableDrawer>
