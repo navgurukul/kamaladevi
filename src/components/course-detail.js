@@ -281,6 +281,7 @@ class CourseDetail extends React.Component {
       submissionType,
       githubLink
     } = getExerciseDetailFromSlug(slug, exercises);
+    console.log(exercises);
     const reviewrs = ["peer", "facilitator", "automatic"];
 
     const { prefetchedData, content, previousNotesData } = this.state;

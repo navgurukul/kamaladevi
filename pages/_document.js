@@ -31,6 +31,10 @@ class MyDocument extends Document {
 						rel="stylesheet"
 						href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
 					/>
+					<link 
+					href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+					rel="stylesheet"
+					/>
 				</Head>
 				<body>
 					<Main />
