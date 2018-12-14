@@ -186,9 +186,18 @@ class CourseDetailSideNav extends React.Component {
 
 	render() {
 		const {
-			openExercises, selectedvalue, selectedchildExercise, enrolled, showEnrolledNotification
+			openExercises,
+			selectedvalue,
+			selectedchildExercise,
+			enrolled,
+			showEnrolledNotification,
 		} = this.state;
-		const { classes, loadExercise } = this.props;
+		const {
+			classes,
+			loadExercise,
+			selectedExercise
+		} = this.props;
+		console.log(selectedExercise);
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
@@ -222,7 +231,30 @@ class CourseDetailSideNav extends React.Component {
             Enroll In Course
 						</Button>
 					</ExpansionPanel>
-					: null
+					:
+					<ExpansionPanel
+						expanded
+						>
+						<ExpansionPanelSummary>
+							<span>
+								{
+									selectedExercise.usersCompletedExercise.slice(0,3).map((user, index) => {
+										if (index ===  selectedExercise.usersCompletedExercise.slice(0,3).length-1){
+											return `${user.name} `
+										}
+										return `${user.name}, `;
+									})
+								}
+								{
+									selectedExercise.usersCompletedExercise.slice(3).length !== 0?
+									<span>
+											and {selectedExercise.usersCompletedExercise.slice(5).length} more have completed this exersise.
+									</span>
+									:null
+								}
+							</span>
+						</ExpansionPanelSummary>
+					</ExpansionPanel>
 				}
 				{/* Display the exercises */}
 				{exercises.map((value, index) => (
@@ -343,6 +375,7 @@ CourseDetailSideNav.propTypes = {
 	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
 	loadExercise: PropTypes.func.isRequired,
 	slug: PropTypes.string.isRequired,
+	selectedExercise: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(CourseDetailSideNav);

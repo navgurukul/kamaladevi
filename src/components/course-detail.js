@@ -141,7 +141,8 @@ class CourseDetail extends React.Component {
       prefetchedData: false,
       content: "",
       notes: "",
-      previousNotesData: ""
+      previousNotesData: "",
+      selectedExercise:{},
     };
     this.courseDetail = React.createRef();
     this.loadExercise = this.loadExercise.bind(this);
@@ -267,12 +268,13 @@ class CourseDetail extends React.Component {
     const previousNotesData = await getExerciseSubmission(id, exerciseId);
     // console.log(previousNotesData);
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
-    console.log(response);
+    // console.log(response);
     this.setState({
       content,
       prefetchedData: true,
       notes: "",
-      previousNotesData: previousNotesData
+      previousNotesData: previousNotesData,
+      selectedExercise:response
     });
   }
 
@@ -285,11 +287,16 @@ class CourseDetail extends React.Component {
       submissionType,
       githubLink
     } = getExerciseDetailFromSlug(slug, exercises);
-    // console.log(exercises);
+    
     const reviewrs = ["peer", "facilitator", "automatic"];
 
-    const { prefetchedData, content, previousNotesData } = this.state;
-    // console.log(previousNotesData);
+    const {
+      prefetchedData,
+      content,
+      previousNotesData,
+      selectedExercise
+    } = this.state;
+
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>
@@ -389,6 +396,7 @@ class CourseDetail extends React.Component {
             exercises={exercises}
             loadExercise={navigateToExercise(id)}
             slug={slug}
+            selectedExercise={selectedExercise}
           />
         </Grid>
       </Grid>
