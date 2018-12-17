@@ -11,7 +11,7 @@ export const clearSession = () => {
 };
 
 export const setSession = (authResponse) => {
-	localforage.setItem('authResponse', authResponse.data, (error) => {
+	localforage.setItem('authResponse', authResponse, (error) => {
 		if (!error) {
 			Router.replace('/home');
 		} else {

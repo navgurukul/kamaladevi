@@ -60,6 +60,7 @@ const styles = theme => ({
 		left: "auto",
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 2,
+		color:'white',
 	},
 	goBackButton:{
 		float:"right",

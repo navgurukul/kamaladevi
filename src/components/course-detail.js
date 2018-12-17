@@ -15,9 +15,15 @@ import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import CheckIcon from "@material-ui/icons/Check";
+
 import { withStyles } from "@material-ui/core/styles";
 
 import { fetchApi } from "../services/api";
+import { getExerciseIdFromSlug } from "../services/courses";
 
 import {
   getSlugOfPreviousCourse,
@@ -28,7 +34,6 @@ import {
 } from "../services/courses";
 import CourseDetailSubmission from "./course-detail-submission";
 
-import { getExerciseIdFromSlug } from "../services/courses";
 
 import CourseDetailSideNav from "./course-detail-sidenav";
 
@@ -80,7 +85,8 @@ const styles = theme => {
       marginLeft: "auto"
     },
     submitExercise: {
-      float: "right"
+      float: "right",
+      color:"white",
     },
     sidebar: {
       paddingLeft: theme.spacing.unit,
@@ -96,9 +102,6 @@ const styles = theme => {
       padding: theme.spacing.unit * 2.5,
       paddingTop: theme.spacing.unit * 3
     },
-    submitBox: {
-      marginTop: theme.spacing.unit * 2
-    },
     progress: {
       margin: theme.spacing.unit * 2
     },
@@ -108,8 +111,9 @@ const styles = theme => {
     },
     editLink: {
       float: "right",
-      marginTop: theme.spacing.unit * 2,
-      marginRight: theme.spacing.unit
+      clear:"right",
+      marginTop:theme.spacing.unit,
+      marginBottom:theme.spacing.unit,
     },
     navigationBtnDiv: {
       width: "100%",
@@ -137,7 +141,8 @@ class CourseDetail extends React.Component {
       prefetchedData: false,
       content: "",
       notes: "",
-      previousNotesData: ""
+      previousNotesData: "",
+      selectedExercise:{},
     };
     this.courseDetail = React.createRef();
     this.loadExercise = this.loadExercise.bind(this);
@@ -261,13 +266,15 @@ class CourseDetail extends React.Component {
     // get the exerciseId for the exercise
     const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
     const previousNotesData = await getExerciseSubmission(id, exerciseId);
-    const content = response.data.content.replace(/```ngMeta[\s\S]*?```/, "");
-
+    // console.log(previousNotesData);
+    const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
+    // console.log(response);
     this.setState({
       content,
       prefetchedData: true,
       notes: "",
-      previousNotesData: previousNotesData
+      previousNotesData: previousNotesData,
+      selectedExercise:response
     });
   }
 
@@ -280,10 +287,16 @@ class CourseDetail extends React.Component {
       submissionType,
       githubLink
     } = getExerciseDetailFromSlug(slug, exercises);
+    
     const reviewrs = ["peer", "facilitator", "automatic"];
 
-    const { prefetchedData, content, previousNotesData } = this.state;
-    console.log(previousNotesData);
+    const {
+      prefetchedData,
+      content,
+      previousNotesData,
+      selectedExercise
+    } = this.state;
+
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>
@@ -330,12 +343,12 @@ class CourseDetail extends React.Component {
               <br />
               <br />
               <Button
-                variant="raised"
+                variant="fab"
                 color="secondary"
                 className={classes.submitExercise}
                 onClick={this.submitExercise}
               >
-                Submit Exercise
+                <CheckIcon />
               </Button>
             </form>
           ) : null}
@@ -350,25 +363,25 @@ class CourseDetail extends React.Component {
           <div className={classes.navigationBtnDiv}>
             {previousSlug ? (
               <Button
-                variant="raised"
+                variant="fab"
                 color="primary"
                 onClick={() => {
                   navigateToExercise(id)(previousSlug);
                 }}
               >
-                Previous
+                <NavigateBeforeIcon />
               </Button>
             ) : null}
             {nextSlug ? (
               <Button
                 className={classes.floatButtonRight}
-                variant="raised"
+                variant="fab"
                 color="primary"
                 onClick={() => {
                   navigateToExercise(id)(nextSlug);
                 }}
               >
-                Next
+                <NavigateNextIcon />
               </Button>
             ) : null}
           </div>
@@ -383,6 +396,7 @@ class CourseDetail extends React.Component {
             exercises={exercises}
             loadExercise={navigateToExercise(id)}
             slug={slug}
+            selectedExercise={selectedExercise}
           />
         </Grid>
       </Grid>

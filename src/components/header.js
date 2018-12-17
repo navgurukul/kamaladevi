@@ -17,7 +17,6 @@ import { withStyles } from '@material-ui/core/styles';
 const drawerWidth = 240;
 
 const styles = theme => {
-	console.log(theme);
 	return ({
 	root: {
 		flexGrow: 1,
@@ -137,15 +136,6 @@ class Header extends React.Component {
 							Saral
 							</a>
 						</Typography>
-						{
-							// isAuthenticated?
-							// <IconButton className={classes.menuButton} color="inherit" aria-label="Review Assignments">
-							// 	<a href='/assignment-review'>
-							// 		<img src='/static/icons/assignment-logo.png' height='45' />
-							// 	</a>
-							// </IconButton>
-							// :null
-						}
 					</Toolbar>
 				</AppBar>
 				{/*Drawer should be here.*/}
@@ -160,16 +150,16 @@ class Header extends React.Component {
 					>
 					<div className={classes.drawerContent} >
 						<List className={classes.sideNavList}>
-							<li className={classes.sideNavItem}>
-								<Link href='/home'>
-										<span>Home</span>
-								</Link>
-							</li>
-							<li className={classes.sideNavItem}>
-								<Link href='/assignment-review'>
-										<span>PeerReview</span>
-								</Link>
-							</li>
+							<Link href='/home'>
+								<div className={classes.sideNavItem}>
+											<span>Home</span>
+								</div>
+							</Link>
+							<Link href='/assignment-review'>
+								<div className={classes.sideNavItem}>
+											<span>PeerReview</span>
+								</div>
+							</Link>
 						</List>
 					</div>
 				</SwipeableDrawer>

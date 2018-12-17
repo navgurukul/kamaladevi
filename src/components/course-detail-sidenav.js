@@ -1,69 +1,118 @@
 // Course list
-import React from 'react';
-import PropTypes from 'prop-types';
-import Router from 'next/router';
+import React from "react";
+import PropTypes from "prop-types";
+import Router from "next/router";
 
-import CloseIcon from '@material-ui/icons/Close';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CloseIcon from "@material-ui/icons/Close";
+import InboxIcon from "@material-ui/icons/Inbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import CancelIcon from "@material-ui/icons/Cancel";
+import ScheduleIcon from "@material-ui/icons/Schedule";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CreateNewIcon from "@material-ui/icons/CreateNewFolder";
 
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Snackbar from '@material-ui/core/Snackbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
+
+import AlertNotification from "./alert-notification";
 
 import {
 	enrollCourse,
 	isEnrolled,
 	getExerciseIdFromSlug,
-} from '../services/courses';
+} from "../services/courses";
 
 
-const styles = () => ({
-	root: {
-		textAlign: 'center',
-	},
-	extPnlSmryRoot: {
-		padding: 0,
-	},
-	expPnlSmryContent: {
-		margin: 0,
-	},
-	expPnlSmryExpanded: {
-		margin: '0px !important',
-	},
-	expPnlDetails: {
-		flexDirection: 'column',
-	},
-	flex1: {
-		flex: 1,
-	},
-	enrollButton: {
-		padding: 20,
-		width: '100%',
-	},
-	unEnrollButton:{
-		padding: 20,
-		width: '100%',
-	},
-	close: {
-	 padding: '10px',
- 	}
-});
+const styles = (theme) => {
+	// console.log(theme);
+	return {
+		root: {
+			textAlign: "center",
+		},
+		extPnlSmryRoot: {
+			padding: 0,
+		},
+		expPnlSmryContent: {
+			margin: 0,
+		},
+		expPnlSmryExpanded: {
+			margin: "0px !important",
+		},
+		expPnlDetails: {
+			flexDirection: "column",
+		},
+		flex1: {
+			flex: 1,
+		},
+		enrollButton: {
+			padding: 20,
+			width: "100%",
+		},
+		unEnrollButton:{
+			padding: 20,
+			width: "100%",
+		},
+		close: {
+		 	padding: "10px",
+	 	},
+		"Approved":{
+			color:theme.palette.secondary.main,
+		},
+		"Pending_Review":{
+			color:theme.palette.warning.main,
+		},
+		"Rejected":{
+			color:theme.palette.error.main,
+		},
+		"Open": {
+			color:theme.palette.info.main,
+		},
+		typography:{
+			display:"inline-block",
+		}
 
+ }
+};
 
+const exerciseSubmissionClass = (status) => {
+	switch (status) {
+		case "completed":
+			return "Approved";
+		case "pending":
+			return "Pending_Review";
+		case "rejected":
+			return "Rejected";
+		default:
+			return "Open";
+	}
+}
+
+const exerciseSubmissionStatus = (status) => {
+	switch (status) {
+		case "completed":
+			return <CheckCircleIcon />;
+		case "pending":
+			return <ScheduleIcon />;
+		case "rejected":
+			return <CancelIcon />;
+		default:
+			return <CreateNewIcon />;
+	}
+}
 // Change this property to let multiple panels to be open simultaneously
 const onlyonePanelOpen = true;
 
@@ -137,35 +186,33 @@ class CourseDetailSideNav extends React.Component {
 
 	render() {
 		const {
-			openExercises, selectedvalue, selectedchildExercise, enrolled,
+			openExercises,
+			selectedvalue,
+			selectedchildExercise,
+			enrolled,
+			showEnrolledNotification,
 		} = this.state;
-		const { classes, loadExercise } = this.props;
+		const {
+			classes,
+			loadExercise,
+			selectedExercise
+		} = this.props;
+		console.log(selectedExercise);
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
-		const notifcationMessage = <div> You have enrolled in the course</div>;
+		const notifcationMessage = "You have enrolled in the course";
 
 		return (
 			<div className={classes.root}>
 				{/* Check whether the user is enrolled in the course.
           If enrolled, do not show the enroll button */}
-					<Snackbar
-						anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-						open={this.state.showEnrolledNotification}
+					<AlertNotification
+						open={showEnrolledNotification}
 						message={notifcationMessage}
+						variant={"success"}
 						autoHideDuration={6000}
 						onClose={this.handleCloseSnackBar}
-						action={[
-	            <IconButton
-	              key="close"
-	              aria-label="Close"
-	              color="inherit"
-	              className={classes.close}
-	              onClick={this.handleCloseSnackBar}
-	            >
-              <CloseIcon />
-            	</IconButton>
-          	]}
 					/>
 				{!enrolled ?
 					<ExpansionPanel
@@ -184,7 +231,34 @@ class CourseDetailSideNav extends React.Component {
             Enroll In Course
 						</Button>
 					</ExpansionPanel>
-					: null
+					:
+
+						selectedExercise.usersCompletedExercise.length !== 0?
+						<ExpansionPanel
+							expanded
+							>
+							<ExpansionPanelSummary>
+								<span>
+									{
+										selectedExercise.usersCompletedExercise.slice(0,3).map((user, index) => {
+											if (index ===  selectedExercise.usersCompletedExercise.slice(0,3).length-1){
+												return `${user.name} `
+											}
+											return `${user.name}, `;
+										})
+									}
+									{
+										selectedExercise.usersCompletedExercise.slice(3).length !== 0?
+										<span>
+											and {selectedExercise.usersCompletedExercise.slice(5).length} more have completed this exersise.
+										</span>
+										:null
+									}
+								</span>
+							</ExpansionPanelSummary>
+						</ExpansionPanel>
+						:null
+					
 				}
 				{/* Display the exercises */}
 				{exercises.map((value, index) => (
@@ -212,14 +286,27 @@ class CourseDetailSideNav extends React.Component {
 									}}
 								>
 									<ListItemIcon>
-										<InboxIcon color={(selectedvalue === value.id) ? 'primary' : 'inherit'} />
+										<InboxIcon color={(selectedvalue === value.id) ? "primary" : "inherit"} />
 									</ListItemIcon>
 									<ListItemText
 										disableTypography
 										primary={
-											<Typography variant="subheading" color={(selectedvalue === value.id) ? 'primary' : 'inherit'}>
-												{value.name}
-											</Typography>
+											<Grid container>
+												<Grid item md={10} sm={10}>
+													<Typography
+														className={classes.typography}
+														variant="subheading"
+														color={(selectedvalue === value.id) ? "primary" : "inherit"}
+														>
+														{value.name}
+													</Typography>
+												</Grid>
+												<Grid item md={2} sm={2}>
+													<span className={classes[exerciseSubmissionClass(value.submissionState)]}>
+														{value.submissionType?exerciseSubmissionStatus(value.submissionState):null}
+													</span>
+												</Grid>
+											</Grid>
 										}
 									/>
 								</ListItem>
@@ -238,14 +325,27 @@ class CourseDetailSideNav extends React.Component {
 										key={child.id}
 									>
 										<ListItemIcon>
-											<DraftsIcon color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'} />
+											<DraftsIcon color={(selectedvalue === value.id && selectedchildExercise === child.id) ? "primary" : "inherit"} />
 										</ListItemIcon>
 										<ListItemText
 											disableTypography
 											primary={
-												<Typography variant="subheading" color={(selectedvalue === value.id && selectedchildExercise === child.id) ? 'primary' : 'inherit'}>
-													{child.name}
-												</Typography>
+												<Grid container>
+													<Grid item md={6} sm={10}>
+														<Typography
+															className={classes.typography}
+															variant="subheading"
+															color={(selectedvalue === value.id && selectedchildExercise === child.id) ? "primary" : "inherit"}
+															>
+															{child.name}
+														</Typography>
+													</Grid>
+													<Grid item md={6} sm={2}>
+														<span className={classes[exerciseSubmissionClass(child.submissionState)]}>
+															{child.submissionType? exerciseSubmissionStatus(child.submissionState):null}
+														</span>
+													</Grid>
+												</Grid>
 											}
 										/>
 									</ListItem>
@@ -279,6 +379,7 @@ CourseDetailSideNav.propTypes = {
 	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
 	loadExercise: PropTypes.func.isRequired,
 	slug: PropTypes.string.isRequired,
+	selectedExercise: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(CourseDetailSideNav);

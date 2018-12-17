@@ -107,11 +107,12 @@ class CourseList extends React.Component {
 					const { jwt, user } = value;
 					fetchApi('/courses', {}, { Authorization: jwt })
 						.then((response) => {
-							setEnrolledCourses(response.data);
+							// console.log(response);
+							setEnrolledCourses(response);
 							this.setState({
 								prefetchedData: true,
 								isAdmin: user.isAdmin,
-								...response.data,
+								...response,
 							});
 						})
 						.catch(() => { /* TODO: Handle network error cases */ });

@@ -81,7 +81,7 @@ export const getExerciseSubmission = async (courseId, exerciseId) => {
 
 	await fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query , { Authorization: jwt })
 			.then( resp => {
-					responseData = resp.data.data;
+					responseData = resp.data;
 			})
 	return responseData;
 };
@@ -92,7 +92,7 @@ export const enrollCourse = async (courseId, callBack) => {
 		const { jwt } = value;
 		fetchApi(`/courses/${courseId}/enroll`, {}, { Authorization: jwt }, 'post')
 			.then((response) => {
-				if (response.data.enrolled) {
+				if (response.enrolled) {
 					callBack(true);
 					addEnrolledCourses(courseId);
 				}
