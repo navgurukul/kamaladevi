@@ -22,21 +22,19 @@ import CheckIcon from "@material-ui/icons/Check";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { fetchApi } from "../services/api";
-import { getExerciseIdFromSlug } from "../services/courses";
+import {
+	       getSlugOfPreviousCourse,
+				 getSlugOfNextCourse,
+				 getExerciseDetailFromSlug
+				 getExerciseIdFromSlug,
+			 } from '../services/utils';
 
 import {
-  getSlugOfPreviousCourse,
-  getSlugOfNextCourse,
-  exerciseSubmission,
-  getExerciseSubmission,
-  getExerciseDetailFromSlug
-} from "../services/courses";
-import CourseDetailSubmission from "./course-detail-submission";
-
-
-import CourseDetailSideNav from "./course-detail-sidenav";
-
+          exerciseSubmissionAPI,
+          getExerciseSubmissionAPI,
+          authenticatedFetchAPI,
+        } from '../services/api';
+import CourseDetailSideNav from './course-detail-sidenav';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
@@ -208,10 +206,9 @@ class CourseDetail extends React.Component {
       alert(message);
       return;
     }
-    exerciseSubmission(id, exerciseId, notes);
-    this.loadExercise();
-  };
-
+			exerciseSubmissionAPI(id, exerciseId, notes);
+			this.loadExercise();
+	}
   // handle the text in the input
   handleChange = event => {
     const name = event.target.name;
@@ -231,45 +228,25 @@ class CourseDetail extends React.Component {
     return true;
   }
 
+
+
   async loadExercise() {
-    let value, response;
+		let response, previousNotesData;
+		const { id:courseId, slug, exercises } = this.props;
+		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
 
-    try {
-      value = await localforage.getItem("authResponse");
-      if (!value) {
-        // No access tokens saved
-        Router.replace("/");
-        return;
-      }
-    } catch (e) {
-      // TODO: Handle localforage error cases
-      return;
-    }
-    const { id, slug, exercises } = this.props;
-    const { jwt } = value;
-    try {
-      response = await fetchApi(
-        `/courses/${id}/exercise/getBySlug`,
-        { slug },
-        { Authorization: jwt }
-      );
-    } catch (e) {
-      // TODO: Handle network error cases
-      return;
-    }
-    // gettuing exersise notes
-    const query = {
-      submissionUsers: "current",
-      submissionState: "all"
-    };
+		try {
+			response = await authenticatedFetchAPI(`/courses/${id}/exercise/getBySlug`, { slug });
+			previousNotesData = await getExerciseSubmissionAPI(courseId , exerciseId).data;
+		} catch (e) {
+			// TODO: Handle network error cases
+			console.error(e);
+			return;
+		}
+		// get the exerciseId for the exercise
+		const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
 
-    // get the exerciseId for the exercise
-    const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-    const previousNotesData = await getExerciseSubmission(id, exerciseId);
-    // console.log(previousNotesData);
-    const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
-    // console.log(response);
-    this.setState({
+		this.setState({
       content,
       prefetchedData: true,
       notes: "",
@@ -277,6 +254,7 @@ class CourseDetail extends React.Component {
       selectedExercise:response
     });
   }
+
 
   render() {
     // const
@@ -287,7 +265,7 @@ class CourseDetail extends React.Component {
       submissionType,
       githubLink
     } = getExerciseDetailFromSlug(slug, exercises);
-    
+
     const reviewrs = ["peer", "facilitator", "automatic"];
 
     const {
@@ -402,6 +380,7 @@ class CourseDetail extends React.Component {
       </Grid>
     );
   }
+
 }
 
 CourseDetail.propTypes = {

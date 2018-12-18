@@ -20,7 +20,7 @@ const CourseDeleteAlert = (props) => {
           keepMounted
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          >
+        >
           <DialogTitle id="alert-dialog-slide-title">
             {"Course Delete?"}
           </DialogTitle>

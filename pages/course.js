@@ -3,13 +3,15 @@ import React from 'react';
 import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { getTitleFromSlug } from '../src/services/courses';
 import DocumentTitle from 'react-document-title';
 
-import { fetchApi } from '../src/services/api';
 import withRoot from '../src/with-root';
-import CourseDetail from '../src/components/course-detail';
+
+import { fetchApi } from '../src/services/api';
+import { getTitleFromSlug } from '../src/services/utils';
+
 import Header from '../src/components/header';
+import CourseDetail from '../src/components/course-detail';
 
 const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 	let value;

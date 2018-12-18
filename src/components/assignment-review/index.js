@@ -10,8 +10,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { fetchApi } from "../../services/api";
-import {filterPendingAssignment}  from "../../services/courses"
+import {filterPendingAssignment}  from "../../services/utils"
 
 import AlertNotification from "../alert-notification";
 import AssignmentsReviewSidenav from "./assignment-review-sidenav";

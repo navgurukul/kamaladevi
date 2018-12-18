@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import {reviewerFeedbackSubmission} from "../../services/courses";
+import {reviewerFeedbackSubmissionAPI} from "../../services/api";
 
 const styles = theme => {
   return ({
@@ -120,7 +120,7 @@ class AssignmentsReviewDetails extends React.Component {
     const {notes} = this.state;
 
     //send the feedback to api
-    reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
+    reviewerFeedbackSubmissionAPI(notes, isApprove, selectedAssignment.id)
       .then(response => {
         console.log(response);
         // empty the textfield after it has been submitted

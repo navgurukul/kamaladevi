@@ -8,15 +8,18 @@ import localforage from 'localforage';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchApi } from '../../services/api';
-import { setEnrolledCourses, sortCoursesBySequenceNum } from '../../services/courses';
+import { setEnrolledCourses } from '../../services/session';
+import { sortCoursesBySequenceNum } from '../../services/utils';
 
 import CourseListCategoryView from './course-list-category-view';
 import CourseListDragAndDropView from './course-list-dragdrop-view';
+
 
 const styles = theme => ({
 	rootLoader: {
@@ -54,12 +57,17 @@ const styles = theme => ({
 			fontSize: theme.spacing.unit * 2
 		},
 	},
+
 	courseSequenceEditRootContent:{
 		width:'40%',
 		[theme.breakpoints.down('sm')]: {
 			width: '100%',
 		},
 	},
+	// dividerContainer: {
+	// 	paddingTop: theme.spacing.unit * 2,
+	// 	justifyContent: 'center',
+	// },
 	progress: {
 		margin: theme.spacing.unit * 1,
 	},
@@ -179,6 +187,7 @@ class CourseList extends React.Component {
 								title="Edit Course Sequence"
 								className={classes.courseEditButton}
 								onClick={() => {
+
 									this.setState({editCourseSequence:true});
 									navigateToEditMode();
 								}}
@@ -198,6 +207,12 @@ class CourseList extends React.Component {
 							/>
 						:''
 					}
+
+					<Grid container spacing={0} className={classes.dividerContainer}>
+						<Grid item xs={6}>
+							<Divider />
+						</Grid>
+					</Grid>
 
 					{/* Available courses list */}
 					{

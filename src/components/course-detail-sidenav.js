@@ -30,11 +30,9 @@ import { withStyles } from "@material-ui/core/styles";
 
 import AlertNotification from "./alert-notification";
 
-import {
-	enrollCourse,
-	isEnrolled,
-	getExerciseIdFromSlug,
-} from "../services/courses";
+import { getExerciseIdFromSlug } from '../services/utils';
+import { isEnrolled } from '../services/session';
+import { enrollCourseAPI } from '../services/api';
 
 
 const styles = (theme) => {
@@ -224,7 +222,7 @@ class CourseDetailSideNav extends React.Component {
 							className={classes.enrollButton}
 							onClick={() => {
 								const { id } = Router.query;
-								enrollCourse(id, success => this.setState({ enrolled: success }));
+								enrollCourseAPI(id, success => this.setState({ enrolled: success }));
 								this.setState({showEnrolledNotification:true});
 							}}
 						>
@@ -258,7 +256,7 @@ class CourseDetailSideNav extends React.Component {
 							</ExpansionPanelSummary>
 						</ExpansionPanel>
 						:null
-					
+
 				}
 				{/* Display the exercises */}
 				{exercises.map((value, index) => (
