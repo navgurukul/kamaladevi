@@ -60,36 +60,32 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 		});
 };
 
-export const authenticatedFetchAPI = (endpoint, payload, method = 'get') =>{
-	return localforage.getItem('authResponse', (error, value)=>{
-		if (!error) {
-			if (value === null) {
-				Router.replace('/');
-			} else {
-				const { jwt } = value;
-				return fetchApi(endpoint, payload, { Authorization: jwt }, method)
-					.catch((error) => {
-							/* TODO: Handle network error cases */
-							console.error(error);
-					});
-			}
-		} else {
-			// TODO: Handle error cases
-		}
-	});
+export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => {
+	return localforage.getItem('authResponse')
+						.then(value => {
+								if(value === null){
+									Router.replace('/');
+								} else {
+									const { jwt } = value;
+									return fetchApi(endpoint, payload, { Authorization: jwt }, method)
+								}
+						});
 }
 
 // Make notes submission api call to submit notes for students
-export const exerciseSubmissionAPI = async (courseId, exerciseId, notes) => {
-	  return authenticatedFetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, 'post')
+export const submitExerciseAPI = (courseId, exerciseId, notes) => {
+  return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, 'post')
 };
 
+export const getExerciseFromSlugAPI =  (courseId, slug) => {
+	return authenticatedFetchAPI(`/courses/${courseId}/exercise/getBySlug`, {slug})
+}
 export const saveCoursesSequenceAPI = (payload) => {
-	return authenticatedFetchApi(`/courses/sequenceNum`, {"courses": payload}, 'put')
+	return authenticatedFetchAPI(`/courses/sequenceNum`, {"courses": payload}, 'put')
 };
 
 export const deleteCourseAPI = (courseId) => {
-	  return authenticatedFetchApi(`/courses/${courseId}/delete`, {}, 'delete')
+	return authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete')
 };
 
 // Make notes submission api call to get submitted notes
@@ -98,14 +94,14 @@ export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
 			submissionUsers: 'current',
 			submissionState: 'all',
 	};
-	return authenticatedFetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
+	return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
 };
 
 // Make enroll API call, and add that course to enrolledCourses
 export const enrollCourseAPI = async (courseId, callBack) => {
-		authenticatedFetchApi(`/courses/${courseId}/enroll`, {}, 'post')
+		return authenticatedFetchAPI(`/courses/${courseId}/enroll`, {}, 'post')
 			.then((response) => {
-				if (response.data.enrolled) {
+				if (response.enrolled) {
 					callBack(true);
 					addEnrolledCourses(courseId);
 				}

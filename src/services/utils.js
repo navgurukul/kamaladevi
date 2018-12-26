@@ -163,3 +163,58 @@ export const filterPendingAssignment = (assignments) => {
 	}
 	return pendingAssignmentList
 }
+
+
+////////////////////////////////////////////////////////////
+const findObjectIndex = (array, key, value) => {
+	return array.findIndex((element) => {
+		return element[key] === value;
+	})
+}
+
+
+// to create a mentee schema row for Dashboard
+const _getMenteesReportSchema = (mentees, extraFields) => {
+	const menteesCourseReportSchema =  [];
+	for(let i = 0; i < mentees.length; i++){
+		let menteeCourseReportSchema = {
+			id : mentees[i].id,
+			name: mentees[i].name,
+			email: mentees[i].email,
+			...extraFields
+		};
+		menteesCourseReportSchema.push(menteeCourseReportSchema);
+	}
+	return menteesCourseReportSchema;
+}
+
+export const getMenteeCoursesTable = (coursesReport, mentees) => {
+	let coursesReportTable = [];
+	const extraFields = {
+		isEnrolled:false,
+		isCourseCompleted:false,
+	}
+	// get a schema of mentees courses reports to display in each courses
+	const menteesCourseReportSchema = _getMenteesReportSchema(mentees, extraFields);
+
+	// update each and every courses
+	coursesReport.forEach((course) => {
+		const {  studentEnrolled, ...courseDetails } = course;
+
+		// create a copy of schema for every courses
+		let courseReport = {
+			students: menteesCourseReportSchema.slice(),
+			...courseDetails
+		}
+
+		// update each schema with the current detail of the student
+		studentEnrolled.forEach((mentee) => {
+			const email = mentee.email;
+			const menteeIndex = findObjectIndex(mentees, "email", email);
+			courseReport['students'][menteeIndex] = { ...mentee };
+		});
+		coursesReportTable.push(courseReport);
+	});
+	// console.log(coursesReportTable);
+	return coursesReportTable;
+}

@@ -25,16 +25,18 @@ import { withStyles } from "@material-ui/core/styles";
 import {
 	       getSlugOfPreviousCourse,
 				 getSlugOfNextCourse,
-				 getExerciseDetailFromSlug
+				 getExerciseDetailFromSlug,
 				 getExerciseIdFromSlug,
 			 } from '../services/utils';
 
 import {
-          exerciseSubmissionAPI,
+					fetchApi,
+          submitExerciseAPI,
           getExerciseSubmissionAPI,
-          authenticatedFetchAPI,
         } from '../services/api';
+
 import CourseDetailSideNav from './course-detail-sidenav';
+import CourseDetailSubmission from './course-detail-submission';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
@@ -125,6 +127,7 @@ const styles = theme => {
 };
 
 const navigateToExercise = id => slug => {
+	// debugger;
   Router.push({
     pathname: "/course",
     query: { id, slug }
@@ -134,6 +137,7 @@ const navigateToExercise = id => slug => {
 class CourseDetail extends React.Component {
   constructor(props) {
     super(props);
+			// console.log('updating props', props);
 
     this.state = {
       prefetchedData: false,
@@ -183,10 +187,7 @@ class CourseDetail extends React.Component {
   submitExercise = event => {
     const { notes } = this.state;
     const { id, exercises, slug } = this.props;
-    const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(
-      slug,
-      exercises
-    );
+    const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(slug,exercises);
 
     // here should be the validation
     if (!this.isSubmissionTypeValid(submissionType, notes)) {
@@ -206,7 +207,7 @@ class CourseDetail extends React.Component {
       alert(message);
       return;
     }
-			exerciseSubmissionAPI(id, exerciseId, notes);
+			submitExerciseAPI(id, exerciseId, notes);
 			this.loadExercise();
 	}
   // handle the text in the input
@@ -231,35 +232,76 @@ class CourseDetail extends React.Component {
 
 
   async loadExercise() {
-		let response, previousNotesData;
-		const { id:courseId, slug, exercises } = this.props;
-		const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+		// let response, previousNotesData;
+		// const { id:courseId, slug, exercises } = this.props;
+		// const { id:exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+		// try {
+		// 	response = await getExerciseFromSlugAPI(courseId, slug);
+		// 	// response =  await authenticatedFetchAPI(`/courses/${courseId}/exercise/getBySlug`, {slug})
+		// 	previousNotesData = await getExerciseSubmissionAPI(courseId , exerciseId);
+		// } catch (e) {
+		// 	// TODO: Handle network error cases
+		// 	console.error(e);
+		// 	return;
+		// }
+		//
+		// // get the exerciseId for the exercise
+		// const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
+		//
+		// this.setState(prevState => ({
+    //   content,
+    //   prefetchedData: true,
+    //   notes: "",
+    //   previousNotesData: previousNotesData.data,
+    //   selectedExercise:response
+    // }));
 
-		try {
-			response = await authenticatedFetchAPI(`/courses/${id}/exercise/getBySlug`, { slug });
-			previousNotesData = await getExerciseSubmissionAPI(courseId , exerciseId).data;
-		} catch (e) {
-			// TODO: Handle network error cases
-			console.error(e);
-			return;
-		}
 		// get the exerciseId for the exercise
-		const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
 
-		this.setState({
+		let value, response;
+
+    try {
+      value = await localforage.getItem("authResponse");
+      if (!value) {
+        // No access tokens saved
+        Router.replace("/");
+        return;
+      }
+    } catch (e) {
+      // TODO: Handle localforage error cases
+      return;
+    }
+		const { id:courseId, slug, exercises } = this.props;
+    const { jwt } = value;
+    try {
+      response = await fetchApi(
+        `/courses/${courseId}/exercise/getBySlug`,
+        { slug },
+        { Authorization: jwt }
+      );
+    } catch (e) {
+      // TODO: Handle network error cases
+      return;
+    }
+		const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+    const previousNotesData = await getExerciseSubmissionAPI(courseId, exerciseId);
+    const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
+		console.log(slug)
+    this.setState({
       content,
       prefetchedData: true,
       notes: "",
-      previousNotesData: previousNotesData,
+      previousNotesData: previousNotesData.data,
       selectedExercise:response
     });
+
   }
 
 
   render() {
-    // const
+		// console.log(this.state)
+		// console.log(this.props)
     const { classes, exercises, id, slug } = this.props;
-
     const {
       reviewType,
       submissionType,

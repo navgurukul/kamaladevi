@@ -195,11 +195,13 @@ class CourseDetailSideNav extends React.Component {
 			loadExercise,
 			selectedExercise
 		} = this.props;
-		console.log(selectedExercise);
+		// console.log(selectedExercise);
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
-		const notifcationMessage = "You have enrolled in the course";
+		const notifcationMessage = (!enrolled && showEnrolledNotification)?
+																"You have enrolled in the course"
+																:"Kuch Error Ayi ha Enrolled nhi kar paye";
 
 		return (
 			<div className={classes.root}>
@@ -222,8 +224,12 @@ class CourseDetailSideNav extends React.Component {
 							className={classes.enrollButton}
 							onClick={() => {
 								const { id } = Router.query;
-								enrollCourseAPI(id, success => this.setState({ enrolled: success }));
-								this.setState({showEnrolledNotification:true});
+								enrollCourseAPI(id, success => this.setState({ enrolled: success,showEnrolledNotification:true }))
+										.catch(error => {
+											this.setState({
+												showEnrolledNotification:true
+											});
+										})
 							}}
 						>
             Enroll In Course

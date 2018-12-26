@@ -6,24 +6,24 @@ import localforage from 'localforage';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
 import { fetchApi } from '../src/services/api';
-import { filterPendingAssignment } from '../src/services/courses';
+import { filterPendingAssignment } from '../src/services/utils';
 
 
 import AssignmentsReview from '../src/components/assignment-review';
-import AssignmentsReviewCompleted from "../src/components/assignment-review/assignment-review-completed";
+import AssignmentsReviewCompleted from '../src/components/assignment-review/assignment-review-completed';
 
 class AssignmentReview extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			assignments:[]
-		}
+			assignments: [],
+		};
 	}
 	componentDidMount() {
-	 	this.loadAssignments();
+		this.loadAssignments();
 	}
 
-	async loadAssignments(){
+	async loadAssignments() {
 		let value;
 		let response;
 		try {
@@ -42,7 +42,7 @@ class AssignmentReview extends React.Component {
 		}
 		const { jwt } = value;
 		try {
-			response = await fetchApi(`/assignments/peerReview`, {}, { Authorization: jwt });
+			response = await fetchApi('/assignments/peerReview', {}, { Authorization: jwt });
 		} catch (e) {
 			// TODO: Handle network error cases
 			return;
@@ -50,24 +50,24 @@ class AssignmentReview extends React.Component {
 		let assignmentsToReview = response.data;
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 		this.setState({
-			assignments:assignmentsToReview
+			assignments: assignmentsToReview,
 		});
 	}
 
 	render() {
 		const { assignments } = this.state;
-		if(assignments.length === 0){
-			return(
+		if (assignments.length === 0) {
+			return (
 				<div>
 					<Header />
 					<AssignmentsReviewCompleted />
 				</div>
-			)
-		} else{
+			);
+		} else {
 
 			return (
 				<div>
-					<Header/>
+					<Header />
 					<AssignmentsReview assignments={assignments} />
 				</div>
 			);

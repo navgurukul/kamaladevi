@@ -38,6 +38,7 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		return;
 	}
 	const exercises = response.data;
+	// console.log(response)
 
 	setExerciseCallback(exercises);
 	// If there is a slug in the URL, use that slug, else get the
@@ -63,6 +64,7 @@ class Course extends React.Component {
 
 	render() {
 		const { id, slug } = this.props.router.query;
+		console.log(slug)
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 		if (!this.state.exercises.length) {
