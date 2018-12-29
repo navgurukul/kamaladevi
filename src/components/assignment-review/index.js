@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import localforage from "localforage";
+import Router from "next/router";
 
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
@@ -13,6 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 import {filterPendingAssignment}  from "../../services/utils"
 
 import AlertNotification from "../alert-notification";
+
 import AssignmentsReviewSidenav from "./assignment-review-sidenav";
 import AssignmentsReviewDetails from "./assignment-review-details";
 import AssignmentsReviewCompleted from "./assignment-review-completed";
@@ -45,18 +47,49 @@ const styles = theme => ({
   },
 });
 
+const navigateToAssignment = submissionId => {
+  Router.push({
+    pathname: '/assignment-review',
+    query:{submissionId}
+  });
+}
+
 class AssignmentsReview extends React.Component {
   constructor(props) {
     super(props);
     const {assignments} =this.props;
+    const { submissionId } =  Router.query;
     this.state = {
       assignments: assignments,
       mobileOpen: false,
-      selectedAssignment:assignments.length?assignments[0]:{},
+      selectedAssignment:this.getAssignment(submissionId),
       showNotification:false,
       notifcationMessage:"",
       alertType:""
     };
+  }
+
+  getAssignment = (id) => {
+    const {assignments} = this.props;
+    // if there is no assignment
+    if (assignments.length === 0){
+      return {}
+    }
+
+    // find the assignment when link is opened using id
+    if(id){
+      for (let i = 0; i < assignments.length; i++) {
+        if (id == assignments[i].id){
+          return assignments[i];
+        }
+      }
+    }
+
+    // if there is no id provided in url or
+    // no assignment found for given id
+    navigateToAssignment(assignments[0])
+    return assignments[0];
+
   }
 
   // On clicking to any assignment in sidebar
@@ -72,7 +105,6 @@ class AssignmentsReview extends React.Component {
   handleHideNotification = () => {
     this.setState({
       showNotification: false,
-      notifcationMessage: "",
     })
   }
 
@@ -133,12 +165,17 @@ class AssignmentsReview extends React.Component {
           removedAssignmentIndex
         );
 
+    let nextAssignment = (nextAssignmentIndex === null)?
+            {} : updateAssignmentList[nextAssignmentIndex];
     this.setState ({
       assignments : updateAssignmentList,
       // what if there is no assignment left?
-      selectedAssignment: (nextAssignmentIndex === null)?
-              {} : updateAssignmentList[nextAssignmentIndex],
+      selectedAssignment: nextAssignment,
     });
+
+    if(nextAssignmentIndex !== null){
+      navigateToAssignment(nextAssignment.id);
+    }
   }
 
   render() {

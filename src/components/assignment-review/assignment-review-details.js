@@ -81,6 +81,7 @@ const styles = theme => {
 
 class AssignmentsReviewDetails extends React.Component {
   constructor(props) {
+
     super(props);
     this.state = {
       notes: "",
@@ -122,11 +123,8 @@ class AssignmentsReviewDetails extends React.Component {
     //send the feedback to api
     reviewerFeedbackSubmissionAPI(notes, isApprove, selectedAssignment.id)
       .then(response => {
-        console.log(response);
         // empty the textfield after it has been submitted
-        this.setState({
-          notes:"",
-        });
+        this.setState({notes:""});
         message = "Feedback dene ke liye sukhriya.";
         showNotification(message, "success");
         // remove the assignment from pending list

@@ -124,7 +124,6 @@ const styles = theme => {
 };
 
 const navigateToExercise = id => slug => {
-	// debugger;
   Router.push({
     pathname: "/course",
     query: { id, slug }
