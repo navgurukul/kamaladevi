@@ -57,35 +57,56 @@ const styles = theme => {
     }
   }
 };
+const getValidationMessage = (submissionType, notes) => {
+    let message = "";
+
+    if (submissionType == "number") {
+      message = `App nich ek integer value hi dal sakte hai.`;
+    } else if (submissionType == "text") {
+      message = `App niche 100 se jada character nhi dal sakte hai.`;
+    } else if (submissionType == "text_large") {
+      message = `App niche 1500 se jada character nhi dal sakte hai.`;
+    } else if (submissionType == "url") {
+      message =  (!notes.startsWith("http"))?
+                `Link ke aage http:// yea https:// hona chaiye.`
+                : `Apko niche ek url ka link dalna hai.`;
+    }
+    return message
+}
+
+const isSubmissionTypeValid = (submissionType, notes) => {
+  if (submissionType == "number") {
+    return !isNaN(notes);
+  } else if (submissionType == "text") {
+    return notes.length <= 100;
+  } else if (submissionType == "text_large") {
+    return notes.length <= 1500;
+  } else if (submissionType == "url") {
+    if (!notes.startsWith("http")){
+      return false
+    } else {
+      let urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+      return notes.match(urlRegex) != null;
+    }
+  }
+  return true;
+};
+
 
 class CourseDetailSubmission extends React.Component {
   constructor(props){
     super(props);
+    this.submitButton = React.createRef();
+
     this.state = {
       notes: "",
       showNotification: false,
       notifcationMessage: "",
-      variant:"error"
+      variant:"error",
+      disableSubmitButton: false,
     }
   }
 
-  isSubmissionTypeValid = (submissionType, notes) => {
-    if (submissionType == "number") {
-      return !isNaN(notes);
-    } else if (submissionType == "text") {
-      return notes.length <= 100;
-    } else if (submissionType == "text_large") {
-      return notes.length <= 1500;
-    } else if (submissionType == "url") {
-      if (!notes.startsWith("http")){
-        return false
-      } else {
-        let urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
-        return notes.match(urlRegex) != null;
-      }
-    }
-    return true;
-  };
 
   submitExercise = event => {
     const { notes } = this.state;
@@ -96,45 +117,45 @@ class CourseDetailSubmission extends React.Component {
       loadExercise,
       updateExercises,
     } = this.props;
+
     const exercise = getExerciseDetailFromSlug(slug,exercises);
     const { submissionType, id: exerciseId } = exercise;
 
     // here should be the validation
-    if (!this.isSubmissionTypeValid(submissionType, notes)) {
-      // TODO: something to alert user
-      let message;
-      if (submissionType == "number") {
-        message = `App nich ek integer value hi dal sakte hai.`;
-      } else if (submissionType == "text") {
-        message = `App niche 100 se jada character nhi dal sakte hai.`;
-      } else if (submissionType == "text_large") {
-        message = `App niche 1500 se jada character nhi dal sakte hai.`;
-      } else if (submissionType == "url") {
-          message =  (!notes.startsWith("http"))?
-                  `Link ke aage http:// yea https:// hona chaiye.`
-                  : `Apko niche ek url ka link dalna hai.`;
-      }
+    if (!isSubmissionTypeValid(submissionType, notes)) {
+      let message = getValidationMessage(submissionType, notes);
       this.showNotification(message, "warning");
       return;
     }
+
     submitExerciseAPI(courseId, exerciseId, notes)
         .then(response => {
           let message;
+
+          // if the user is not enrolled in the course and tries to submit assignment
           let enrolledServerMessage = "User can't submit an assignment unless enrolled in course";
           if (response.statusCode === 417 && response.message === enrolledServerMessage ){
+
             // call a function to show popup
             message = "Phele course me Enroll kare.";
             this.showNotification(message, "error");
+
           } else {
+
+            // when the assignment is submitted
             message = "Aapki assignment submit ho chuka hai.";
-            this.showNotification(message);
             this.setState({notes:""});
             // update the submissionType
             exercise["submissionState"] = "pending";
             updateExercises(exercises);
+            this.showNotification(message);
+
+            this.setState({
+              disableSubmitButton:true
+            })
+            loadExercise();
           }
-        })
-      loadExercise();
+        });
   }
 
   showNotification = (message, variant="success") => {
@@ -171,12 +192,12 @@ class CourseDetailSubmission extends React.Component {
       notes,
       showNotification,
       notifcationMessage,
-      variant
+      variant,
+      disableSubmitButton,
     } = this.state;
 
-    const { submissionType } = getExerciseDetailFromSlug(slug, exercises);
+    const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
 
-    // const reviewrs = ["peer", "facilitator", "automatic"];
     return (
       <Card>
         {/*previously submitted notes*/}
@@ -222,6 +243,7 @@ class CourseDetailSubmission extends React.Component {
             <br />
             <br />
             <Button
+              disabled={disableSubmitButton}
               variant="extendedFab"
               color="secondary"
               className={classes.submitExercise}
@@ -247,7 +269,7 @@ CourseDetailSubmission.propTypes = {
   classes: PropTypes.object.isRequired,
   slug: PropTypes.string.isRequired,
   exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
-  courseId: PropTypes.number.isRequired,
+  courseId: PropTypes.string.isRequired,
   loadExercise: PropTypes.func.isRequired,
   updateExercises: PropTypes.func.isRequired,
   prevSolutionDetail: PropTypes.object,
