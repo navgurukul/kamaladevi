@@ -318,6 +318,7 @@ class CourseDetail extends React.Component {
             selectedExercise={selectedExercise}
           />
         </Grid>
+
       </Grid>
     );
   }

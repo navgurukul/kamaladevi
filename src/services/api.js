@@ -3,7 +3,7 @@ import Router from 'next/router';
 import localforage from 'localforage';
 
 import { BACKEND_URL } from './config';
-import { clearSession } from './session';
+import { clearSession, addEnrolledCourses } from './session';
 
 // export const fetchApi = (endpoint, payload, headers, method = 'get') => {
 // 	const axiosConfig = {

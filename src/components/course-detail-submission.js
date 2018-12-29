@@ -10,7 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 
 import CheckIcon from "@material-ui/icons/Check";
+
 import { withStyles } from "@material-ui/core/styles";
+
+import AlertNotification from "./alert-notification";
+
 import {  submitExerciseAPI } from '../services/api';
 import {  getExerciseDetailFromSlug } from '../services/utils';
 
@@ -59,6 +63,9 @@ class CourseDetailSubmission extends React.Component {
     super(props);
     this.state = {
       notes: "",
+      showNotification: false,
+      notifcationMessage: "",
+      variant:"error"
     }
   }
 
@@ -73,7 +80,8 @@ class CourseDetailSubmission extends React.Component {
       if (!notes.startsWith("http")){
         return false
       } else {
-        return notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
+        let urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+        return notes.match(urlRegex) != null;
       }
     }
     return true;
@@ -99,11 +107,36 @@ class CourseDetailSubmission extends React.Component {
                   `Link ke aage http:// yea https:// hona chaiye.`
                   : `Apko niche ek url ka link dalna hai.`;
       }
-      alert(message);
+      this.showNotification(message, "warning");
       return;
     }
-      submitExerciseAPI(courseId, exerciseId, notes);
+    submitExerciseAPI(courseId, exerciseId, notes)
+        .then(response => {
+          let message;
+          let enrolledServerMessage = "User can't submit an assignment unless enrolled in course";
+          if (response.statusCode === 417 && response.message === enrolledServerMessage ){
+            // call a function to show popup
+            message = "Phele course me Enroll kare."
+            this.showNotification(message, "error");
+          } else {
+            message = "Aapki assignment submit ho chuka hai."
+            this.showNotification(message);
+          }
+        })
       loadExercise();
+  }
+
+  showNotification = (message, variant="success") => {
+    this.setState({
+      showNotification:true,
+      notifcationMessage:message,
+      variant
+    })
+  }
+  handleHideNotification = () => {
+    this.setState({
+      showNotification:false,
+    })
   }
 
   // handle the text in the input
@@ -118,9 +151,20 @@ class CourseDetailSubmission extends React.Component {
     const {
       classes,
       prevSolutionDetail,
+      slug,
+      exercises,
     } = this.props;
-    console.log(prevSolutionDetail);
-    const reviewrs = ["peer", "facilitator", "automatic"];
+
+    const {
+      notes,
+      showNotification,
+      notifcationMessage,
+      variant
+    } = this.state;
+
+    const { submissionType } = getExerciseDetailFromSlug(slug, exercises);
+
+    // const reviewrs = ["peer", "facilitator", "automatic"];
     return (
       <Card>
         {/*previously submitted notes*/}
@@ -157,7 +201,7 @@ class CourseDetailSubmission extends React.Component {
             <TextField
               multiline={true}
               fullWidth
-              value={this.state.notes}
+              value={notes}
               label={"Exercise Submission"}
               onChange={this.handleChange}
               className={classes.submissionField}
@@ -175,6 +219,13 @@ class CourseDetailSubmission extends React.Component {
             </Button>
           </form>
         </CardContent>
+        <AlertNotification
+          open={showNotification}
+          message={notifcationMessage}
+          autoHideDuration={6000}
+          variant={variant}
+          onClose={this.handleHideNotification}
+          />
       </Card>
     );
   }

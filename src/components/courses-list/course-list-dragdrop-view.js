@@ -226,7 +226,6 @@ class CourseListDragAndDropView extends React.Component {
 	handleHideNotification = () => {
 		this.setState({
 			showNotification: false,
-			notifcationMessage: "",
 		})
 	}
 
