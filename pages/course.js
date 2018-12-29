@@ -62,6 +62,7 @@ class Course extends React.Component {
 		};
 	}
 
+
 	render() {
 		const { id, slug } = this.props.router.query;
 		console.log(slug)
@@ -84,6 +85,7 @@ class Course extends React.Component {
 							id={id}
 							slug={slug}
 							exercises={this.state.exercises}
+							updateExercises={exercises => this.setState({ exercises })}
 							/>
 					</div>
 				</DocumentTitle>

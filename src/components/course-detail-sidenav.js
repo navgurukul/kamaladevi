@@ -195,7 +195,7 @@ class CourseDetailSideNav extends React.Component {
 			loadExercise,
 			selectedExercise
 		} = this.props;
-		// console.log(selectedExercise);
+		
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
@@ -244,7 +244,7 @@ class CourseDetailSideNav extends React.Component {
 							>
 							<ExpansionPanelSummary>
 								<span>
-									{
+									{ // Name of the students who have completed the exercise.
 										selectedExercise.usersCompletedExercise.slice(0,3).map((user, index) => {
 											if (index ===  selectedExercise.usersCompletedExercise.slice(0,3).length-1){
 												return `${user.name} `

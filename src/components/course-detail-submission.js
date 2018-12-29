@@ -89,8 +89,15 @@ class CourseDetailSubmission extends React.Component {
 
   submitExercise = event => {
     const { notes } = this.state;
-    const { courseId, exercises, slug, loadExercise } = this.props;
-    const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(slug,exercises);
+    const {
+      courseId,
+      exercises,
+      slug,
+      loadExercise,
+      updateExercises,
+    } = this.props;
+    const exercise = getExerciseDetailFromSlug(slug,exercises);
+    const { submissionType, id: exerciseId } = exercise;
 
     // here should be the validation
     if (!this.isSubmissionTypeValid(submissionType, notes)) {
@@ -116,11 +123,15 @@ class CourseDetailSubmission extends React.Component {
           let enrolledServerMessage = "User can't submit an assignment unless enrolled in course";
           if (response.statusCode === 417 && response.message === enrolledServerMessage ){
             // call a function to show popup
-            message = "Phele course me Enroll kare."
+            message = "Phele course me Enroll kare.";
             this.showNotification(message, "error");
           } else {
-            message = "Aapki assignment submit ho chuka hai."
+            message = "Aapki assignment submit ho chuka hai.";
             this.showNotification(message);
+            this.setState({notes:""});
+            // update the submissionType
+            exercise["submissionState"] = "pending";
+            updateExercises(exercises);
           }
         })
       loadExercise();
@@ -130,9 +141,10 @@ class CourseDetailSubmission extends React.Component {
     this.setState({
       showNotification:true,
       notifcationMessage:message,
-      variant
+      variant,
     })
   }
+
   handleHideNotification = () => {
     this.setState({
       showNotification:false,
@@ -233,7 +245,12 @@ class CourseDetailSubmission extends React.Component {
 
 CourseDetailSubmission.propTypes = {
   classes: PropTypes.object.isRequired,
-  prevSolutionDetail: PropTypes.object
+  slug: PropTypes.string.isRequired,
+  exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+  courseId: PropTypes.number.isRequired,
+  loadExercise: PropTypes.func.isRequired,
+  updateExercises: PropTypes.func.isRequired,
+  prevSolutionDetail: PropTypes.object,
 };
 
 export default withStyles(styles)(CourseDetailSubmission);

@@ -219,7 +219,7 @@ class CourseDetail extends React.Component {
 
 
   render() {
-    const { classes, exercises, id, slug } = this.props;
+    const { classes, exercises, id, slug, updateExercises } = this.props;
     const {
       reviewType,
       submissionType,
@@ -267,6 +267,7 @@ class CourseDetail extends React.Component {
 								courseId={id}
 								slug={slug}
 								loadExercise={this.loadExercise}
+								updateExercises={updateExercises}
 								/>
 							: null
 				}
@@ -329,7 +330,8 @@ CourseDetail.propTypes = {
   classes: PropTypes.object.isRequired,
   exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.string.isRequired,
-  slug: PropTypes.string.isRequired
+  slug: PropTypes.string.isRequired,
+	updateExercises: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CourseDetail);
