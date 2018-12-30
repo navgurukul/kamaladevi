@@ -24,13 +24,13 @@ import {
 				 getSlugOfNextCourse,
 				 getExerciseDetailFromSlug,
 				 getExerciseIdFromSlug,
-			 } from '../services/utils';
+			 } from '../../services/utils';
 
 import {
 					fetchApi,
           submitExerciseAPI,
           getExerciseSubmissionAPI,
-        } from '../services/api';
+        } from '../../services/api';
 
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';

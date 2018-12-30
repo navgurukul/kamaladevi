@@ -13,10 +13,10 @@ import CheckIcon from "@material-ui/icons/Check";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import AlertNotification from "./alert-notification";
+import AlertNotification from "../alert-notification";
 
-import {  submitExerciseAPI } from '../services/api';
-import {  getExerciseDetailFromSlug } from '../services/utils';
+import {  submitExerciseAPI } from '../../services/api';
+import {  getExerciseDetailFromSlug } from '../../services/utils';
 
 const styles = theme => {
   return {
@@ -225,15 +225,21 @@ class CourseDetailSubmission extends React.Component {
                     prevSolutionDetail.reviewerName?
                     <Typography variant="body2" className={classes.typography}>
                       Reviewer Name: <span className={classes.reviewer}>{prevSolutionDetail.reviewerName}</span>
-                  </Typography>
-                  :null
+                    </Typography>
+                    :null
                   }
-                  <Typography variant="body2">
-                    Reviewer Feedback:
-                  </Typography>
-                  <Typography variant="body1">
-                    {prevSolutionDetail.notesReviewer}
-                  </Typography>
+                  {
+                    prevSolutionDetail.state !== "pending"?
+                    <React.Fragment>
+                      <Typography variant="body2">
+                        Reviewer Feedback:
+                      </Typography>
+                      <Typography variant="body1">
+                        {prevSolutionDetail.notesReviewer}
+                      </Typography>
+                    </React.Fragment>
+                    :null
+                  }
                 </Grid>
 
               </Grid>

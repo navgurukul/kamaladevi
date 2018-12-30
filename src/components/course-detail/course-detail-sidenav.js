@@ -28,11 +28,11 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import AlertNotification from "./alert-notification";
+import AlertNotification from "../alert-notification";
 
-import { getExerciseIdFromSlug } from '../services/utils';
-import { isEnrolled } from '../services/session';
-import { enrollCourseAPI } from '../services/api';
+import { getExerciseIdFromSlug } from '../../services/utils';
+import { isEnrolled } from '../../services/session';
+import { enrollCourseAPI } from '../../services/api';
 
 
 const styles = (theme) => {
@@ -195,7 +195,7 @@ class CourseDetailSideNav extends React.Component {
 			loadExercise,
 			selectedExercise
 		} = this.props;
-		
+
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
