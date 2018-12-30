@@ -197,7 +197,7 @@ class CourseDetailSubmission extends React.Component {
     } = this.state;
 
     const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
-
+    
     return (
       <Card>
         {/*previously submitted notes*/}

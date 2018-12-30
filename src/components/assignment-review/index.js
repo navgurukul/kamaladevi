@@ -87,7 +87,7 @@ class AssignmentsReview extends React.Component {
 
     // if there is no id provided in url or
     // no assignment found for given id
-    navigateToAssignment(assignments[0])
+    navigateToAssignment(assignments[0].id)
     return assignments[0];
 
   }
