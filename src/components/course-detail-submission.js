@@ -195,35 +195,49 @@ class CourseDetailSubmission extends React.Component {
       variant,
       disableSubmitButton,
     } = this.state;
-
-    const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
     
+    const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
+
     return (
       <Card>
         {/*previously submitted notes*/}
           {
             prevSolutionDetail?
             <CardContent className={classes.cardContent}>
-              <Typography variant="body2" className={classes.typography}>
-                Previous Solution:
-              </Typography>
-              {
-                prevSolutionDetail.reviewerName?
-                <Typography variant="body2" className={`${classes.typography} ${classes.floatRight}`}>
-                  Reviewer Name: <span className={classes.reviewer}>{prevSolutionDetail.reviewerName}</span>
-                </Typography>
-                :null
-              }
+              <Grid container>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Typography variant="body2" className={classes.typography}>
+                    Previous Solution:
+                  </Typography>
+                  <Typography variant="body1">
+                    {
+                      prevSolutionDetail.submitterNotes.startsWith("http")?
+                      <a href={prevSolutionDetail.submitterNotes} target="_blank">
+                        Solution
+                      </a>
+                      :prevSolutionDetail.submitterNotes
+                    }
+                  </Typography>
+                </Grid>
 
-              <Typography className={classes.solution} variant="body1">
-                {
-                  prevSolutionDetail.submitterNotes.startsWith("http")?
-                  <a href={prevSolutionDetail.submitterNotes} target="_blank">
-                    Solution
-                  </a>
-                  :prevSolutionDetail.submitterNotes
-                }
-              </Typography>
+                <Grid item xs={6} sm={6} md={6} className={classes.floatRight}>
+                  {
+                    prevSolutionDetail.reviewerName?
+                    <Typography variant="body2" className={classes.typography}>
+                      Reviewer Name: <span className={classes.reviewer}>{prevSolutionDetail.reviewerName}</span>
+                  </Typography>
+                  :null
+                  }
+                  <Typography variant="body2">
+                    Reviewer Feedback:
+                  </Typography>
+                  <Typography variant="body1">
+                    {prevSolutionDetail.notesReviewer}
+                  </Typography>
+                </Grid>
+
+              </Grid>
+
             </CardContent>
             : null
           }
