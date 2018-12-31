@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import {reviewerFeedbackSubmission} from "../../services/courses";
+import {reviewerFeedbackSubmissionAPI} from "../../services/api";
 
 const styles = theme => {
   return ({
@@ -81,6 +81,7 @@ const styles = theme => {
 
 class AssignmentsReviewDetails extends React.Component {
   constructor(props) {
+
     super(props);
     this.state = {
       notes: "",
@@ -120,13 +121,10 @@ class AssignmentsReviewDetails extends React.Component {
     const {notes} = this.state;
 
     //send the feedback to api
-    reviewerFeedbackSubmission(notes, isApprove, selectedAssignment.id)
+    reviewerFeedbackSubmissionAPI(notes, isApprove, selectedAssignment.id)
       .then(response => {
-        console.log(response);
         // empty the textfield after it has been submitted
-        this.setState({
-          notes:"",
-        });
+        this.setState({notes:""});
         message = "Feedback dene ke liye sukhriya.";
         showNotification(message, "success");
         // remove the assignment from pending list

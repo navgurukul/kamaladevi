@@ -1,118 +1,5 @@
-import localforage from 'localforage';
-import { fetchApi } from '../services/api';
-
-export const resetEnrolledCourses = () => {
-	localforage.removeItem('enrolledCourses');
-};
-
-export const setEnrolledCourses = (data) => {
-	const { enrolledCourses } = data;
-	const enrolledCoursesId = enrolledCourses.map(value => value.id);
-	localforage.setItem('enrolledCourses', enrolledCoursesId);
-};
-
-// Add a course to enrolledCourses
-export const addEnrolledCourses = (courseId) => {
-	localforage.getItem('enrolledCourses', (error, value) => {
-		if (value) {
-			value.push(parseInt(courseId, 10));
-			localforage.setItem('enrolledCourses', value);
-		} else {
-			localforage.setItem('enrolledCourses', [courseId]);
-		}
-	});
-};
-
-// submit student assignment
-export const exerciseSubmission = async (courseId, exerciseId, notes) => {
-	localforage.getItem('authResponse', (error, value)=>{
-		const { jwt } =  value;
-
-	  fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, { Authorization: jwt }, 'post')
-			.then((response) => {
-					console.log(response);
-			})
-			.catch((error) => {
-					console.log(error);
-			});
-	});
-};
-
-// Submit the feedback for student assignment
-export const reviewerFeedbackSubmission = (notes,isApprove,submissionId)=>{
-	return localforage.getItem('authResponse')
-		.then(value => {
-			const {jwt} =value;
-			const payload = {
-				notes:notes,
-				approved:isApprove
-			}
-			return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
-		})
-	}
-
-
-// save course new sequenceNum
-export const saveCoursesSequence = (payload) => {
-	return localforage.getItem('authResponse')
-		.then(value => {
-			const { jwt } =  value;
-		  return fetchApi(`/courses/sequenceNum`, {"courses": payload}, { Authorization: jwt }, 'put')
-		})
-};
-
-// delete a course
-export const deleteCourseAPI = (courseId) => {
-	return localforage.getItem('authResponse')
-		.then(value => {
-			const { jwt } =  value;
-			return fetchApi(`/courses/${courseId}/delete`, {}, { Authorization: jwt }, 'delete')
-		})
-};
-
-// get the student old exercise solution submision details
-export const getExerciseSubmission = async (courseId, exerciseId) => {
-	let responseData;
-	const { jwt } = await localforage.getItem('authResponse');
-	const query = {
-			submissionUsers: 'current',
-			submissionState: 'all',
-	};
-
-	await fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query , { Authorization: jwt })
-			.then( resp => {
-					responseData = resp.data;
-			})
-	return responseData;
-};
-
-// Make enroll API call, and add that course to enrolledCourses
-export const enrollCourse = async (courseId, callBack) => {
-	localforage.getItem('authResponse', (error, value) => {
-		const { jwt } = value;
-		fetchApi(`/courses/${courseId}/enroll`, {}, { Authorization: jwt }, 'post')
-			.then((response) => {
-				if (response.enrolled) {
-					callBack(true);
-					addEnrolledCourses(courseId);
-				}
-			});
-	});
-};
-
-// Checks whether a course is enrolled
-export const isEnrolled = (courseId, callBack) => {
-	localforage.getItem('enrolledCourses', (error, value) => {
-		if (value && value.indexOf(parseInt(courseId, 10)) !== -1) {
-			callBack(true);
-		} else {
-			callBack(false);
-		}
-	});
-};
-
 //gets gihtub Link for each exercise
-	export const getExerciseDetailFromSlug = (slug, exercises) => {
+export const getExerciseDetailFromSlug = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
 		if (exercises[exerciseId].slug === slug) {
 			return exercises[exerciseId];
@@ -175,6 +62,14 @@ const getNextExerciseSlug = (exercises, exerciseId) => {
 	}
 };
 
+const getPreviousChildSlug = (exercises, exerciseId, childExerciseId) => {
+  if (childExerciseId === 0) {
+    return exercises[exerciseId].slug;
+  } else {
+    return exercises[exerciseId].childExercises[childExerciseId - 1].slug;
+  }
+};
+
 const getNextChildSlug = (exercises, exerciseId, childExerciseId) => {
 	try {
 		// Return if there is next child
@@ -202,13 +97,6 @@ const getPreviousExerciseSlug = (exercises, exerciseId) => {
 	}
 };
 
-const getPreviousChildSlug = (exercises, exerciseId, childExerciseId) => {
-	if (childExerciseId === 0) {
-		return exercises[exerciseId].slug;
-	} else {
-		return exercises[exerciseId].childExercises[childExerciseId - 1].slug;
-	}
-};
 
 // Get slug of the next course to navigate using next button
 export const getSlugOfNextCourse = (slug, exercises) => {
@@ -245,6 +133,7 @@ export const sortCoursesBySequenceNum = courses => {
 	});
 	return sortedCourses;
 }
+
 // Get slug of the previous course to navigate using next button
 export const getSlugOfPreviousCourse = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
@@ -273,4 +162,59 @@ export const filterPendingAssignment = (assignments) => {
 		}
 	}
 	return pendingAssignmentList
+}
+
+
+////////////////////////////////////////////////////////////
+const findObjectIndex = (array, key, value) => {
+	return array.findIndex((element) => {
+		return element[key] === value;
+	})
+}
+
+
+// to create a mentee schema row for Dashboard
+const _getMenteesReportSchema = (mentees, extraFields) => {
+	const menteesCourseReportSchema =  [];
+	for(let i = 0; i < mentees.length; i++){
+		let menteeCourseReportSchema = {
+			id : mentees[i].id,
+			name: mentees[i].name,
+			email: mentees[i].email,
+			...extraFields
+		};
+		menteesCourseReportSchema.push(menteeCourseReportSchema);
+	}
+	return menteesCourseReportSchema;
+}
+
+export const getMenteeCoursesTable = (coursesReport, mentees) => {
+	let coursesReportTable = [];
+	const extraFields = {
+		isEnrolled:false,
+		isCourseCompleted:false,
+	}
+	// get a schema of mentees courses reports to display in each courses
+	const menteesCourseReportSchema = _getMenteesReportSchema(mentees, extraFields);
+
+	// update each and every courses
+	coursesReport.forEach((course) => {
+		const {  studentEnrolled, ...courseDetails } = course;
+
+		// create a copy of schema for every courses
+		let courseReport = {
+			students: menteesCourseReportSchema.slice(),
+			...courseDetails
+		}
+
+		// update each schema with the current detail of the student
+		studentEnrolled.forEach((mentee) => {
+			const email = mentee.email;
+			const menteeIndex = findObjectIndex(mentees, "email", email);
+			courseReport['students'][menteeIndex] = { ...mentee };
+		});
+		coursesReportTable.push(courseReport);
+	});
+	// console.log(coursesReportTable);
+	return coursesReportTable;
 }

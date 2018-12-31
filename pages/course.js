@@ -3,13 +3,15 @@ import React from 'react';
 import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { getTitleFromSlug } from '../src/services/courses';
 import DocumentTitle from 'react-document-title';
 
-import { fetchApi } from '../src/services/api';
 import withRoot from '../src/with-root';
-import CourseDetail from '../src/components/course-detail';
+
+import { fetchApi } from '../src/services/api';
+import { getTitleFromSlug } from '../src/services/utils';
+
 import Header from '../src/components/header';
+import CourseDetail from '../src/components/course-detail';
 
 const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 	let value;
@@ -36,6 +38,7 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		return;
 	}
 	const exercises = response.data;
+	// console.log(response)
 
 	setExerciseCallback(exercises);
 	// If there is a slug in the URL, use that slug, else get the
@@ -59,8 +62,10 @@ class Course extends React.Component {
 		};
 	}
 
+
 	render() {
 		const { id, slug } = this.props.router.query;
+		console.log(slug)
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 		if (!this.state.exercises.length) {
@@ -80,6 +85,7 @@ class Course extends React.Component {
 							id={id}
 							slug={slug}
 							exercises={this.state.exercises}
+							updateExercises={exercises => this.setState({ exercises })}
 							/>
 					</div>
 				</DocumentTitle>

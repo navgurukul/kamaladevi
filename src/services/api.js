@@ -1,6 +1,9 @@
 import axios from 'axios';
+import Router from 'next/router';
+import localforage from 'localforage';
+
 import { BACKEND_URL } from './config';
-import { clearSession } from './session';
+import { clearSession, addEnrolledCourses } from './session';
 
 // export const fetchApi = (endpoint, payload, headers, method = 'get') => {
 // 	const axiosConfig = {
@@ -56,3 +59,64 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 			throw error;
 		});
 };
+
+export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => {
+	return localforage.getItem('authResponse')
+						.then(value => {
+								if(value === null){
+									Router.replace('/');
+								} else {
+									const { jwt } = value;
+									return fetchApi(endpoint, payload, { Authorization: jwt }, method)
+								}
+						});
+}
+
+// Make notes submission api call to submit notes for students
+export const submitExerciseAPI = (courseId, exerciseId, notes) => {
+  return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, 'post')
+};
+
+export const getExerciseFromSlugAPI =  (courseId, slug) => {
+	return authenticatedFetchAPI(`/courses/${courseId}/exercise/getBySlug`, {slug})
+}
+export const saveCoursesSequenceAPI = (payload) => {
+	return authenticatedFetchAPI(`/courses/sequenceNum`, {"courses": payload}, 'put')
+};
+
+export const deleteCourseAPI = (courseId) => {
+	return authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete')
+};
+
+// Make notes submission api call to get submitted notes
+export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
+	const query = {
+			submissionUsers: 'current',
+			submissionState: 'all',
+	};
+	return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
+};
+
+// Make enroll API call, and add that course to enrolledCourses
+export const enrollCourseAPI = async (courseId, callBack) => {
+		return authenticatedFetchAPI(`/courses/${courseId}/enroll`, {}, 'post')
+			.then((response) => {
+				if (response.enrolled) {
+					callBack(true);
+					addEnrolledCourses(courseId);
+				}
+			});
+};
+
+// Submit the feedback for student assignment
+export const reviewerFeedbackSubmissionAPI = (notes,isApprove,submissionId)=>{
+	return localforage.getItem('authResponse')
+		.then(value => {
+			const {jwt} =value;
+			const payload = {
+				notes:notes,
+				approved:isApprove
+			}
+			return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
+		})
+	}

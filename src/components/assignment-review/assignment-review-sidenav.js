@@ -2,6 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import Router from "next/router";
 
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
@@ -50,6 +51,7 @@ const AssignmentsReviewSidenav = (props) => {
       showSelectedAssignment,
       selectedAssignment,
     } = props;
+
     return (
       <div className={classes.root }>
         {
@@ -64,7 +66,15 @@ const AssignmentsReviewSidenav = (props) => {
                   `${classes.assignmentsCards} ${classes.selectedAssignment}`
                   :classes.assignmentsCards
                 }
-                onClick={() => showSelectedAssignment(assignment)}
+                onClick={() => {
+                  showSelectedAssignment(assignment)
+                  Router.push({
+                    pathname:'/assignment-review',
+                    query:{
+                      submissionId:assignment.id,
+                    }
+                  })
+                }}
                 key={assignment.id}
               >
                 {/*Main Content of Assignment*/}

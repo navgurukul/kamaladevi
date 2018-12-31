@@ -10,33 +10,30 @@ import ReactUtterences from "react-utterances";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import CheckIcon from "@material-ui/icons/Check";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { fetchApi } from "../services/api";
-import { getExerciseIdFromSlug } from "../services/courses";
+import {
+	       getSlugOfPreviousCourse,
+				 getSlugOfNextCourse,
+				 getExerciseDetailFromSlug,
+				 getExerciseIdFromSlug,
+			 } from '../../services/utils';
 
 import {
-  getSlugOfPreviousCourse,
-  getSlugOfNextCourse,
-  exerciseSubmission,
-  getExerciseSubmission,
-  getExerciseDetailFromSlug
-} from "../services/courses";
-import CourseDetailSubmission from "./course-detail-submission";
+					fetchApi,
+          submitExerciseAPI,
+          getExerciseSubmissionAPI,
+        } from '../../services/api';
 
-
-import CourseDetailSideNav from "./course-detail-sidenav";
-
+import CourseDetailSideNav from './course-detail-sidenav';
+import CourseDetailSubmission from './course-detail-submission';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
@@ -136,12 +133,12 @@ const navigateToExercise = id => slug => {
 class CourseDetail extends React.Component {
   constructor(props) {
     super(props);
+			// console.log('updating props', props);
 
     this.state = {
       prefetchedData: false,
       content: "",
-      notes: "",
-      previousNotesData: "",
+      prevSolutionDetail: "",
       selectedExercise:{},
     };
     this.courseDetail = React.createRef();
@@ -165,61 +162,6 @@ class CourseDetail extends React.Component {
     return courseDetail.body.innerHTML;
   };
 
-  isSubmissionTypeValid = (submissionType, notes) => {
-    if (submissionType == "number") {
-      return !isNaN(notes);
-    } else if (submissionType == "text") {
-      return notes.length <= 100;
-    } else if (submissionType == "text_large") {
-      return notes.length <= 1500;
-    } else if (submissionType == "url") {
-      if (!notes.startsWith("http")){
-        return false
-      } else {
-        return notes.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) != null;
-      }
-    }
-    return true;
-  };
-  // submit the exercise notes
-  submitExercise = event => {
-    const { notes } = this.state;
-    const { id, exercises, slug } = this.props;
-    const { submissionType, id: exerciseId } = getExerciseDetailFromSlug(
-      slug,
-      exercises
-    );
-
-    // here should be the validation
-    if (!this.isSubmissionTypeValid(submissionType, notes)) {
-      // TODO: something to alert user
-      let message;
-      if (submissionType == "number") {
-        message = `App nich ek integer value hi dal sakte hai.`;
-      } else if (submissionType == "text") {
-        message = `App niche 100 se jada character nhi dal sakte hai.`;
-      } else if (submissionType == "text_large") {
-        message = `App niche 1500 se jada character nhi dal sakte hai.`;
-      } else if (submissionType == "url") {
-          message =  (!notes.startsWith("http"))?
-                  `Link ke aage http:// yea https:// hona chaiye.`
-                  : `Apko niche ek url ka link dalna hai.`;
-      }
-      alert(message);
-      return;
-    }
-    exerciseSubmission(id, exerciseId, notes);
-    this.loadExercise();
-  };
-
-  // handle the text in the input
-  handleChange = event => {
-    const name = event.target.name;
-    this.setState({
-      [name]: event.target.value
-    });
-  };
-
   componentDidMount() {
     this.loadExercise();
   }
@@ -231,9 +173,11 @@ class CourseDetail extends React.Component {
     return true;
   }
 
-  async loadExercise() {
-    let value, response;
 
+
+  async loadExercise() {
+		// get the exerciseId for the exercise
+		let value, response;
     try {
       value = await localforage.getItem("authResponse");
       if (!value) {
@@ -245,55 +189,48 @@ class CourseDetail extends React.Component {
       // TODO: Handle localforage error cases
       return;
     }
-    const { id, slug, exercises } = this.props;
+		const { id:courseId, slug, exercises } = this.props;
     const { jwt } = value;
     try {
       response = await fetchApi(
-        `/courses/${id}/exercise/getBySlug`,
+        `/courses/${courseId}/exercise/getBySlug`,
         { slug },
         { Authorization: jwt }
       );
     } catch (e) {
       // TODO: Handle network error cases
+
       return;
     }
-    // gettuing exersise notes
-    const query = {
-      submissionUsers: "current",
-      submissionState: "all"
-    };
-
-    // get the exerciseId for the exercise
-    const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-    const previousNotesData = await getExerciseSubmission(id, exerciseId);
-    // console.log(previousNotesData);
+		const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+    const prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
-    // console.log(response);
+		console.log(slug)
     this.setState({
       content,
       prefetchedData: true,
       notes: "",
-      previousNotesData: previousNotesData,
+      prevSolutionDetail: prevSolutionDetail.data,
       selectedExercise:response
     });
+
   }
 
-  render() {
-    // const
-    const { classes, exercises, id, slug } = this.props;
 
+  render() {
+    const { classes, exercises, id, slug, updateExercises } = this.props;
     const {
       reviewType,
       submissionType,
       githubLink
     } = getExerciseDetailFromSlug(slug, exercises);
-    
+
     const reviewrs = ["peer", "facilitator", "automatic"];
 
     const {
       prefetchedData,
       content,
-      previousNotesData,
+      prevSolutionDetail,
       selectedExercise
     } = this.state;
 
@@ -320,38 +257,20 @@ class CourseDetail extends React.Component {
             />
           </Card>
           <br />
-          {/*previously submitted notes*/}
+
           {
-            previousNotesData[0] ?
-            <CourseDetailSubmission submissionDetails={previousNotesData[0]} />
-           : null
-          }
-          {/*submission form*/}
-          {
-            // TODO: Input box should be generated based on submissionType
-          }
-          {reviewrs.includes(reviewType) && submissionType != null ? (
-            <form autoComplete="off">
-              <TextField
-                multiline={true}
-                fullWidth
-                value={this.state.notes}
-                label={"Exercise Submission"}
-                onChange={this.handleChange}
-                name="notes"
-              />
-              <br />
-              <br />
-              <Button
-                variant="fab"
-                color="secondary"
-                className={classes.submitExercise}
-                onClick={this.submitExercise}
-              >
-                <CheckIcon />
-              </Button>
-            </form>
-          ) : null}
+						reviewrs.includes(reviewType) && submissionType != null ?
+							<CourseDetailSubmission
+								prevSolutionDetail={prevSolutionDetail[0]}
+								exercises={exercises}
+								courseId={id}
+								slug={slug}
+								loadExercise={this.loadExercise}
+								updateExercises={updateExercises}
+								/>
+							: null
+				}
+
           {/*link to github page*/}
           <div className={classes.editLink}>
             <a href={githubLink} target="_blank">
@@ -399,16 +318,19 @@ class CourseDetail extends React.Component {
             selectedExercise={selectedExercise}
           />
         </Grid>
+
       </Grid>
     );
   }
+
 }
 
 CourseDetail.propTypes = {
   classes: PropTypes.object.isRequired,
   exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.string.isRequired,
-  slug: PropTypes.string.isRequired
+  slug: PropTypes.string.isRequired,
+	updateExercises: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CourseDetail);
