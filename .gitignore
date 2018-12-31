@@ -33,6 +33,7 @@ local.properties
 *.iml
 
 .vscode
+package-lock.json
 
 # node.js
 #
