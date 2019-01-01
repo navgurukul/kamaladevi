@@ -178,7 +178,7 @@ class AssignmentsReviewDetails extends React.Component {
 							Exercise Name:
 						</span>
 						{` ${selectedAssignment.exerciseName} `}
-						{/* eslint-disable no-target-blank */}
+						{/* eslint-disable react/jsx-no-target-blank */}
 						<a href={`/course?id=${courseId}&slug=${exerciseSlug}`} target="_blank">
 								(Link)
 						</a>

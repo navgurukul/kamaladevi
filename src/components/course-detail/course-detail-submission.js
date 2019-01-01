@@ -289,6 +289,6 @@ CourseDetailSubmission.propTypes = {
 
 CourseDetailSubmission.defaultProps = {
 	prevSolutionDetail: undefined,
-}
+};
 
 export default withStyles(styles)(CourseDetailSubmission);

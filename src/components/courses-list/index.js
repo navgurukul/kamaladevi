@@ -89,7 +89,6 @@ class CourseList extends React.Component {
 			availableCourses: [],
 			// For future uses
 			enrolledCourses: [],
-			facilitatingCourses: [],
 			isAdmin: false,
 		};
 	}

@@ -74,7 +74,7 @@ class AssignmentsReview extends React.Component {
 
 		// find the assignment when link is opened using id
 		if (id) {
-			for (let i = 0; i < assignments.length; i++) {
+			for (let i = 0; i < assignments.length; i += 1) {
 				if (parseInt(id, 10) === assignments[i].id) {
 					return assignments[i];
 				}
@@ -139,13 +139,14 @@ class AssignmentsReview extends React.Component {
 		let removedAssignmentIndex;
 
 		// The assignment which is approve or rejected
-		// shall no longer be in pending list remove it.
-		for (let i = 0; i < assignments.length; i++) {
+		// shall no longer be in pending list remove it.\\
+
+		for (let i = 0; i < assignments.length; i += 1) {
 			if (assignments[i] === selectedAssignment) {
 				removedAssignmentIndex = i;
-				continue;
+			} else {
+				updateAssignmentList.push(assignments[i]);
 			}
-			updateAssignmentList.push(assignments[i]);
 		}
 
 		// which assignment to be shown after removing the

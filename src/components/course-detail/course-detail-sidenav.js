@@ -306,7 +306,7 @@ class CourseDetailSideNav extends React.Component {
 												</Grid>
 												<Grid item md={2} sm={2}>
 													<span className={classes[exerciseSubmissionClass(value.submissionState)]}>
-														{value.submissionType ? 
+														{value.submissionType ?
 															exerciseSubmissionStatus(value.submissionState) : null}
 													</span>
 												</Grid>
@@ -346,8 +346,14 @@ class CourseDetailSideNav extends React.Component {
 															</Typography>
 														</Grid>
 														<Grid item md={6} sm={2}>
-																													<span className={classes[exerciseSubmissionClass(child.submissionState)]}>
-																{child.submissionType ? exerciseSubmissionStatus(child.submissionState) : null}
+															<span
+																className={classes[exerciseSubmissionClass(child.submissionState)]}
+															>
+																{
+																	child.submissionType ?
+																		exerciseSubmissionStatus(child.submissionState)
+																		: null
+																}
 															</span>
 														</Grid>
 													</Grid>

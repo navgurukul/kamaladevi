@@ -208,7 +208,6 @@ class CourseListDragAndDropView extends React.Component {
 	}
 
 
-
 	// Saves the current sequence
 	saveUpdate = () => {
 		const { currentCoursesSequence } = this.state;
