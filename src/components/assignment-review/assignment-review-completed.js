@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	root: {
-		display:"flex",
+		display: 'flex',
 		flexGrow: 1,
-		marginTop:"40vh",
-		height:"100%"
+		marginTop: '40vh',
+		height: '100%',
 	},
 
 });
@@ -19,10 +19,12 @@ const AssignmentsReviewCompleted = (props) => {
 			<center>
 				Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye
 				aap apni padhai continue karsakte ha.
-			</center>
+
+
+   </center>
 		</div>
 	);
-}
+};
 
 AssignmentsReviewCompleted.propTypes = {
 	classes: PropTypes.object.isRequired,

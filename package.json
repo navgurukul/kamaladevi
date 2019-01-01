@@ -14,7 +14,7 @@
     }
   },
   "lint-staged": {
-    "*.js": ["eslint src/ --fix","git add "]
+    "*.js": ["git add "]
   },
   "repository": {
     "type": "git",

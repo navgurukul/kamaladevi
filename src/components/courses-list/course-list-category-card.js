@@ -19,64 +19,64 @@ const styles = theme => ({
 		marginBottom: 10,
 		flexGrow: 1,
 	},
-	cardContent:{
+	cardContent: {
 		display: 'inline',
 		width: '120%',
 		[theme.breakpoints.down('sm')]: {
-      marginLeft:1
-    },
+			marginLeft: 1,
+		},
 	},
-	image:{
-		paddingTop:theme.spacing.unit * 3,
+	image: {
+		paddingTop: theme.spacing.unit * 3,
 		marginLeft: 10,
-    marginRight: 10,
-    width: "100%",
+		marginRight: 10,
+		width: '100%',
 		[theme.breakpoints.up('xl')]: {
-				paddingTop:theme.spacing.unit
-    },
+			paddingTop: theme.spacing.unit,
+		},
 		[theme.breakpoints.down('sm')]: {
-    },
+		},
 	},
 	enrolledProgress: {
 		paddingTop: theme.spacing.unit,
 	},
-	deleteCourseButton:{
-		cursor:"pointer",
-		float:"right",
-		cursor:"unset",
+	deleteCourseButton: {
+		cursor: 'pointer',
+		float: 'right',
+		cursor: 'unset',
 	},
-	deleteIcon:{
-		fontSize:theme.spacing.unit*2
+	deleteIcon: {
+		fontSize: theme.spacing.unit * 2,
 	},
 	cardMargin: {
-    marginLeft: theme.spacing.unit*1,
-		marginRight:theme.spacing.unit*2,
+		marginLeft: theme.spacing.unit * 1,
+		marginRight: theme.spacing.unit * 2,
 		height: '100%',
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
-		cursor:'pointer',
+		cursor: 'pointer',
 		[theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing.unit*1,
-      marginRight: theme.spacing.unit*1,
-      // wordWrap: 'break-word',
+			marginLeft: theme.spacing.unit * 1,
+			marginRight: theme.spacing.unit * 1,
+			// wordWrap: 'break-word',
 		},
 	},
-	headline:{
-		fontSize:theme.spacing.unit * 2,
+	headline: {
+		fontSize: theme.spacing.unit * 2,
 		[theme.breakpoints.down('md')]: {
-			fontSize:theme.spacing.unit*1.8
+			fontSize: theme.spacing.unit * 1.8,
 		},
-	}
+	},
 });
 
 const CourseListCard = (props) => {
 	const {
-				classes,
-				value,
-				showProgress,
-				index,
-			} = props;
+		classes,
+		value,
+		showProgress,
+		index,
+	} = props;
 
 
 	return (
@@ -86,13 +86,13 @@ const CourseListCard = (props) => {
 					pathname: '/course',
 					query: { id: value.id },
 				}}
-				>
+			>
 				<Card
 					variant="raised"
 					className={classes.cardMargin}
-					>
+				>
 					<Grid container>
-						<Grid	item xs={2} sm md>
+						<Grid item xs={2} sm md>
 							<img className={classes.image} src={value.logo} />
 						</Grid>
 						<Grid item xs={9} sm={10} md={10} container className={classes.cardContent}>
@@ -104,14 +104,16 @@ const CourseListCard = (props) => {
 									{value.shortDescription}
 								</Typography>
 								{
-									showProgress?
-									<div className={classes.enrolledProgress}>
-										<LinearProgress
-											variant="determinate"
-											value={(value.completedSubmissions * 100) / value.totalExercises}
-											/>
-									</div>
-									:null
+									showProgress
+										? (
+											<div className={classes.enrolledProgress}>
+												<LinearProgress
+													variant="determinate"
+													value={(value.completedSubmissions * 100) / value.totalExercises}
+												/>
+											</div>
+										)
+										: null
 								}
 							</CardContent>
 						</Grid>
@@ -120,7 +122,7 @@ const CourseListCard = (props) => {
 			</Link>
 		</Grid>
 	);
-}
+};
 
 CourseListCard.propTypes = {
 	classes: PropTypes.object.isRequired,
@@ -132,5 +134,5 @@ CourseListCard.propTypes = {
 
 CourseListCard.defaultProps = {
 	showProgress: false,
-}
+};
 export default withStyles(styles)(CourseListCard);

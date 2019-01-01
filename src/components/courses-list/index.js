@@ -33,8 +33,8 @@ const styles = theme => ({
 	},
 	rootContent: {
 		paddingTop: theme.spacing.unit * 5,
-			display: 'flex',
-			flexDirection: 'column',
+		display: 'flex',
+		flexDirection: 'column',
 		width: '80%',
 		[theme.breakpoints.down('sm')]: {
 			width: '100%',
@@ -42,24 +42,24 @@ const styles = theme => ({
 			paddingRight: 10,
 		},
 	},
-	courseEditButton:{
-		display:'block',
-		float:'right',
-		margin: "0",
-		top: "auto",
-		float:"right",
+	courseEditButton: {
+		display: 'block',
+		float: 'right',
+		margin: '0',
+		top: 'auto',
+		float: 'right',
 		right: theme.spacing.unit * 4,
 		bottom: theme.spacing.unit * 4,
-		left: "auto",
-		zIndex:"100",
-		position: "fixed",
+		left: 'auto',
+		zIndex: '100',
+		position: 'fixed',
 		[theme.breakpoints.down('xs')]: {
-			fontSize: theme.spacing.unit * 2
+			fontSize: theme.spacing.unit * 2,
 		},
 	},
 
-	courseSequenceEditRootContent:{
-		width:'40%',
+	courseSequenceEditRootContent: {
+		width: '40%',
 		[theme.breakpoints.down('sm')]: {
 			width: '100%',
 		},
@@ -75,30 +75,30 @@ const styles = theme => ({
 
 const navigateToEditMode = () => {
 	Router.push({
-		pathname:'/home',
+		pathname: '/home',
 		query: {
-			edit: true
-		}
-	})
+			edit: true,
+		},
+	});
 };
 
 const navigateToHome = () => {
 	Router.push({
-		pathname:'/home'
-	})
-}
+		pathname: '/home',
+	});
+};
 
 class CourseList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			prefetchedData: false,
-			editCourseSequence:false,
+			editCourseSequence: false,
 			availableCourses: [],
 			// For future uses
 			enrolledCourses: [],
 			facilitatingCourses: [],
-			isAdmin: false
+			isAdmin: false,
 		};
 	}
 
@@ -130,6 +130,7 @@ class CourseList extends React.Component {
 			}
 		});
 	}
+
 	stopCourseSequenceEditing = () => {
 		this.getCoursesUpdated();
 		this.setState({
@@ -145,28 +146,29 @@ class CourseList extends React.Component {
 			facilitatingCourses,
 			prefetchedData,
 			editCourseSequence,
-			isAdmin
+			isAdmin,
 		} = this.state;
 		if (!prefetchedData) {
 			return (
 				<div className={classes.rootLoader}>
 					<CircularProgress className={classes.progress} size={50} />
-				</div>);
+				</div>
+			);
 		}
 
-		if (editCourseSequence === true){
+		if (editCourseSequence === true) {
 			return (
 				<div className={classes.root}>
 					<div className={`${classes.rootContent} ${classes.courseSequenceEditRootContent}`}>
 						<CourseListDragAndDropView
-							headline={'Aapke courses'}
+							headline="Aapke courses"
 							courses={sortCoursesBySequenceNum([...availableCourses, ...enrolledCourses])}
-							stopCourseSequenceEditing={ () => {
+							stopCourseSequenceEditing={() => {
 								this.stopCourseSequenceEditing();
 								navigateToHome();
 							}}
 							paddingTop
-							/>
+						/>
 					</div>
 				</div>
 			);
@@ -179,33 +181,36 @@ class CourseList extends React.Component {
 			<div className={classes.root}>
 				<div className={classes.rootContent}>
 					{
-						isAdmin?
-						<div>
-							<Button
-								variant="fab"
-								color="primary"
-								title="Edit Course Sequence"
-								className={classes.courseEditButton}
-								onClick={() => {
-
-									this.setState({editCourseSequence:true});
-									navigateToEditMode();
-								}}
-								>
-								<EditIcon />
-							</Button>
-						</div>
-						:null
+						isAdmin
+							? (
+								<div>
+									<Button
+										variant="fab"
+										color="primary"
+										title="Edit Course Sequence"
+										className={classes.courseEditButton}
+										onClick={() => {
+											this.setState({ editCourseSequence: true });
+											navigateToEditMode();
+										}}
+									>
+										<EditIcon />
+									</Button>
+								</div>
+							)
+							: null
 					}
 					{/* Enrolled courses list  */}
 					{
-						enrolledCourses.length?
-						<CourseListCategoryView
-							headline={'Courses jis mein aap enrolled hai'}
-							courses={sortCoursesBySequenceNum(enrolledCourses)}
-							showProgress
-							/>
-						:''
+						enrolledCourses.length
+							? (
+								<CourseListCategoryView
+									headline="Courses jis mein aap enrolled hai"
+									courses={sortCoursesBySequenceNum(enrolledCourses)}
+									showProgress
+								/>
+							)
+							: ''
 					}
 
 					<Grid container spacing={0} className={classes.dividerContainer}>
@@ -216,13 +221,15 @@ class CourseList extends React.Component {
 
 					{/* Available courses list */}
 					{
-						availableCourses.length?
-						<CourseListCategoryView
-							headline={'Aap yeh courses mein enroll kar skte hai'}
-							courses={sortCoursesBySequenceNum(availableCourses)}
-							paddingTop
-							/>
-						:''
+						availableCourses.length
+							? (
+								<CourseListCategoryView
+									headline="Aap yeh courses mein enroll kar skte hai"
+									courses={sortCoursesBySequenceNum(availableCourses)}
+									paddingTop
+								/>
+							)
+							: ''
 					}
 
 				</div>
