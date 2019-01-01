@@ -46,20 +46,18 @@ const MenteeCoursesReports = (props) => {
 
 						<TableCell variant="head">Courses</TableCell>
 						{
-							mentees.map((mentee, index) => (
-								<TableCell variant="head" key={index}>{mentee.name}</TableCell>
-							))
+							mentees.map(mentee => <TableCell variant="head" key={mentee.id}>{mentee.name}</TableCell>)
 						}
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{
-						coursesReports.map((courseReport, courseIndex) => (
-							<TableRow key={courseIndex}>
+						coursesReports.map(courseReport => (
+							<TableRow key={courseReport.courseId}>
 								<TableCell variant="head">{courseReport.courseName}</TableCell>
 								{
-									courseReport.students.map((student, studentIndex) => (
-										<TableCell variant="body" key={studentIndex}>
+									courseReport.students.map(student => (
+										<TableCell variant="body" key={student.id}>
 											{courseStatus(student.isEnrolled, student.isCourseCompleted)}
 										</TableCell>
 									))

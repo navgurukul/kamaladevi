@@ -109,5 +109,5 @@ AlertNotification.propTypes = {
 
 AlertNotification.defaultProps = {
 	className: ' ',
-}
+};
 export default withStyles(styles)(AlertNotification);

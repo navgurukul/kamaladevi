@@ -85,8 +85,7 @@ class LandingPage extends React.Component {
 						variant="headline"
 						gutterBottom
 					>
-            			SARAL
-						{' '}
+						{'SARAL '}
 						<br />
 					</Typography>
 					<Typography

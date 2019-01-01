@@ -30,7 +30,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 					clearSession();
 					// throw response.statusText;
 				}
-    	}
+			}
 			return response.json();
 		})
 		.catch((error) => {
