@@ -1,17 +1,13 @@
 // Course list
 import React from 'react';
-import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
 import ReactUtterences from 'react-utterances';
 
-
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CardContent from '@material-ui/core/CardContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -20,21 +16,20 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { withStyles } from '@material-ui/core/styles';
 
 import {
-	       getSlugOfPreviousCourse,
-				 getSlugOfNextCourse,
-				 getExerciseDetailFromSlug,
-				 getExerciseIdFromSlug,
-			 } from '../../services/utils';
+	getSlugOfPreviousCourse,
+	getSlugOfNextCourse,
+	getExerciseDetailFromSlug,
+} from '../../services/utils';
 
 import {
 	fetchApi,
-	submitExerciseAPI,
 	getExerciseSubmissionAPI,
 } from '../../services/api';
 
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';
 
+const { DOMParser } = window;
 const blockEmbedPlugin = require('markdown-it-block-embed');
 
 // Parse markdown content
@@ -143,191 +138,185 @@ class CourseDetail extends React.Component {
 		this.loadExercise = this.loadExercise.bind(this);
 	}
 
-  updateLinks = (htmlFromServer) => {
-  	const courseDetail = new DOMParser().parseFromString(
-  		htmlFromServer,
-  		'text/html',
-  	);
-  	const anchorList = courseDetail.querySelectorAll('a');
-  	// setting links inside courseDetail to be open in new tab
-  	anchorList.forEach((anchor) => {
-  		if (anchor.innerText === 'Saral') {
-  			return false;
-  		} else {
-  			anchor.setAttribute('target', '_blank');
-  		}
-  	});
-  	return courseDetail.body.innerHTML;
-  };
+	componentDidMount() {
+		this.loadExercise();
+	}
 
-  componentDidMount() {
-  	this.loadExercise();
-  }
+	shouldComponentUpdate(nextProps) {
+		if (nextProps.slug !== this.props.slug) {
+			this.loadExercise();
+		}
+		return true;
+	}
 
-  shouldComponentUpdate(nextProps) {
-  	if (nextProps.slug !== this.props.slug) {
-  		this.loadExercise();
-  	}
-  	return true;
-  }
+	updateLinks = (htmlFromServer) => {
+		const courseDetail = new DOMParser().parseFromString(
+			htmlFromServer,
+			'text/html',
+		);
+		const anchorList = courseDetail.querySelectorAll('a');
+		// setting links inside courseDetail to be open in new tab
+		anchorList.forEach((anchor) => {
+			if (anchor.innerText === 'Saral') {
+				return false;
+			} else {
+				anchor.setAttribute('target', '_blank');
+			}
+		});
+		return courseDetail.body.innerHTML;
+	};
 
+	async loadExercise() {
+		// get the exerciseId for the exercise
+		let value; let
+			response;
+		try {
+			value = await localforage.getItem('authResponse');
+			if (!value) {
+				// No access tokens saved
+				Router.replace('/');
+				return;
+			}
+		} catch (e) {
+			// TODO: Handle localforage error cases
+			return;
+		}
+		const { id: courseId, slug, exercises } = this.props;
+		const { jwt } = value;
+		try {
+			response = await fetchApi(
+				`/courses/${courseId}/exercise/getBySlug`,
+				{ slug },
+				{ Authorization: jwt },
+			);
+		} catch (e) {
+			// TODO: Handle network error cases
 
-  async loadExercise() {
-  	// get the exerciseId for the exercise
-  	let value; let
-  		response;
-  	try {
-  		value = await localforage.getItem('authResponse');
-  		if (!value) {
-  			// No access tokens saved
-  			Router.replace('/');
-  			return;
-  		}
-  	} catch (e) {
-  		// TODO: Handle localforage error cases
-  		return;
-  	}
-  	const { id: courseId, slug, exercises } = this.props;
-  	const { jwt } = value;
-  	try {
-  		response = await fetchApi(
-  			`/courses/${courseId}/exercise/getBySlug`,
-  			{ slug },
-  			{ Authorization: jwt },
-  		);
-  	} catch (e) {
-  		// TODO: Handle network error cases
-
-  		return;
-  	}
-  	const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-  	const prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
-  	const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
-  	console.log(slug);
-  	this.setState({
-  		content,
-  		prefetchedData: true,
-  		notes: '',
-  		prevSolutionDetail: prevSolutionDetail.data,
-  		selectedExercise: response,
-  	});
-  }
+			return;
+		}
+		const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+		const prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
+		const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
+		console.log(slug);
+		this.setState({
+			content,
+			prefetchedData: true,
+			prevSolutionDetail: prevSolutionDetail.data,
+			selectedExercise: response,
+		});
+	}
 
 
-  render() {
-  	const {
-  		classes, exercises, id, slug, updateExercises,
-  	} = this.props;
-  	const {
-  		reviewType,
-  		submissionType,
-  		githubLink,
-  	} = getExerciseDetailFromSlug(slug, exercises);
+	render() {
+		const {
+			classes, exercises, id, slug, updateExercises,
+		} = this.props;
+		const {
+			reviewType,
+			submissionType,
+			githubLink,
+		} = getExerciseDetailFromSlug(slug, exercises);
 
-  	const reviewrs = ['peer', 'facilitator', 'automatic'];
+		const reviewrs = ['peer', 'facilitator', 'automatic'];
 
-  	const {
-  		prefetchedData,
-  		content,
-  		prevSolutionDetail,
-  		selectedExercise,
-  	} = this.state;
+		const {
+			prefetchedData,
+			content,
+			prevSolutionDetail,
+			selectedExercise,
+		} = this.state;
 
-  	if (!prefetchedData) {
-  		return (
-  			<div className={classes.loaderRoot}>
-		<CircularProgress className={classes.progress} size={50} />
-	</div>
-  		);
-  	}
-  	const previousSlug = getSlugOfPreviousCourse(slug, exercises);
-  	const nextSlug = getSlugOfNextCourse(slug, exercises);
+		if (!prefetchedData) {
+			return (
+				<div className={classes.loaderRoot}>
+					<CircularProgress className={classes.progress} size={50} />
+				</div>
+			);
+		}
+		const previousSlug = getSlugOfPreviousCourse(slug, exercises);
+		const nextSlug = getSlugOfNextCourse(slug, exercises);
 
-  	return (
-	<Grid container spacing={0} className={classes.root}>
-	<Grid item xs={12} md={8} className={classes.content}>
-			<Card className={classes.content}>
-			{/* eslint-disable-next-line react/no-danger */}
-  					<div
-  						id="course"
-  						dangerouslySetInnerHTML={{
-  							__html: this.updateLinks(md.render(content)),
-  						}}
-				/>
-		</Card>
-			<br />
+		return (
+			<Grid container spacing={0} className={classes.root}>
+				<Grid item xs={12} md={8} className={classes.content}>
+					<Card className={classes.content}>
+						{/* eslint-disable react/no-danger */}
+						<div
+							id="course"
+							dangerouslySetInnerHTML={{
+								__html: this.updateLinks(md.render(content)),
+							}}
+						/>
+					</Card>
+					<br />
 
-			{
-  					reviewrs.includes(reviewType) && submissionType != null
-  						? (
-  							<CourseDetailSubmission
-		prevSolutionDetail={prevSolutionDetail[0]}
-  								exercises={exercises}
-  								courseId={id}
-  								slug={slug}
-		loadExercise={this.loadExercise}
-		updateExercises={updateExercises}
-	/>
-  						)
-  						: null
-  				}
+					{
+						reviewrs.includes(reviewType) && submissionType != null
+							? (
+								<CourseDetailSubmission
+									prevSolutionDetail={prevSolutionDetail[0]}
+									exercises={exercises}
+									courseId={id}
+									slug={slug}
+									loadExercise={this.loadExercise}
+									updateExercises={updateExercises}
+								/>
+							)
+							: null
+					}
 
-			{/* link to github page */}
-			<div className={classes.editLink}>
-  					<a href={githubLink} target="_blank">
-              Edit
+					{/* link to github page */}
+					<div className={classes.editLink}>
+						{/* eslint-disable react/jsx-no-target-blank */}
+						<a href={githubLink} target="_blank">
+							Edit
+						</a>
+						{' on GitHub'}
+					</div>
 
+					<div className={classes.navigationBtnDiv}>
+						{previousSlug ? (
+							<Button
+								variant="fab"
+								color="primary"
+								onClick={() => {
+									navigateToExercise(id)(previousSlug);
+								}}
+							>
+								<NavigateBeforeIcon />
+							</Button>
+						) : null}
+						{nextSlug ? (
+							<Button
+								className={classes.floatButtonRight}
+								variant="fab"
+								color="primary"
+								onClick={() => {
+									navigateToExercise(id)(nextSlug);
+								}}
+							>
+								<NavigateNextIcon />
+							</Button>
+						) : null}
+					</div>
+					<ReactUtterences
+						className={classes.utterances}
+						repo="navgurukul/newton"
+						type="title"
+					/>
+				</Grid>
+				<Grid item xs={4} className={classes.sidebar}>
+					<CourseDetailSideNav
+						exercises={exercises}
+						loadExercise={navigateToExercise(id)}
+						slug={slug}
+						selectedExercise={selectedExercise}
+					/>
+				</Grid>
 
-    </a>
-  					{' '}
-            on GitHub
-
-
-      </div>
-
-  				<div className={classes.navigationBtnDiv}>
-			{previousSlug ? (
-  						<Button
-					variant="fab"
-  							color="primary"
-					onClick={() => {
-  								navigateToExercise(id)(previousSlug);
-  							}}
-				>
-					<NavigateBeforeIcon />
-  						</Button>
-  					) : null}
-  					{nextSlug ? (
-		<Button
-	className={classes.floatButtonRight}
-	variant="fab"
-  							color="primary"
-  							onClick={() => {
-  								navigateToExercise(id)(nextSlug);
-  							}}
-  						>
-	<NavigateNextIcon />
-  						</Button>
-  					) : null}
-  </div>
-			<ReactUtterences
-	className={classes.utterances}
-  					repo="navgurukul/newton"
-  					type="title"
-  				/>
-  			</Grid>
-	<Grid item xs={4} className={classes.sidebar}>
-	<CourseDetailSideNav
-	exercises={exercises}
-	loadExercise={navigateToExercise(id)}
-	slug={slug}
-	selectedExercise={selectedExercise}
-  				/>
-  			</Grid>
-
-  		</Grid>
-  	);
-  }
+			</Grid>
+		);
+	}
 }
 
 CourseDetail.propTypes = {

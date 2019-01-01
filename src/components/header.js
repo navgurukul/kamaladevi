@@ -27,13 +27,13 @@ const styles = theme => ({
 		flex: 1,
 	},
 	drawerPaper: {
-   	width: drawerWidth,
+		width: drawerWidth,
 		zIndex: theme.zIndex.appBar - 1,
 		...theme.mixins.toolbar,
 		backgroundColor: theme.palette.grey[50],
 	},
 	link: {
-	  textDecoration: 'inherit',
+		textDecoration: 'inherit',
 		color: 'inherit',
 	},
 	drawerContent: {
@@ -62,6 +62,9 @@ class Header extends React.Component {
 			isAuthenticated: false,
 			open: false,
 		};
+	}
+	componentDidMount() {
+		this.checkIsAuthenticated();
 	}
 
 	toggleMenu = () => {
@@ -92,7 +95,6 @@ class Header extends React.Component {
 				if (!window.navigator.onLine) {
 					alert('Aap internet se connected nhi ho.');
 				}
-				console.log(e);
 			} else if (!value) {
 				// No access tokens saved
 				// Do nothing
@@ -105,9 +107,6 @@ class Header extends React.Component {
 		});
 	}
 
-	componentDidMount() {
-		this.checkIsAuthenticated();
-	}
 
 	render() {
 		const { classes } = this.props;
@@ -170,37 +169,6 @@ class Header extends React.Component {
 		);
 	}
 }
-
-// function Header(props)  {
-// 	const { classes } = props;
-// 	const isAuthenticated =  checkIsAuthenticated();
-// 	console.log(isAuthenticated)
-// 	return (
-// 		<div className={classes.root}>
-// 			<AppBar position="static">
-// 				<Toolbar>
-// 					{/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"> */}
-// 					{/* <MenuIcon /> */}
-// 					{/* </IconButton> */}
-// 					<Typography variant="title" color="inherit" className={classes.flex}>
-// 						<a href="/home" className={classes.link}>
-//             Saral
-// 						</a>
-// 					</Typography>
-// 					{
-// 						isAuthenticated?
-// 						<IconButton className={classes.menuButton} color="inherit" aria-label="Review Assignments">
-// 							<a href='/assignment-review'>
-// 								<img src='/static/icons/assignment-logo.png' height='45' />
-// 							</a>
-// 						</IconButton>
-// 						:null
-// 					}
-// 				</Toolbar>
-// 			</AppBar>
-// 		</div>
-// 	);
-// }
 
 Header.propTypes = {
 	classes: PropTypes.object.isRequired,

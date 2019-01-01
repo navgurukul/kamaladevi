@@ -1,8 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
 
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
@@ -39,7 +37,7 @@ const styles = theme => ({
 const CourseListCategoryView = (props) => {
 	const {
 		classes,
-	 	headline,
+		headline,
 		courses,
 		showProgress,
 		paddingTop,
@@ -77,4 +75,5 @@ CourseListCategoryView.defaultProps = {
 	showProgress: false,
 	paddingTop: false,
 };
+
 export default withStyles(styles)(CourseListCategoryView);

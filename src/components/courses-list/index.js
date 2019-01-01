@@ -1,10 +1,8 @@
 // Course list
 import React from 'react';
-import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import localforage from 'localforage';
-
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -47,7 +45,6 @@ const styles = theme => ({
 		float: 'right',
 		margin: '0',
 		top: 'auto',
-		float: 'right',
 		right: theme.spacing.unit * 4,
 		bottom: theme.spacing.unit * 4,
 		left: 'auto',
@@ -57,17 +54,12 @@ const styles = theme => ({
 			fontSize: theme.spacing.unit * 2,
 		},
 	},
-
 	courseSequenceEditRootContent: {
 		width: '40%',
 		[theme.breakpoints.down('sm')]: {
 			width: '100%',
 		},
 	},
-	// dividerContainer: {
-	// 	paddingTop: theme.spacing.unit * 2,
-	// 	justifyContent: 'center',
-	// },
 	progress: {
 		margin: theme.spacing.unit * 1,
 	},
@@ -143,7 +135,6 @@ class CourseList extends React.Component {
 		const {
 			availableCourses,
 			enrolledCourses,
-			facilitatingCourses,
 			prefetchedData,
 			editCourseSequence,
 			isAdmin,

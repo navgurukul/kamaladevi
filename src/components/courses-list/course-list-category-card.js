@@ -7,9 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -43,7 +40,6 @@ const styles = theme => ({
 	deleteCourseButton: {
 		cursor: 'pointer',
 		float: 'right',
-		cursor: 'unset',
 	},
 	deleteIcon: {
 		fontSize: theme.spacing.unit * 2,
@@ -75,7 +71,6 @@ const CourseListCard = (props) => {
 		classes,
 		value,
 		showProgress,
-		index,
 	} = props;
 
 
@@ -93,7 +88,7 @@ const CourseListCard = (props) => {
 				>
 					<Grid container>
 						<Grid item xs={2} sm md>
-							<img className={classes.image} src={value.logo} />
+							<img alt={value.name} className={classes.image} src={value.logo} />
 						</Grid>
 						<Grid item xs={9} sm={10} md={10} container className={classes.cardContent}>
 							<CardContent>
@@ -128,7 +123,6 @@ CourseListCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	value: PropTypes.object.isRequired,
 	showProgress: PropTypes.bool,
-	index: PropTypes.number.isRequired,
 };
 
 

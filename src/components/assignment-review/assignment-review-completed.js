@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles = () => ({
 	root: {
 		display: 'flex',
 		flexGrow: 1,
@@ -21,7 +21,7 @@ const AssignmentsReviewCompleted = (props) => {
 				aap apni padhai continue karsakte ha.
 
 
-   </center>
+			</center>
 		</div>
 	);
 };

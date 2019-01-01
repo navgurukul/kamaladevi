@@ -85,6 +85,7 @@ const AssignmentsReviewSidenav = (props) => {
 											className={classes.assignmentLogo}
 											src="/static/icons/assignment-logo.png"
 											height="40"
+											alt="assignment-logo"
 										/>
 									</Grid>
 									<Grid item sm={9} md={9} xs={9}>
@@ -92,11 +93,7 @@ const AssignmentsReviewSidenav = (props) => {
 											{assignment.submitterName}
 										</Typography>
 										<Typography>
-                        Exercise:
-
-
-											{' '}
-											{assignment.exerciseName}
+											{`Exercise: ${assignment.exerciseName}`}
 										</Typography>
 										<Typography>{submittedAt}</Typography>
 									</Grid>
@@ -113,7 +110,7 @@ const AssignmentsReviewSidenav = (props) => {
 
 AssignmentsReviewSidenav.propTypes = {
 	classes: PropTypes.object.isRequired,
-	assignments: PropTypes.array.isRequired,
+	assignments: PropTypes.arrayOf(PropTypes.object).isRequired,
 	showSelectedAssignment: PropTypes.func.isRequired,
 	selectedAssignment: PropTypes.object.isRequired,
 };

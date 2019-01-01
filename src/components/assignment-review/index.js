@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import localforage from 'localforage';
 import Router from 'next/router';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -10,8 +9,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import { withStyles } from '@material-ui/core/styles';
-
-import { filterPendingAssignment } from '../../services/utils';
 
 import AlertNotification from '../alert-notification';
 
@@ -68,202 +65,186 @@ class AssignmentsReview extends React.Component {
 		};
 	}
 
-  getAssignment = (id) => {
-  	const { assignments } = this.props;
-  	// if there is no assignment
-  	if (assignments.length === 0) {
-  		return {};
-  	}
+	getAssignment = (id) => {
+		const { assignments } = this.props;
+		// if there is no assignment
+		if (assignments.length === 0) {
+			return {};
+		}
 
-  	// find the assignment when link is opened using id
-  	if (id) {
-  		for (let i = 0; i < assignments.length; i++) {
-  			if (id == assignments[i].id) {
-  				return assignments[i];
-  			}
-  		}
-  	}
+		// find the assignment when link is opened using id
+		if (id) {
+			for (let i = 0; i < assignments.length; i++) {
+				if (parseInt(id, 10) === assignments[i].id) {
+					return assignments[i];
+				}
+			}
+		}
 
-  	// if there is no id provided in url or
-  	// no assignment found for given id
-  	navigateToAssignment(assignments[0].id);
-  	return assignments[0];
-  }
+		// if there is no id provided in url or
+		// no assignment found for given id
+		navigateToAssignment(assignments[0].id);
+		return assignments[0];
+	}
 
-  // On clicking to any assignment in sidebar
-  // it should be displayed in AssignmentsReviewDetails page
-  showSelectedAssignment = (assignment) => {
-  	this.setState({
-  		selectedAssignment: assignment,
-  		mobileOpen: false,
-  	});
-  }
+	getNextAssignmentIndex = (updateAssignmentList, removedAssignmentIndex) => {
+		// if there is no assignment left
+		if (updateAssignmentList.length === 0) {
+			return null;
+		} else if (updateAssignmentList.length === 1) {
+			// if there is only 1 assignment just show it
+			return 0;
+		} else if (updateAssignmentList.length === removedAssignmentIndex) {
+			// if the approve assignment is the last one then
+			// then get the previous one
+			return updateAssignmentList.length - 1;
+		} else {
+			return removedAssignmentIndex;
+		}
+	}
+	// to open and close the sidebar in mobile view
+	handleDrawerToggle = () => {
+		this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+	};
 
-  // Hide the Notification
-  handleHideNotification = () => {
-  	this.setState({
-  		showNotification: false,
-  	});
-  }
+	// show Notification to user
+	handleShowNotification = (message, alertType) => {
+		this.setState({
+			showNotification: true,
+			notifcationMessage: message,
+			alertType,
+		});
+	}
+	// Hide the Notification
+	handleHideNotification = () => {
+		this.setState({
+			showNotification: false,
+		});
+	}
 
-  // show Notification to user
-  handleShowNotification = (message, alertType) => {
-  	this.setState({
-  		showNotification: true,
-  		notifcationMessage: message,
-  		alertType,
-  	});
-  }
-
-  // to open and close the sidebar in mobile view
-  handleDrawerToggle = () => {
-  	this.setState(state => ({ mobileOpen: !state.mobileOpen }));
-  };
-
-  getNextAssignmentIndex = (updateAssignmentList, removedAssignmentIndex) => {
-  	// if there is no assignment left
-  	if (updateAssignmentList.length === 0) {
-  		return null;
-  	}
-  	// if there is only 1 assignment just show it
-  	else if (updateAssignmentList.length === 1) {
-  		return 0;
-  	}
-  	// if the approve assignment is the last one then
-  	// then get the previous one
-  	else if (updateAssignmentList.length == removedAssignmentIndex) {
-  		return updateAssignmentList.length - 1;
-  	} else {
-  		return removedAssignmentIndex;
-  	}
-  }
-
-  // remove a completed assignment
-  removeCompletedAssignment = () => {
-  	const { assignments, selectedAssignment } = this.state;
-  	const updateAssignmentList = [];
+	// On clicking to any assignment in sidebar
+	// it should be displayed in AssignmentsReviewDetails page
+	showSelectedAssignment = (assignment) => {
+		this.setState({
+			selectedAssignment: assignment,
+			mobileOpen: false,
+		});
+	}
+	// remove a completed assignment
+	removeCompletedAssignment = () => {
+		const { assignments, selectedAssignment } = this.state;
+		const updateAssignmentList = [];
 
 
-  	let removedAssignmentIndex;
+		let removedAssignmentIndex;
 
+		// The assignment which is approve or rejected
+		// shall no longer be in pending list remove it.
+		for (let i = 0; i < assignments.length; i++) {
+			if (assignments[i] === selectedAssignment) {
+				removedAssignmentIndex = i;
+				continue;
+			}
+			updateAssignmentList.push(assignments[i]);
+		}
 
-  	let nextAssignmentIndex;
+		// which assignment to be shown after removing the
+		// completed one in the main box
+		const nextAssignmentIndex = this.getNextAssignmentIndex(
+			updateAssignmentList,
+			removedAssignmentIndex,
+		);
 
-  	// The assignment which is approve or rejected
-  	// shall no longer be in pending list remove it.
-  	for (let i = 0; i < assignments.length; i++) {
-  		if (assignments[i] === selectedAssignment) {
-  			removedAssignmentIndex = i;
-  			continue;
-  		}
-  		updateAssignmentList.push(assignments[i]);
-  	}
+		const nextAssignment = (nextAssignmentIndex === null)
+			? {} : updateAssignmentList[nextAssignmentIndex];
+		this.setState({
+			assignments: updateAssignmentList,
+			// what if there is no assignment left?
+			selectedAssignment: nextAssignment,
+		});
 
-  	// which assignment to be shown after removing the
-  	// completed one in the main box
-  	nextAssignmentIndex = this.getNextAssignmentIndex(
-  		updateAssignmentList,
-  		removedAssignmentIndex,
-  	);
+		if (nextAssignmentIndex !== null) {
+			navigateToAssignment(nextAssignment.id);
+		}
+	}
 
-  	const nextAssignment = (nextAssignmentIndex === null)
-  		? {} : updateAssignmentList[nextAssignmentIndex];
-  	this.setState({
-  		assignments: updateAssignmentList,
-  		// what if there is no assignment left?
-  		selectedAssignment: nextAssignment,
-  	});
-
-  	if (nextAssignmentIndex !== null) {
-  		navigateToAssignment(nextAssignment.id);
-  	}
-  }
-
-  render() {
-  	const { classes } = this.props;
-  	const {
-  		assignments,
-  		selectedAssignment,
-  		mobileOpen,
-  		showNotification,
-  		notifcationMessage,
-  		alertType,
-  	} = this.state;
-  	return (
-  		<div className={classes.root}>
-		{
-  				assignments.length
-  					? (
-	<React.Fragment>
-
-	{/* Side Drawer to display assignment list */}
-	<IconButton
-	color="inherit"
-	onClick={this.handleDrawerToggle}
-	className={classes.navIconHide}
-  							>
-	<MenuIcon />
-  							</IconButton>
-  							{/* For mobile view */}
-  							<Hidden mdUp>
-			<Drawer
-  									variant="persistent"
-  									open={mobileOpen}
-  									onClose={this.handleDrawerToggle}
-  									classes={{
-  									paper: classes.drawerPaper,
-  								}}
-	>
-		<AssignmentsReviewSidenav
-  										assignments={assignments}
-  										selectedAssignment={selectedAssignment}
-  										showSelectedAssignment={this.showSelectedAssignment}
-  									/>
- </Drawer>
-		</Hidden>
-  							{/* For desktop view */}
-  							<Hidden smDown>
-  								<Drawer
-  									variant="persistent"
-		open
-		classes={{
-  									paper: classes.drawerPaper,
-  								}}
-	>
-  									<AssignmentsReviewSidenav
-		assignments={assignments}
-  										selectedAssignment={selectedAssignment}
-		showSelectedAssignment={this.showSelectedAssignment}
-	/>
- </Drawer>
-		</Hidden>
-  							{/* Feedback page */}
-  							<main>
-  								<AssignmentsReviewDetails
-  									selectedAssignment={selectedAssignment}
-  									removeCompletedAssignment={this.removeCompletedAssignment}
-  									showNotification={this.handleShowNotification}
-	/>
-  </main>
-  							<AlertNotification
-  								open={showNotification}
-  								message={notifcationMessage}
-  								variant={alertType}
-  								autoHideDuration={6000}
-  								onClose={this.handleHideNotification}
-		/>
-  						</React.Fragment>
-  					)
-  					: <AssignmentsReviewCompleted />
-  			}
-	</div>
-  	);
-  }
+	render() {
+		const { classes } = this.props;
+		const {
+			assignments,
+			selectedAssignment,
+			mobileOpen,
+			showNotification,
+			notifcationMessage,
+			alertType,
+		} = this.state;
+		return (
+			<div className={classes.root}>
+				{assignments.length ?
+					<React.Fragment>
+						{ /* Side Drawer to display assignment list */}
+						<IconButton
+							color="inherit"
+							onClick={this.handleDrawerToggle}
+							className={classes.navIconHide}
+						>
+							<MenuIcon />
+						</IconButton>
+						{/* For mobile view */}
+						<Hidden mdUp>
+							<Drawer
+								variant="persistent"
+								open={mobileOpen}
+								onClose={this.handleDrawerToggle}
+								classes={{ paper: classes.drawerPaper }}
+							>
+								<AssignmentsReviewSidenav
+									assignments={assignments}
+									selectedAssignment={selectedAssignment}
+									showSelectedAssignment={this.showSelectedAssignment}
+								/>
+							</Drawer>
+						</Hidden>
+						{/* For desktop view */}
+						<Hidden smDown>
+							<Drawer
+								variant="persistent"
+								open
+								classes={{ paper: classes.drawerPaper }}
+							>
+								<AssignmentsReviewSidenav
+									assignments={assignments}
+									selectedAssignment={selectedAssignment}
+									showSelectedAssignment={this.showSelectedAssignment}
+								/>
+							</Drawer>
+						</Hidden>
+						{/* Feedback page */}
+						<main>
+							<AssignmentsReviewDetails
+								selectedAssignment={selectedAssignment}
+								removeCompletedAssignment={this.removeCompletedAssignment}
+								showNotification={this.handleShowNotification}
+							/>
+						</main>
+						<AlertNotification
+							open={showNotification}
+							message={notifcationMessage}
+							variant={alertType}
+							autoHideDuration={6000}
+							onClose={this.handleHideNotification}
+						/>
+					</React.Fragment>
+					: <AssignmentsReviewCompleted />
+				}
+			</div>
+		);
+	}
 }
 
 AssignmentsReview.propTypes = {
 	classes: PropTypes.object.isRequired,
-	assignments: PropTypes.array.isRequired,
+	assignments: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default withStyles(styles)(AssignmentsReview);

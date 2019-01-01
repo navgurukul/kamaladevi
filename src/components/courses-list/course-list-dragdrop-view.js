@@ -1,27 +1,19 @@
 import React from 'react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
-import localforage from 'localforage';
 import {
 	DragDropContext,
 	Draggable,
 	Droppable,
 } from 'react-beautiful-dnd';
 
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
-import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 
 
-import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
-import DeleteIcon from '@material-ui/icons/Delete';
 import RestoreIcon from '@material-ui/icons/Restore';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -52,8 +44,8 @@ const styles = theme => ({
 		float: 'right',
 	},
 	close: {
-	 padding: theme.spacing.unit,
- 	},
+		padding: theme.spacing.unit,
+	},
 	restoreButton: {
 		float: 'right',
 		left: 'auto',
@@ -119,55 +111,30 @@ class CourseListDragAndDropView extends React.Component {
 		};
 	}
 
-	extractSequenceNum = (courses) => {
-		// extract sequenceNum and id's
-		const payload = [];
-		for (let i = 0; i < courses.length; i++) {
-			const { id, sequenceNum } = courses[i];
-			payload.push({
-				id,
-				sequenceNum,
-			});
+	// What should happen on dropping courses after we drag them
+	onDragEnd = (result) => {
+		// when the course is  picked but hasn"t been moved out
+		// to destination
+		if (!result.destination) {
+			return;
 		}
-		return payload;
-	}
 
+		// when course is put back from where it was drag
+		if (result.source.index === result.destination.index) {
+			return;
+		}
 
-	// Resets the sequence
-	restoreSequence = () => {
-		const { originalCoursesSequence } = this.state;
+		// reorder with new course sequenceNum
+		let newCourseSequence = reorder(
+			this.state.currentCoursesSequence,
+			result.source.index,
+			result.destination.index,
+		);
+		newCourseSequence = this.updateSequenceNumber(newCourseSequence);
+
 		this.setState({
-			currentCoursesSequence: originalCoursesSequence,
+			currentCoursesSequence: newCourseSequence,
 		});
-	}
-
-	// Saves the current sequence
-	saveUpdate = () => {
-		const { currentCoursesSequence } = this.state;
-
-		const payload = this.extractSequenceNum(currentCoursesSequence);
-		// call the api and update the course sequence
-		saveCoursesSequenceAPI(payload)
-			.then((response) => {
-				// show data saved in backend.
-				this.setState({
-					showNotification: true,
-					notifcationMessage: 'Sequence Saved Successfully',
-					alertType: 'success',
-				});
-			})
-			.catch((error) => {
-				// got some error show it in sanackbar.
-				console.log(error);
-				const notifcationMessage = window.navigator.onLine
-					? 'Internet connected nhi hai!'
-					: 'Ek error Ayi hue hai. Console check kare!';
-				this.setState({
-					showNotification: true,
-					notifcationMessage,
-					alertType: 'error',
-				});
-			});
 	}
 
 	displayDeleteNotification = (index) => {
@@ -189,7 +156,7 @@ class CourseListDragAndDropView extends React.Component {
 
 		// API call for the course and show alert for type of response
 		deleteCourseAPI(removed.id)
-			.then((response) => {
+			.then(() => {
 				notifcationMessage = `${removed.name} course deleted.`;
 				this.setState({
 					currentCoursesSequence: newCourseSequence,
@@ -234,37 +201,62 @@ class CourseListDragAndDropView extends React.Component {
 	updateSequenceNumber = (courses) => {
 		// update sequence
 		const updatedCourse = Array.from(courses);
-		for (let i = 0; i < updatedCourse.length; i++) {
+		for (let i = 0; i < updatedCourse.length; i += 1) {
 			updatedCourse[i].sequenceNum = i;
 		}
 		return updatedCourse;
 	}
 
 
-	// What should happen on dropping courses after we drag them
-	onDragEnd = (result) => {
-		// when the course is  picked but hasn"t been moved out
-		// to destination
-		if (!result.destination) {
-      	return;
-    	}
 
-		// when course is put back from where it was drag
-		if (result.source.index === result.destination.index) {
-			return;
+	// Saves the current sequence
+	saveUpdate = () => {
+		const { currentCoursesSequence } = this.state;
+
+		const payload = this.extractSequenceNum(currentCoursesSequence);
+		// call the api and update the course sequence
+		saveCoursesSequenceAPI(payload)
+			.then(() => {
+				// show data saved in backend.
+				this.setState({
+					showNotification: true,
+					notifcationMessage: 'Sequence Saved Successfully',
+					alertType: 'success',
+				});
+			})
+			.catch((error) => {
+				// got some error show it in sanackbar.
+				console.log(error);
+				const notifcationMessage = window.navigator.onLine
+					? 'Internet connected nhi hai!'
+					: 'Ek error Ayi hue hai. Console check kare!';
+
+				this.setState({
+					showNotification: true,
+					notifcationMessage,
+					alertType: 'error',
+				});
+			});
+	}
+
+	extractSequenceNum = (courses) => {
+		// extract sequenceNum and id's
+		const payload = [];
+		for (let i = 0; i < courses.length; i += 1) {
+			const { id, sequenceNum } = courses[i];
+			payload.push({
+				id,
+				sequenceNum,
+			});
 		}
+		return payload;
+	}
 
-		// reorder with new course sequenceNum
-		let newCourseSequence = reorder(
-			this.state.currentCoursesSequence,
-			result.source.index,
-			result.destination.index,
-		);
-
-		newCourseSequence = this.updateSequenceNumber(newCourseSequence);
-
+	// Resets the sequence
+	restoreSequence = () => {
+		const { originalCoursesSequence } = this.state;
 		this.setState({
-			currentCoursesSequence: newCourseSequence,
+			currentCoursesSequence: originalCoursesSequence,
 		});
 	}
 
@@ -272,8 +264,6 @@ class CourseListDragAndDropView extends React.Component {
 		const {
 			classes,
 			headline,
-			courses,
-			showProgress,
 			paddingTop,
 			stopCourseSequenceEditing,
 		} = this.props;
@@ -309,8 +299,8 @@ class CourseListDragAndDropView extends React.Component {
 						<Grid container>
 							{/* Courses List and the box till where courses can  be drop */}
 							<Droppable droppableId="courses">
-								{provided => (
-									<div ref={provided.innerRef} {...provided.droppableProps}>
+								{providedDrop => (
+									<div ref={providedDrop.innerRef} {...providedDrop.droppableProps}>
 										{/* Each courses that can be dragged */}
 										{
 											currentCoursesSequence.map((value, key) => (
@@ -319,11 +309,11 @@ class CourseListDragAndDropView extends React.Component {
 													draggableId={value.id}
 													index={key}
 												>
-													{(provided, snapshot) => (
+													{ providedDrag => (
 														<div
-															ref={provided.innerRef}
-															{...provided.draggableProps}
-															{...provided.dragHandleProps}
+															ref={providedDrag.innerRef}
+															{...providedDrag.draggableProps}
+															{...providedDrag.dragHandleProps}
 														>
 
 															<CourseListCard
@@ -337,7 +327,7 @@ class CourseListDragAndDropView extends React.Component {
 												</Draggable>
 											))
 										}
-										{provided.placeholder}
+										{providedDrop.placeholder}
 									</div>
 								)}
 							</Droppable>
@@ -399,12 +389,10 @@ CourseListDragAndDropView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	headline: PropTypes.string.isRequired,
 	courses: PropTypes.arrayOf(PropTypes.object).isRequired,
-	showProgress: PropTypes.bool,
 	paddingTop: PropTypes.bool,
 };
 
 CourseListDragAndDropView.defaultProps = {
-	showProgress: false,
 	paddingTop: false,
 };
 export default withStyles(styles)(CourseListDragAndDropView);

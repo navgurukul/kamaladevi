@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -33,7 +33,11 @@ const courseStatus = (isEnrolled, isCourseCompleted) => {
 };
 
 const MenteeCoursesReports = (props) => {
-	const { classes, coursesReports, mentees } = props;
+	const {
+		classes,
+		coursesReports,
+		mentees,
+	} = props;
 	return (
 		<Paper className={classes.root}>
 			<Table className={classes.table}>
@@ -71,6 +75,8 @@ const MenteeCoursesReports = (props) => {
 
 MenteeCoursesReports.propTypes = {
 	classes: PropTypes.object.isRequired,
+	coursesReports: PropTypes.arrayOf(PropTypes.object).isRequired,
+	mentees: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default withStyles(styles)(MenteeCoursesReports);

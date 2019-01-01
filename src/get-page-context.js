@@ -39,17 +39,16 @@ const theme = createMuiTheme({
 	},
 	typography: {
 		headline: {
-		    [breakpoints.down('md')]: {
-		      fontSize: 16,
-		    },
+			[breakpoints.down('md')]: {
+				fontSize: 16,
+			},
 		},
 		textSecondary: {
-		  [breakpoints.down('md')]: {
-		    fontSize: 10,
-		  },
+			[breakpoints.down('md')]: {
+				fontSize: 10,
+			},
 		},
 	},
-
 });
 
 function createPageContext() {

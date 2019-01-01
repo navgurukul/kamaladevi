@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,46 +12,51 @@ function Transition(props) {
 	return <Slide direction="down" {...props} />;
 }
 
-const CourseDeleteAlert = props => (
-	<div>
-		<Dialog
-			open={props.open}
-			TransitionComponent={Transition}
-			keepMounted
-			aria-labelledby="alert-dialog-slide-title"
-			aria-describedby="alert-dialog-slide-description"
-		>
-			<DialogTitle id="alert-dialog-slide-title">
-				{'Course Delete?'}
-			</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-slide-description">
-              Kya aap yeh course delete karna chate hai?
+const CourseDeleteAlert = (props) => {
+	const {
+		open,
+		course,
+		cancelCourseDelete,
+		deleteCourse,
+	} = props;
 
+	return (
+		<div>
+			<Dialog
+				open={open}
+				TransitionComponent={Transition}
+				keepMounted
+				aria-labelledby="alert-dialog-slide-title"
+				aria-describedby="alert-dialog-slide-description"
+			>
+				<DialogTitle id="alert-dialog-slide-title">
+					{'Course Delete?'}
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-slide-description">
+						Kya aap yeh course delete karna chate hai?
+						<br />
+						{`Course Name: ${course.name}`}
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={cancelCourseDelete} color="primary">
+						Cancel
+					</Button>
+					<Button onClick={deleteCourse} color="primary">
+						Delete
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</div>
+	);
+};
 
-					<br />
-              Course Name:
-
-
-					
-{' '}
-					{props.course.name}
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button onClick={props.cancelCourseDelete} color="primary">
-              Cancel
-
-
-				</Button>
-				<Button onClick={props.deleteCourse} color="primary">
-              Delete
-
-
-				</Button>
-			</DialogActions>
-		</Dialog>
-	</div>
-);
+CourseDeleteAlert.propTypes = {
+	open: PropTypes.bool.isRequired,
+	course: PropTypes.object.isRequired,
+	cancelCourseDelete: PropTypes.func.isRequired,
+	deleteCourse: PropTypes.func.isRequired,
+};
 
 export default CourseDeleteAlert;

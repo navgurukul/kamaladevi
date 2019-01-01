@@ -153,7 +153,7 @@ export const getSlugOfPreviousCourse = (slug, exercises) => {
 // filters the pending assignment from the list
 export const filterPendingAssignment = (assignments) => {
 	const pendingAssignmentList = [];
-	for (let i = 0; i < assignments.length; i++) {
+	for (let i = 0; i < assignments.length; i += 1) {
 		const assignment = assignments[i];
 		if (!assignment.completed && assignment.state === 'pending') {
 			pendingAssignmentList.push(assignment);
@@ -168,9 +168,9 @@ const findObjectIndex = (array, key, value) => array.findIndex(element => elemen
 
 
 // to create a mentee schema row for Dashboard
-const _getMenteesReportSchema = (mentees, extraFields) => {
+const getMenteesReportSchema = (mentees, extraFields) => {
 	const menteesCourseReportSchema = [];
-	for (let i = 0; i < mentees.length; i++) {
+	for (let i = 0; i < mentees.length; i += 1) {
 		const menteeCourseReportSchema = {
 			id: mentees[i].id,
 			name: mentees[i].name,
@@ -189,7 +189,7 @@ export const getMenteeCoursesTable = (coursesReport, mentees) => {
 		isCourseCompleted: false,
 	};
 	// get a schema of mentees courses reports to display in each courses
-	const menteesCourseReportSchema = _getMenteesReportSchema(mentees, extraFields);
+	const menteesCourseReportSchema = getMenteesReportSchema(mentees, extraFields);
 
 	// update each and every courses
 	coursesReport.forEach((course) => {
@@ -203,7 +203,7 @@ export const getMenteeCoursesTable = (coursesReport, mentees) => {
 
 		// update each schema with the current detail of the student
 		studentEnrolled.forEach((mentee) => {
-			const email = mentee.email;
+			const { email } = mentee;
 			const menteeIndex = findObjectIndex(mentees, 'email', email);
 			courseReport.students[menteeIndex] = { ...mentee };
 		});

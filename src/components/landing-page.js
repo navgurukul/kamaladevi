@@ -69,13 +69,13 @@ class LandingPage extends React.Component {
 
 
 		// Show loader if auth is success, and waiting for Router to take to home
-		// if (this.state.loading) {
-		// 	return (
-		// 		<div className={classes.root}>
-		// 			<CircularProgress className={classes.progress} size={50} />
-		// 		</div>
-		// 	);
-		// }
+		if (this.state.loading) {
+			return (
+				<div className={classes.root}>
+					<CircularProgress className={classes.progress} size={50} />
+				</div>
+			);
+		}
 
 
 		return (
@@ -85,22 +85,16 @@ class LandingPage extends React.Component {
 						variant="headline"
 						gutterBottom
 					>
-            SARAL
-
-
-						
-{' '}
+            			SARAL
+						{' '}
 						<br />
 					</Typography>
 					<Typography
 						variant="caption"
 						gutterBottom
 					>
-            NavGurukul eLearning Platform
-
-
-					
-</Typography>
+						NavGurukul eLearning Platform
+					</Typography>
 					<br />
 					<Button
 						color="primary"
@@ -115,34 +109,25 @@ class LandingPage extends React.Component {
 						}}
 						onFailure={authFailure}
 					>
-            Sign In
-
-
-					
-</Button>
+						Sign In
+					</Button>
 					<br />
 					<br />
 					<Typography
 						variant="body1"
 						gutterBottom
 					>
-            Never doubt that a small group of thoughtful, committed citizens can change the world;
-            indeed, it&apos;s the only thing
-            that ever has.
-
-
-					
-</Typography>
+						Never doubt that a small group of thoughtful, committed citizens can change the world;
+						indeed, it&apos;s the only thing
+						that ever has.
+					</Typography>
 					<Typography
 						variant="body1"
 						gutterBottom
 						style={{ textAlign: 'right' }}
 					>
-            ~ Margaret Mead
-
-
-					
-</Typography>
+						~ Margaret Mead
+					</Typography>
 				</Paper>
 			</div>
 		);

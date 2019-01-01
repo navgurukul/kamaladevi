@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 import Card from '@material-ui/core/Card';
@@ -33,7 +32,6 @@ const styles = theme => ({
 	deleteCourseButton: {
 		cursor: 'pointer',
 		float: 'right',
-		cursor: 'unset',
 		'&:hover': {
 			backgroundColor: theme.palette.error.main,
 		},
@@ -91,7 +89,7 @@ const CourseListCard = (props) => {
 				</Grid>
 				<Grid container spacing={16}>
 					<Grid item xs={2} sm md={2}>
-						<img className={classes.image} src={value.logo} />
+						<img alt={value.name} className={classes.image} src={value.logo} />
 					</Grid>
 					<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
 						<CardContent>

@@ -102,9 +102,12 @@ AlertNotification.propTypes = {
 	classes: PropTypes.object.isRequired,
 	className: PropTypes.string,
 	message: PropTypes.string.isRequired,
-	onClose: PropTypes.func,
+	onClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
 	variant: PropTypes.oneOf(['success', 'warning', 'error', 'info', '']).isRequired,
 };
 
+AlertNotification.defaultProps = {
+	className: ' ',
+}
 export default withStyles(styles)(AlertNotification);

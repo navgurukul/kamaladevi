@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 
-import CloseIcon from '@material-ui/icons/Close';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -16,7 +15,6 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -64,8 +62,8 @@ const styles = theme => ({
 		width: '100%',
 	},
 	close: {
-		 	padding: '10px',
-	 	},
+		padding: '10px',
+	},
 	Approved: {
 		color: theme.palette.secondary.main,
 	},
@@ -83,6 +81,7 @@ const styles = theme => ({
 	},
 
 });
+
 const exerciseSubmissionClass = (status) => {
 	switch (status) {
 		case 'completed':
@@ -108,6 +107,7 @@ const exerciseSubmissionStatus = (status) => {
 			return <CreateNewIcon />;
 	}
 };
+
 // Change this property to let multiple panels to be open simultaneously
 const onlyonePanelOpen = true;
 
@@ -211,72 +211,57 @@ class CourseDetailSideNav extends React.Component {
 					autoHideDuration={6000}
 					onClose={this.handleHideNotification}
 				/>
-				{!enrolled
-					? (
-						<ExpansionPanel
-							expanded
-						>
-							<Button
-								variant="raised"
-								color="primary"
-								className={classes.enrollButton}
-								onClick={() => {
-									const { id } = Router.query;
-									enrollCourseAPI(id, success => this.setState({ enrolled: success, showEnrolledNotification: true }))
-										.catch((error) => {
-											console.log(error);
-											this.setState({
-												showEnrolledNotification: true,
-											});
+				{/* eslint-disable no-nested-ternary */}
+				{ !enrolled ?
+					<ExpansionPanel expanded>
+						<Button
+							variant="raised"
+							color="primary"
+							className={classes.enrollButton}
+							onClick={() => {
+								const { id } = Router.query;
+								enrollCourseAPI(id, success => this.setState({
+									enrolled: success,
+									showEnrolledNotification: true,
+								}))
+									.catch((error) => {
+										console.log(error);
+										this.setState({
+											showEnrolledNotification: true,
 										});
-								}}
-							>
-            Enroll In Course
-
-
-							
-</Button>
-						</ExpansionPanel>
-					)
-					:						selectedExercise.usersCompletedExercise.length !== 0
-						? (
-							<ExpansionPanel
-								expanded
-							>
+									});
+							}}
+						>
+							Enroll In Course
+						</Button>
+					</ExpansionPanel>
+					: (
+						selectedExercise.usersCompletedExercise.length !== 0 ?
+							<ExpansionPanel	expanded>
 								<ExpansionPanelSummary>
 									<span>
 										{ // Name of the students who have completed the exercise.
 											selectedExercise.usersCompletedExercise.slice(0, 3).map((user, index) => {
-												if (index === selectedExercise.usersCompletedExercise.slice(0, 3).length - 1) {
+												const { usersCompletedExercise } = selectedExercise;
+												const studentCompletedCount = usersCompletedExercise.slice(0, 3).length - 1;
+												if (index === studentCompletedCount) {
 													return `${user.name} `;
 												}
 												return `${user.name}, `;
 											})
 										}
-										{
-											selectedExercise.usersCompletedExercise.slice(3).length !== 0
-												? (
-													<span>
-											and
-
-
-														
-{' '}
-														{selectedExercise.usersCompletedExercise.slice(5).length}
-														{' '}
-more have completed this exersise.
-
-
-													</span>
-												)
+										{ // Count of students who have completed the current exercise
+											selectedExercise.usersCompletedExercise.slice(3).length !== 0 ?
+												<span>
+													{`and ${selectedExercise.usersCompletedExercise.slice(5).length} more have completed this exersise.`}
+												</span>
 												: null
 										}
 									</span>
 								</ExpansionPanelSummary>
 							</ExpansionPanel>
-						)
-						: null
-
+							: null
+					)
 				}
 				{/* Display the exercises */}
 				{exercises.map((value, index) => (
@@ -321,7 +306,8 @@ more have completed this exersise.
 												</Grid>
 												<Grid item md={2} sm={2}>
 													<span className={classes[exerciseSubmissionClass(value.submissionState)]}>
-														{value.submissionType ? exerciseSubmissionStatus(value.submissionState) : null}
+														{value.submissionType ? 
+															exerciseSubmissionStatus(value.submissionState) : null}
 													</span>
 												</Grid>
 											</Grid>
@@ -360,7 +346,7 @@ more have completed this exersise.
 															</Typography>
 														</Grid>
 														<Grid item md={6} sm={2}>
-															<span className={classes[exerciseSubmissionClass(child.submissionState)]}>
+																													<span className={classes[exerciseSubmissionClass(child.submissionState)]}>
 																{child.submissionType ? exerciseSubmissionStatus(child.submissionState) : null}
 															</span>
 														</Grid>
@@ -385,9 +371,7 @@ more have completed this exersise.
 								color="primary"
 								className={classes.unEnrollButton}
 							>
-						UnEnroll From Course
-
-
+							UnEnroll From Course
 							</Button>
 						</ExpansionPanel>
 					)
