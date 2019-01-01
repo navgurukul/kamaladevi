@@ -4,7 +4,6 @@ import localforage from 'localforage';
 import { BACKEND_URL } from './config';
 import { clearSession, addEnrolledCourses } from './session';
 
-const { fetch } = window;
 
 export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 	const options = {

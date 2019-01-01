@@ -29,7 +29,7 @@ import {
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';
 
-const { DOMParser } = window;
+
 const blockEmbedPlugin = require('markdown-it-block-embed');
 
 // Parse markdown content

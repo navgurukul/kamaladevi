@@ -15,7 +15,6 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { withStyles } from '@material-ui/core/styles';
 
-const { alert } = window;
 const drawerWidth = 240;
 
 const styles = theme => ({
