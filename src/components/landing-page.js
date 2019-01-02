@@ -23,7 +23,7 @@ const styles = theme => ({
 	},
 	paper: {
 		width: '25%',
-		minWidth:'200px',
+		minWidth: '200px',
 		margin: 'auto',
 		padding: theme.spacing.unit * 2.5,
 	},
@@ -50,6 +50,7 @@ class LandingPage extends React.Component {
 			loading: false,
 		};
 	}
+
 	render() {
 		const { classes } = this.props;
 		localforage.getItem('authResponse', (error, value) => {
@@ -68,13 +69,13 @@ class LandingPage extends React.Component {
 
 
 		// Show loader if auth is success, and waiting for Router to take to home
-		// if (this.state.loading) {
-		// 	return (
-		// 		<div className={classes.root}>
-		// 			<CircularProgress className={classes.progress} size={50} />
-		// 		</div>
-		// 	);
-		// }
+		if (this.state.loading) {
+			return (
+				<div className={classes.root}>
+					<CircularProgress className={classes.progress} size={50} />
+				</div>
+			);
+		}
 
 
 		return (
@@ -84,13 +85,14 @@ class LandingPage extends React.Component {
 						variant="headline"
 						gutterBottom
 					>
-            SARAL <br />
+						{'SARAL '}
+						<br />
 					</Typography>
 					<Typography
 						variant="caption"
 						gutterBottom
 					>
-            NavGurukul eLearning Platform
+						NavGurukul eLearning Platform
 					</Typography>
 					<br />
 					<Button
@@ -106,26 +108,28 @@ class LandingPage extends React.Component {
 						}}
 						onFailure={authFailure}
 					>
-            Sign In
+						Sign In
 					</Button>
-					<br /><br />
+					<br />
+					<br />
 					<Typography
 						variant="body1"
 						gutterBottom
 					>
-            Never doubt that a small group of thoughtful, committed citizens can change the world;
-            indeed, it&apos;s the only thing
-            that ever has.
+						Never doubt that a small group of thoughtful, committed citizens can change the world;
+						indeed, it&apos;s the only thing
+						that ever has.
 					</Typography>
 					<Typography
 						variant="body1"
 						gutterBottom
 						style={{ textAlign: 'right' }}
 					>
-            ~ Margaret Mead
+						~ Margaret Mead
 					</Typography>
 				</Paper>
-			</div>);
+			</div>
+		);
 	}
 }
 

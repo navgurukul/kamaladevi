@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles = () => ({
 	root: {
-		display:"flex",
+		display: 'flex',
 		flexGrow: 1,
-		marginTop:"40vh",
-		height:"100%"
+		marginTop: '40vh',
+		height: '100%',
 	},
 
 });
@@ -19,10 +19,12 @@ const AssignmentsReviewCompleted = (props) => {
 			<center>
 				Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye
 				aap apni padhai continue karsakte ha.
+
+
 			</center>
 		</div>
 	);
-}
+};
 
 AssignmentsReviewCompleted.propTypes = {
 	classes: PropTypes.object.isRequired,
