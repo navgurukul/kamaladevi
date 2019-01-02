@@ -4,7 +4,6 @@ import Link from "next/link";
 import Router from "next/router";
 import PropTypes from "prop-types";
 import localforage from "localforage";
-import ReactUtterences from "react-utterances";
 
 
 import Card from "@material-ui/core/Card";
@@ -34,6 +33,7 @@ import {
 
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';
+import Utterances from './utterances';
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
 
@@ -129,6 +129,7 @@ const navigateToExercise = id => slug => {
     query: { id, slug }
   });
 };
+
 
 class CourseDetail extends React.Component {
   constructor(props) {
@@ -304,11 +305,8 @@ class CourseDetail extends React.Component {
               </Button>
             ) : null}
           </div>
-          <ReactUtterences
-            className={classes.utterances}
-            repo={"navgurukul/newton"}
-            type={"title"}
-          />
+					<Utterances slug={slug} />
+
         </Grid>
         <Grid item xs={4} className={classes.sidebar}>
           <CourseDetailSideNav
@@ -326,10 +324,10 @@ class CourseDetail extends React.Component {
 }
 
 CourseDetail.propTypes = {
-  classes: PropTypes.object.isRequired,
-  exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
-  id: PropTypes.string.isRequired,
-  slug: PropTypes.string.isRequired,
+	classes: PropTypes.object.isRequired,
+	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+	id: PropTypes.string.isRequired,
+	slug: PropTypes.string.isRequired,
 	updateExercises: PropTypes.func.isRequired,
 };
 
