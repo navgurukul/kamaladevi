@@ -21,8 +21,9 @@ const Utterances = (props) => {
 	const repo = 'navgurukul/newton';
 	const currentUrl = `${BACKEND_URL}${asPath}`;
 	const pageDetail = `url=${currentUrl}&origin=${BACKEND_URL}&pathname=${pathname}&title=${title}`;
+	const utterancesSettings = 'crossorigin=anonymous&issue-term=title&description=&og:title=';
 
-	const url = `${utterancesUrl}&repo=${repo}&crossorigin=anonymous&issue-term=title&${pageDetail}&description=&og:title=`;
+	const url = `${utterancesUrl}&repo=${repo}&${pageDetail}&${utterancesSettings}`;
 
 	return <iframe title={title} className={classes.utterances} src={url} />;
 };
