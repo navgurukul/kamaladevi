@@ -336,7 +336,7 @@ class CourseDetailSideNav extends React.Component {
 											disableTypography
 											primary={
 												<Grid container>
-													<Grid item md={6} sm={10}>
+													<Grid item md={10} sm={10}>
 														<Typography
 															className={classes.typography}
 															variant="subheading"
@@ -345,7 +345,7 @@ class CourseDetailSideNav extends React.Component {
 															{child.name}
 														</Typography>
 													</Grid>
-													<Grid item md={6} sm={2}>
+													<Grid item md={2} sm={2}>
 														<span className={classes[exerciseSubmissionClass(child.submissionState)]}>
 															{child.submissionType? exerciseSubmissionStatus(child.submissionState):null}
 														</span>
