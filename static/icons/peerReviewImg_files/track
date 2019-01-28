@@ -1,0 +1,42 @@
+
+
+
+
+
+
+
+var _ZSLUTSSERVERURL = "ping.zohospotlight.com"; //No I18N
+var _ZSLEMBEDSERVERURL = "https\x3A\x2F\x2Fspotlight.zoho.com"; //No I18N
+var _ZSLISTRACKONDEMAND = ("true" == "true");  //No I18N
+(function() //No I18N
+{
+	var headArr = document.getElementsByTagName("head");  //No I18N
+	if (!headArr || headArr.length == 0) 
+	{
+    	headArr = []; //No I18N
+       	headArr[0] = document.createElement("head"); //No I18N
+        document.insertBefore(doc.body,headArr[0]); //No I18N
+	}
+	
+	
+		_loadJS("https://js.zohostatic.com/spotlight/v83_https/js/spotlightapi.js");  //No I18N
+		
+			
+
+	
+	function _loadJS(url)
+	{
+		var script=document.createElement("script"); //No I18N
+		script.defer=true; //No I18N
+		script.src=url; //No I18N
+		headArr[0].appendChild(script); //No I18N			
+	}
+	
+	function _loadCSS(url)
+	{
+		 var css = document.createElement("link"); //No I18N
+ 		 css.rel ="stylesheet"; //No I18N
+  		 css.href = url;  //No I18N
+  		 headArr[0].appendChild(css); //No I18N
+	}
+})();

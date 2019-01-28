@@ -1,0 +1,361 @@
+/*$Id$*/
+@font-face { 
+font-family: "ZoFo-ChatBar" ; 
+src:url('https://img.zohostatic.com/chat/2027798_https/officechat/images/fonts/zchat.eot') format('eot'),
+    url('https://img.zohostatic.com/chat/2027798_https/officechat/images/fonts/zchat.woff') format('woff'),
+	url('https://img.zohostatic.com/chat/2027798_https/officechat/images/fonts/zchat.ttf') format('truetype'),
+	url('https://img.zohostatic.com/chat/2027798_https/officechat/images/fonts/zchat.svg#zmail') format('svg');
+font-weight: normal;
+font-style: normal;}
+
+[class^="msi-"]:before, [class*=" msi-"]:before, .ztb-settings-icon:before, span.msi-history:before, span.msi-feed:before, span.msi-calndr:before,.msi-mobico-1:before, .msi-mobico-4:before, .msi-mobico-2:before, .msi-mobico-0:before, .msi-mobico-3:before, .sel_status:after, .zcstatus--6:before, .zcstatus--3:before, .zcstatus--1:before, .zcstatus--7:before, .msi-chnlck:after, .msi-chnunlck:after,.msi-multiteamchannel:after{ font-family:ZoFo-ChatBar; font-weight:normal; font-style: normal; font-size:1em; text-shadow: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+
+.mheader_icn.msi-chnlck, .mheader_icn.msi-chnunlck{font-size: 30px;}
+.msi-mail:before{ content:"\e626"; color:#000; display:inline-block; width:13px;}
+.msi-calendericon:before{ content:"\e62c"; color:#000; display:inline-block; width:19px;}
+.msi-feed:before{ content:"\e603";}
+.msi-settings:before, .ztb-settings-icon:before{ content:"\e924";}
+.msi-call:before{ content:"\e624";}
+.msi-scrnshr:before{content: "\e9d3";}
+.msi-bcstrt:before{ content: "\e969";}
+.msi-video:before, .msi-vidorun:before, .msi-upldvideo:before{ content:"\e61c";}
+.msi-grpmbradd:before, .msi-invite:before { content:"\e63f";}
+.msi-groups:before, .msi-grpimg:before{ content:"\e640";}
+.msi-status:before{ content:"\e609"; font-size:33px;}
+.msi-contact-zoho:before{ content:"\e60c"; font-size:1.2em;}
+.msi-contact-facebook:before{ content:"\e60d"; font-size:1.2em;}
+.msi-contact-gmail:before{ content: "\e60b";font-size:15px;}
+.gpvnavmn .msi-grpcontact:before{ content: "\e63e";}
+.msi-grpcht:before, .msi-unrdchat:before, .msi-chatctnue:before, .msi-chatico:before,.msi-sp3:before{ content:"\e601"; padding-right:5px; font-size:1.3em;}
+.msi-continue:before{ content:"\e601";}
+.msi-lvsupprt:before{ content: "\e61a"; padding-right:5px;}
+.msi-shoutbox:before{ content: "\e61e";padding-right:5px;}
+.msi-livecht:before{ content: "\e63a";padding-right:5px;}
+.msi-alrt:before{content:"\e675";}
+.msi-faq:before{content:"\e976";}
+.msi-chtwthus:before{content:"\e97b";}
+.msi-usrguide:before{content:"\e97c";}
+.chatsection .zcstatus--3:before, .chatsection .zcstatus--6:before{ content: "\e91d";}
+
+.msi-marw:before, .darrow:before, .darwalgn:before, .msi-darw:before{ content:"\e632";padding-right:5px;}
+.darrow:before, .chdarrow:before{ color:#999; font-size:8px; padding:0 5px; margin:0; position:absolute; top:0; right:-2px;}
+.msi-uparw:before{ content:"\e631";padding-right:5px;}
+.msi-add:before, .msi-plus:before{ content:"\e636"; padding-right:5px;font-size:1.2em;}
+.msi-addicon:before{content:"\e66b"; font-weight:bold; font-size:1.2em;}
+.msi-sp0:before,.msi-srchicon:before, .msi-ztb-icon-group:before{content:"\e650";padding-right:5px; }
+.msi-srchclose:before, .msi-lsrmv:before{content:"\e634";padding-right:5px; font-size:0.7em;}
+.msi-unsbsrbeimg:before{content:"\e678";}
+
+.zicon.facebook:before{ content:"\e60d";font-size:1.2em; color:#889abe; }
+.zicon.zoho:before{ content:"\e60c";font-size:1.2em; color:#cc2a39;}
+.zicon.zedit:before, .msi-edit:before{content:"\e620";font-size:1.2em;}
+.zicon.gmail:before{content:"\e60b";font-size:1.2em; color:#f18b83;}
+.zicon.jabber:before{content:"\e609";font-size:1.2em; color:#dd8c8c;}
+.zicon.yahoo:before{content:"\e60f"; font-size:1.2em; color:#c196c4;}
+.zicon.qq:before{content:"\e607"; font-size:1.2em; color:#929292;}
+.zicon.msn:before{content:"\e66e"; font-size:1.2em; color:#649dcc;}
+.zicon.myspace:before{content:"\e606"; font-size:1.2em; color:#6183c1;}
+.zicon.aim:before{content:"\e60e"; font-size:1.2em; color:#edcf7e;}
+.zicon.icq:before{content:"\e60a"; font-size:1.2em; color:#7fc680;}
+.msi-contact-gmail:before, .net-icon.msi-contact-gmail:before{ content:"\e60b"; font-size:2.5em;}
+.msi-contact-yahoo:before, .net-icon.msi-contact-yahoo:before{ content:"\e605";font-size:2.5em; }
+.msi-contact-facebook:before, .net-icon.msi-contact-facebook:before{content:"\e60d";font-size:2.5em;}
+.msi-contact-msn:before, .net-icon.msi-contact-msn:before{content:"\e66e";font-size:2.5em;}
+.msi-contact-qq:before, .net-icon.msi-contact-qq:before{content:"\e607";font-size:2.5em;}
+.msi-contact-myspace:before, .net-icon.msi-contact-myspace:before{content:"\e606";font-size:2.5em;}
+.msi-contact-aim:before, .net-icon.msi-contact-aim:before{content:"\e66d";font-size:2.5em;}
+.msi-contact-icq:before, .net-icon.msi-contact-icq:before{content:"\e60a";font-size:2.5em;}
+.msi-contact-jabber:before, .net-icon.msi-contact-jabber:before{content:"\e609";font-size:2.5em;}
+
+.msi-contact-zoho:before, .msi-contact-gmail:before,.msi-contact-yahoo:before,.msi-contact-facebook:before,.msi-contact-msn:before,
+.msi-contact-qq:before,.msi-contact-myspace:before,.msi-contact-aim:before,.msi-contact-icq:before,.msi-contact-jabber:before{ font-size:12px;}
+
+.msi-zchomeico:before{content:"\e67c";}
+.msi-upaw:before, .msi-close:before, .addmem .delmem:before, .addmtit .delmem:before{ content:"\e634";}
+.msi-closeicon:before, .msi-chtclose:before, .zccontent .msi-cht-opt-close:before{ content:"\e906"; font-size: 12px;}
+.msi-sndfle:before, .msi-sndfile:before{ content:"\e646";}
+.msi-shrscrn:before, .msi-dsktpimg:before{ content:"\e621";}
+.msi-print:before, .msi-hstprint:before{ content:"\e623";}
+.msi-guest:before,.msi-sp1:before{ content:"\e641";}
+.msi-tick:before{ content:"\e667";}
+.msi-ticktwo:before, .sel_status:after{ content:"\e91d";}
+.msi-aguest:before{ content:"\e63d";}
+.msi-bguest:before{ content:"\e63c";}
+.msi-guesturl:before{ content:"\e627";text-indent:-2px;}
+.msi-sldrhtarw:before, .msi-rightarr:after{ content:"\e608";}
+.msi-leftarr:before, .msi-sldlftarw:before{ content:"\e62d";}
+.msi-mobico-1:before, .msi-mobico-4:before, .msi-mobico-2:before, .msi-mobico-0:before, .msi-mobico-3:before{ content:"\e645"}
+
+.zmtptcmn .msi-gmail:before, .mpi-gmail:before, .msi-gmailimg:before{content:"\e604"; font-size:3em; color:#f18b83;}
+.zmtptcmn .msi-yahoo:before, .mpi-yahoo:before, .msi-yahooimg:before{content:"\e60f"; font-size:3em; color:#c196c4;}
+.zmtptcmn .msi-qq:before, .mpi-qq:before, .msi-qqimg:before{content:"\e612"; font-size:3em; color:#929292;}
+.zmtptcmn .msi-facebook:before, .mpi-facebook:before, .msi-facebookimg:before{content:"\e610"; font-size:3em; color:#889abe;}
+.zmtptcmn .msi-msn:before, .mpi-msn:before, .msi-msnimg:before{content:"\e613"; font-size:3em; color:#649dcc;}
+.zmtptcmn .msi-myspace:before, .mpi-myspace:before, .msi-myspaceimg:before{content:"\e611"; font-size:3em; color:#6183c1;}
+.zmtptcmn .msi-aim:before, .mpi-aim:before, .msi-aimimg:before{content:"\e60e"; font-size:3em; color:#edcf7e;}
+.zmtptcmn .msi-icq:before, .mpi-icq:before, .msi-icqimg:before{content:"\e615"; font-size:3em; color:#7fc680;}
+.zmtptcmn .msi-jabber:before, .mpi-jabber:before, .msi-jabberimg:before{content:"\e614"; font-size:3em; color:#dd8c8c;}
+.mpi-gmail:before, .mpi-yahoo:before, .mpi-qq:before, .mpi-facebook:before, .mpi-msn:before, .mpi-myspace:before, .mpi-aim:before, .mpi-icq:before, .mpi-jabber:before{ font-size:1em; position:relative; top:5px; left:4px;}
+
+.msi-gmailimg, .msi-yahooimg, .msi-qqimg, .msi-facebookimg, .msi-msnimg, .msi-myspaceimg, .msi-aimimg, .msi-icqimg, .msi-jabberimg{ color:#878787; margin:7px 0 0 6px}
+
+.msi-chkbxdsel:before, .msi-dsblesel:before{content:"\e920";}
+.msi-chkbxsel:before, .msi-dsble:before{content:"\e927";}
+.msi-uplctnico:before{content:"\e67e"; margin-right:5px;}
+.msi-mbico:before{content:"\e645"; margin-right:5px;}
+.msi-extnico:before{content:"\e913"; margin-right:5px;}
+
+.msi-atchfile:before{content:"\e62b"; font-size:3em;}
+.msi-sfile:before{content:"\e646";}
+.msi-delete:before, .msi-grpmbrdel:before, .msi-feedclr:before, .msi-ppdel:before{content:"\e633";}
+.msi-history:before{content:"\e629";}
+.msi-endsupport:before, .msi-chlv:before{content:"\e666";}
+.msi-lvsptrep:before{ content:"\e665";}
+.msi-embdimg:before{content:"\e627";}
+.msi-newchat:before{content:"\e635";}
+.msi-reinvite:before{content:"\e638";}
+.msi-zoom:before {content: "\e61b";font-size: 1.5em;}
+.msi-download:before {content:"\e62e"; font-size:1.2em;}
+.msi-downld:before { content:"\e90d";}
+.msi-fileshare:before{content:"\e659"; font-size:1.2em;}
+.msi-invldfleimg:before{content:"\e676";}
+.msi-fltfnotalwimg:before{content:"\e674";}
+.msi-at:before{content:"\e669";}
+.msi-android:before{content:"\e689";}
+
+.msi-calndr:before{ content:"\e62a";}
+.msi-zcsmly:before{ content:"\e61d"; font-size:1.3em;}
+
+.msi-grpstatus-0:before { content:"\e644"; font-size:1em;}
+.msi-grpstatus-1:before{ content:"\e643"; font-size:1em;}
+.msi-grpstatus-2:before,.msi-sp2:before { content:"\e642"; font-size:1em;}
+
+
+.msi-arwup:before, .msi-dwnarrw:before{ content:"\e62c"; font-size:1em;}
+.msi-arwdwn:before, .msi-uparrw:before{ content:"\e639"; font-size:1em;}
+
+.msi-qut:before{content:"\e649"; font-size:1.5em;}
+.msi-zcpin span:before, .msi-pin:before, .msi-zc-pinnedchats:before{content:"\e64a"; font-size:1em;}
+
+.msi-zcentr_ico:before{content:"\e680";}
+.msi-chtprtcpntimg:before{content:"\e63b";}
+.msi-unpin:before{content:"\e64b"; font-size:1em;}
+.msi-scrtcht:before{content:"\e663"; font-size:1em;}
+.msi-cleartitle:before{content:"\e670";}
+.msi-atchmnd:before{content:"\e679";}
+.msi-zinfo:before{content:"\e67a"; font-weight:bold;}
+.msi-sdfile:before{content:"\e67b";}
+.msi-newcht:before{content:"\e67d";}
+
+.msi-upldfile:before, .msi-atchfilem:before{content:"\e64c"; font-size:1em;}
+.msi-atchfle:before { content:"\e90c";}
+.msi-upldpdf:before{content:"\e64d"; font-size:1em;}
+.msi-aprvl:before{content:"\e651"; font-size:1em;}
+.msi-reject:before{content:"\e658";}
+.msi-upldaudio:before{content:"\e65a"; font-size:1em;}
+.msi-dob:before{content:"\e662"; font-size:1em;}
+.msi-fsizextimg:before{content:"\e672";}
+.msi-smlalrtimg:before, .msi-alert:before{content:"\e671";}
+
+.msi-chtzm:before, .msi-exp:before{content:"\e652";}
+.msi-chtpanvw:before{content:"\e653";}
+.msi-play:before, .msi-soundplay:before{content:"\e931";}
+.msi-pause:before{content:"\e930";}
+.msi-spkon:before, .msi-audrun:before{content:"\e655";}
+.msi-spkoff:before, .msi-mutecht:before{content:"\e656";}
+.msi-scrtecht:before{ content:"\e65c";}
+.msi-videoplybtn:before{ content:"\e9df";}
+.msi-zcfdkbtnmn:before{content:"\e67f"; font-size:2.5em; color:#fff;}
+
+.chlusricn:before{ content:"\e664"; }
+.chlusrmemicn:before{ content:"\e640"; }
+
+.msi-zcheadicn:before{ content:"\e909"; cursor: pointer; font-size: 20px; color: #666;}
+.msi-sc1:before{ content:"\e972";}
+.msi-sc2:before{ content:"\e96f";}
+.msi-sc3:before{ content:"\e96d";}
+.msi-sc4:before,.msi-sp4:before{ content:"\e96c";}
+.msi-chacunt:before { content: "\e684";}
+.msi-mute:before{ content:"\e685"; font-size:70px;}
+
+.msi-announce:before{content : "\e901";}
+.msi-ios:before{content: "\e687";}
+.msi-boticon:before{ content:"\e902";}
+.msi-chat:before, .msi-zc-chats:before{ content: "\e905";} 
+.msi-muteicon:before, .msi-notifi:before{content:"\e907";}
+.msi-unmuteicon:before{content:"\e908";}
+.msi-popout:before { content: "\e910"; font-size:1.2em; font-weight:bold;}
+.msi-direction:before{ content:"\e912";}
+.msi-location:before{ content:"\e90e";}
+.msi-atchcontact:before{ content:"\e90b";}
+.msi-audioicn:before{ content:"\e90a";}
+.msi-plybtn:before{ content:"\e90f";}
+.msi-plyschbtn:before{ content:"\e90f"; margin-right:7px;}
+.msi-previewicn:before{ content:"\e916";}
+.msi-hisseld:before, .msi-accepted:before{ content:"\e91a";}
+.msi-hissel:before{ content:"\e919"}
+.msi-hisdelsel:before{ content:"\e917";}
+.msi-hisdelseld:before{ content:"\e918";}
+.msi-theme:before{ content:"\e926";}
+.msi-advance:before{ content:"\e91f"; font-size:18px;}
+.msi-playnone:before{ content:"\e932";}
+.msi-chtcmt:before{ content:"\e928";}
+.msi-editicn:before{ content:"\e67f";}
+.msi-cmddel:before{ content:"\e92b";}
+.msi-cmdicn:before{ content:"\e92d";}
+.msi-msgvisbl:before { content: "\e933";}
+.msi-minemiz:before{ content: "\e935";}
+.msi-unreadfilter:before{content: "\e935";}
+.msi-cmdarw:before, .msi-bckarw:before{content: "\e934";}
+.msi-chtclse:before, .msi-declined:before{ content: "\e914";}
+.msi-dwnarw:before, .msi-darrw:before{ content:"\e65e";}
+.msi-fx:before{content:"\e938";}
+.msi-schedlr:before {content:"\e9a3";}
+.msi-platfrmdb:before{content:"\e9c3";}
+.msi-rhtarw:before{ content:"\e937";}
+.msi-question:before, .msi-needs-action:before{ content:"\e686";}
+.msi-wand:before{ content:'\e943';}
+.msi-unsub:before{ content:'\e9a5';}
+.msi-star:before{ content:"\e93e"}
+.msi-starsel:before, .msi-staricon:before{ content:"\e925";}
+
+.msi-vamute:before{ content: "\e93c";}
+.msi-vend:before{ content:"\e940";}
+.msi-vmute:before{ content: "\e93f";}
+.msi-max:before{ content:"\e99c"; }
+.msi-min:before{content:"\e93b"; }
+.msi-zc-channel:before{ content:"\e944";}
+.msi-chnlck:after{content:"\e9a4";}
+.msi-chnunlck:after{content:"\e9cc";}
+.msi-zohoaps:before{ content: "\e92f";}
+.msi-exapp:before{ content: "\e92e";}
+.msi-drag:before{ content: "\e947"; }
+.msi-pop:before{ content: "\e904";}
+.msi-more:before{ content: "\e94e";}
+.msi-attcontact:before{content:"\e90b";}
+.msi-attfile:before{content:"\e679";}
+.msi-resend:before{ content:"\e9a6";}
+.msi-copy:before{ content:"\e921";}
+.msi-fork:before{ content:"\e922";}
+.msi-forward:before{content:"\e659";}
+.msi-send:before{ content:"\e91c";}
+.msi-reply:before{content:"\e659"; transform: scale(-1, 1);}
+.msi-share:before{content: "\e677";margin-right: 5px;}
+.msi-startchat:before{ content: "\e951"}
+.msi-giphy:before{ content:"\e959"; font-size: 17px;}
+.msi-cussim:before{ content:"\e958";}
+.msi-defsim:before{ content:"\e952";}
+.msi-frquse:before{ content:"\e953";}
+.msi-feedback:before{ content: "\e957";}
+.msi-menu:before{ content: "\e91e";}
+.msi-exit:before{ content: "\e956";}
+.msi-tickcircle:before{ content: "\e915";}
+.msi-optmore:before{ content: "\e94f";}
+
+.msi-gplus:before{ content: "\e95e";}
+.msi-lnkin:before{ content: "\e95d";}
+.msi-twitter:before{ content: "\e95c";}
+.msi-fb:before{ content: "\e95b";}
+.msi-announceicn:before{ content: "\e95a";}
+.msi-action:before{ content: "\e960";}
+
+.msi-glunmute:before{content:"\e96b";}
+.msi-glmute:before{content:"\e96a";}
+body .msi-like:before{ content:"\e974"; }
+.msi-camera:before{content:"\e973";}
+.msi-alerttriangle:before{content:"\e975";}
+.msi-slash:before{content:"\e961";}
+.msi-link:before{content:"\e983";}
+.msi-email:before{content:"\e982";}
+.msi-adduser:before {content:"\e97d";}
+.msi-removeuser:before {content:"\e97e";}
+
+.msi-animsim:before { content: "\e987";color: #c5c5c5;}
+.msi-animsim1:before {content: "\e988";color: #c5c5c5;margin-left: -1em;}
+.msi-animsim2:before {content: "\e989";color: #e2e2e2;margin-left: -1em;}
+
+.msi-shrink:before{content:"\e65f";}
+.msi-expand:before{content:"\e65e";}
+.msi-tip:before {content: "\e98a"; color: #ffd865;}
+.msi-phcamera:before{content:"\e979";}
+.msi-bluetooth:before{content:"\e978";}
+.msi-headphones:before{content:"\e97a";}
+.msi-ldspeaker:before{content:"\e98d";}
+.msi-mic:before{content: "\e98e";}
+.msi-link-line:before{content: "\e991";}
+.msi-refresh:before{content:"\e98c";}
+.msi-external:before{content:"\e98f";}
+
+.msi-forum:before{content: "\e99b";}
+.msi-showtime:before{ content: "\e981";}
+
+.msi-ex-popout:before{content:"\e985";}
+.msi-ex-update:before{content:"\e98a"; margin-right: 7px;}
+.msi-ex-deactivate:before, .zcapps-disable .msi-ex-activate:before{content:"\e986";}
+.msi-ex-activate:before{content:"\e98b"; font-size: 15px;}
+
+.msi-unarchive:before{content:"\e9a0";}
+.msi-archive:before{content:"\e9a1";}
+
+.msi-manage-org:before{content:"\e66c";}
+
+.msi-joinicon:before{content:"\e9b0";}
+.msi-pendinginv:before{content:"\e9b2";}
+.msi-keyboard:before{content:"\e9a8";}
+.msi-personalize:before{content:"\e9a9";}
+.msi-cliqresources:before{content:"\e9aa";}
+.msi-feedback:before{content:"\e9ab";}
+.msi-subscription:before{content:"\e9ac";}
+.msi-livechat:before{content:"\e9ad";}
+.msi-webinar:before{content:"\e9ae";}
+.msi-adminpanel:before{content:"\e9af";}
+.msi-marketplace:before{content:"\e9a7";}
+.msi-migrdata:before{content:"\e9e8";}
+.msi-recentstories:before{content:"\e9b4";}
+.msi-whatsnew:before{content: "\e9d2";}
+.msi-macstore:before{content:"\e9b7";}
+.msi-plystore:before{content:"\e9b8";}
+.msi-windws:before{content:"\e9b6";}
+.msi-ubuntu:before{content:"\e9b5";}
+.msi-signout:before{content:"\e9b9";}
+.msi-integ:before{content:"\e9ba";}
+.msi-people:before{content:"\e9e3";}
+
+.msi-mutualchats:before{content: "\e9c2";}
+.msi-multiteamchannel:after{content: "\e9c6";}
+
+.msi-adhoccht:before{content:"\e9c1";}
+.msi-dirctmsg:before{content:"\e9c0";}
+.msi-chnlcreate:before{content:"\e9bf";}
+.msi-usrcall:before{content:"\e9be";}
+.msi-eventcreate:before{content:"\e9bd";}
+
+.msi-reminder:before{content:"\e9a2";}
+.msi-remtimeicon:before {content: "\e9ca";}
+.msi-rematicon:before {content: "\e9cb";}
+.msi-circletick:before{content: "\e637";}
+.msi-open:before{content:"\e98f";}
+.msi-assignby:before{content:"\e9bb";}
+.msi-assignto:before{content:"\e9bc";}
+.msi-remicon:before{content:"\e9c4";}
+.msi-remquickadd:before {content: "\e9c9";}
+
+.msi-scrnshr-start:before, .zc-vc-incmng-scrn div.zcincmclcnt .msi-call:before{content: "\e99e";}
+.msi-scrnshr-stop:before, .zc-vc-incmng-scrn div.zcincmclcnt .msi-vend:before{content: "\e99f";}
+.msi-broadcast:before{content: "\e9e0";}
+.msi-swap:before{content: "\e9d1";}
+.msi-sorticon:before{content: "\e9c7";}
+.msi-readall:before{content: "\e9c8";}
+.msi-file-dsktp:before{content: "\e9d6";}
+.msi-file-cloud:before{content: "\e9d7";}
+.msi-searchacross:before { content:"\e9da" }
+
+.msi-complete:before { content:"\e9db";}
+.msi-remviewcompact:before { content:"\e9e5";}
+.msi-remviewnormal:before {content: "\e9e4";}
+.msi-listfilter:before { content:"\e9dc";}
+.msi-circle:before {content: '\e9e2';}
+
+.msi-deluge:before { content: '\e9ea'; }
+.msi-multiusr:before { content: '\e94c'; }
+.msi-clock:before{ content: '\e9e7';}

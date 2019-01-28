@@ -7,7 +7,7 @@ import withRoot from '../src/with-root';
 import Header from '../src/components/header';
 import { fetchApi } from '../src/services/api';
 import { filterPendingAssignment } from '../src/services/utils';
-
+import { withStyles } from "@material-ui/core/styles";
 
 import AssignmentsReview from '../src/components/assignment-review';
 import AssignmentsReviewCompleted from '../src/components/assignment-review/assignment-review-completed';
@@ -17,6 +17,7 @@ class AssignmentReview extends React.Component {
 		super(props);
 		this.state = {
 			assignments: [],
+			showLoader: true
 		};
 	}
 	componentDidMount() {
@@ -50,17 +51,18 @@ class AssignmentReview extends React.Component {
 		let assignmentsToReview = response.data;
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 		this.setState({
-			assignments: assignmentsToReview,
+			assignments: assignmentsToReview,showLoader: false
 		});
 	}
 
 	render() {
-		const { assignments } = this.state;
+		const { assignments,showLoader } = this.state;
+		
 		if (assignments.length === 0) {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReviewCompleted />
+					<AssignmentsReviewCompleted showLoader = {showLoader}/>
 				</div>
 			);
 		} else {
@@ -68,7 +70,7 @@ class AssignmentReview extends React.Component {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReview assignments={assignments} />
+					<AssignmentsReview showLoader = {showLoader} assignments={assignments} />
 				</div>
 			);
 		}

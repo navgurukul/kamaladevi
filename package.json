@@ -32,6 +32,7 @@
     "react-document-title": "^2.0.3",
     "react-dom": "^16.4.1",
     "react-google-login": "^3.2.1",
+    "react-loader-spinner": "^2.3.0",
     "react-markdown": "^3.3.2"
   },
   "devDependencies": {

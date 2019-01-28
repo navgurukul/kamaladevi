@@ -1,0 +1,201 @@
+
+<!-- saved from url=(0308)https://cliq.zoho.com/_wms/pconnect.sas?settings=true&prd=CT&uname=659559602&opera=false&samedomain=false&ie=false&safari=true&nocache=1548490722286&config=111&wmscont=_wms&nodomainchange=true&retrycount=1&tabid=659559602_CT_1548490678023_2154&staticdomain=js.zohostatic.com&staticversion=v319&tokenpair=true -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"></head><body><script>
+var infomsg = null;
+var infomsgtype = null;
+
+var wmssubdomain= 'zoho.com'; //NO OUTPUTENCODING
+var wmsserver = 'wms6.zoho.com'; //NO OUTPUTENCODING
+
+var _APPACCOUNTID = '657814536';
+var prd = 'CT';
+var uname = '659559602';
+var _CFPARAMNAME = "zchat_csrparam"; //NO OUTPUTENCODING
+var _CFTOKENCOOKIENAME = "CT_CSRF_TOKEN"; //NO OUTPUTENCODING
+var _CHATCSRFPARAMNAME = "zchat_csrparam"; //NO OUTPUTENCODING
+var _CHATCSRFCOOKIENAME = "CT_CSRF_TOKEN"; //NO OUTPUTENCODING
+var _HTML = "wmsconnector";
+var samedomain = false;
+var _WMSCONT = "_wms";
+var _SSTSERVICE = false;
+var _IAMSERVER = "https://accounts.zoho.com"; //NO OUTPUTENCODING
+var _IAMCLIENTSERVER = "https://accounts.zohoportal.com"; //NO OUTPUTENCODING
+var _SERVICE = "ZohoChat"; //NO OUTPUTENCODING
+var _USERCONFIG = {"connmode":"ws","salesiqjsurl":"https://localjs.zohostatic.com/salesiq/CHATBAR_V1/js/siqchatbarplugin.js","zvv":"v171","gsv":"v21_8","phonebridgejsurl":"https://js.zohostatic.com/phonebridge/V7/javascript/phonebridge.js"};  //NO OUTPUTENCODING
+var _NODOMAINCHANGE = "true";
+var _uselp = "false";
+var _SDOMAIN = "wms6.zoho.com"; //NO OUTPUTENCODING
+var _WMSSETTINGS = {"vustatus":"0","disann":{"All":"1512563928325"},"scp":"0","vmessage":"0","salesiq_chatbar":"0","cunreadchats":"1","soc":"1","cpinnedchats":"0","sound":"0","crecentchats":"1","primetime_onboard_count":"3","autogrow":"0"}; //NO OUTPUTENCODING
+_WMSSETTINGS.chatenabled = true; //NO OUTPUTENCODING
+_WMSSETTINGS.tourenabled = true;//NO OUTPUTENCODING
+_WMSSETTINGS.wmstourprops = "";
+_WMSSETTINGS.adminsettings = {"activeappaccountuser":true,"features":{"newmentionformat":{"enabled":true},"DeleteMessage":{"enabled":true,"properties":{"timeframe":259200000}},"reactions":{"enabled":true},"EditMessage":{"enabled":true,"properties":{"timeframe":259200000}},"taz":{"enabled":true},"specialmention":{"enabled":true}},"service_configurations":{"upload_server_url":"https://upload.zoho.com","download_server_url":"https://download.zoho.com"},"active_appaccount":true,"licenseduser":true,"licensed_feature":{"isTeamChannelAllowed":false,"isDisableHistoryAllowed":false,"isChannelPermissonAllowed":false,"isBroadcastAllowed":false,"isExternalChannelAllowed":false,"isGuestAccessAllowed":false,"isChannelAllowed":true},"cliqaccess":true,"orgPolicies":{"allow_request_to_join_org":"true","append_copyright_in_print_transcript":"true","allow_turn_off_chat_history":"true","xmpp_gateway_enabled":"false","allow_otherorg_external_channel":"true","chat_with_non_org_users":"true","auto_approve_org_channel":"true","irc_gateway_enabled":"true","allow_deleted_storage_records_backup":"false","allow_external_channel":"true","create_private_channel":"true"}}; //NO OUTPUTENCODING
+var _SERVICEDISPNAME; //Remove it after all setups stop using this variable 
+var _CHATSERVERURL = "cliq.zoho.com"; //NO OUTPUTENCODING
+var _CALENDARSERVERURL = "calendar.zoho.com"; //NO OUTPUTENCODING
+var _MAILSERVERURL = "mail.zoho.com"; //NO OUTPUTENCODING
+var _MEETINGSERVERURL = "meeting.zoho.com"; //NO OUTPUTENCODING
+var _PHOTOSERVERURL = "contacts.zoho.com"; //NO OUTPUTENCODING
+var _JSSTATICDOMAIN = 'js.zohostatic.com';
+var _JSSTATICVERSION = 'v319';
+var _SESSIONCONFIG = 111;
+var _CROSSORIGINALLOWED = null;
+var _tabid = '659559602_CT_1548490678023_2154';
+var staticdetails;
+if( _WMSSETTINGS && _WMSSETTINGS.deact )
+{
+function indexOf( arrayobj, elem )
+{
+if( Array.prototype.indexOf )
+{
+return Array.prototype.indexOf.call( arrayobj, elem );
+}
+else
+{
+for( var i = 0; i < arrayobj.length; i++ )
+{
+if( elem === arrayobj[i] )
+{
+return i;
+}
+}
+return -1;
+}
+}
+var deactarr = _WMSSETTINGS.deact.split(","); 
+if( indexOf( deactarr, "ALL" ) !== -1 || indexOf( deactarr, prd ) !== -1 )
+{
+var deactchat = true;
+}
+}
+if( _WMSSETTINGS.chatenabled === false || ( _WMSSETTINGS.adminsettings && _WMSSETTINGS.adminsettings.cliqaccess === false ) )
+{
+var deactchat = true;
+}
+
+var filename = "wmsbridge.js"; //No I18N
+
+//After every setup update moves to v165, we can remove this check and all other filename, html variable assignment
+if( _JSSTATICVERSION && _JSSTATICVERSION.substring(1) >= 164 )
+{
+_HTML = "wmsconnector";//No I18N
+filename = "wmsbridge.js";//No I18N
+if( ( _SESSIONCONFIG & 256 ) === 256 )
+{
+_HTML = "wmsattachopera";//No I18N
+}
+}
+function addEvent(el, evname, func)
+{
+if (el.attachEvent)
+{ // IE
+el.attachEvent("on"+evname, func);
+}
+else if (el.addEventListener)
+{ 
+el.addEventListener(evname, func, true);
+}
+}
+function loadjs( url )
+{
+var screlem = document.createElement("script");
+if( screlem.readyState )//IE8 support
+{
+screlem.onreadystatechange = function()
+{
+if( this.readyState == "loaded" || this.readyState == "complete" )
+{
+this.onreadystatechange = null;
+loadwms();
+}
+}
+}
+else
+{
+screlem.onload = function()
+{
+loadwms();
+}
+}
+screlem.src = url;
+screlem.type = "text/javascript";
+document.body.appendChild( screlem );
+}
+if( _JSSTATICDOMAIN === "null" )//When all the clients moved to latest version we can remove this if part
+{
+addEvent( window, "message", function(ev)//No I18N
+{
+function isValidDomain()
+{
+var domain = removeport( ev.origin );
+function removeport( str )
+{
+return str.replace(/:\d*$/,"");
+}
+if( wmssubdomain && domain )
+{
+if( domain === window.location.protocol + "//" + wmssubdomain )
+{
+return true;
+}
+else if(domain.split(".").length > 2)
+{
+return domain.substring( domain.length - (wmssubdomain.length+1) ) == "."+wmssubdomain;
+}
+}
+return false;
+}
+if( !isValidDomain() )
+{
+throw new Error("Domain validation failed");//No I18N
+}
+var data = JSON.parse( ev.data );
+var opr = data[0];
+if( opr === "staticdetails" )
+{
+staticdetails = data[1];
+var lfromstatic = staticdetails.lfromstatic;
+var jsstaticdomain = staticdetails.jsstaticdomain;
+var staticversion =  staticdetails.staticversion;
+var docprotocol = document.location.protocol;
+staticversion += docprotocol == "http:" ? "" : "_https"; //No I18N
+if( lfromstatic )
+{
+var url = docprotocol + "//" + jsstaticdomain + "/ichat/" + staticversion +"/js/"+ filename;
+loadjs( url );
+}
+else
+{
+if( filename === "wmsbridge.js" )
+{
+var url = "/" + _WMSCONT + "/javascript/bar/" + filename + "?version=" + staticversion;//No I18N
+}
+else
+{
+var url = "/" + _WMSCONT + "/javascript/embed/" + filename + "?version=" + staticversion;//No I18N
+}
+loadjs( url );
+}
+}
+});
+}else{
+var docprotocol = document.location.protocol;
+_JSSTATICVERSION += docprotocol == "http:" ? "" : "_https"; //No I18N
+if( _JSSTATICDOMAIN !== "null" )
+{
+var url = docprotocol + "//" + _JSSTATICDOMAIN + "/ichat/" + _JSSTATICVERSION +"/js/"+ filename;
+loadjs( url );
+}
+else
+{
+if( filename === "wmsbridge.js" )
+{
+var url = "/" + _WMSCONT + "/javascript/bar/" + filename + "?version=" + _JSSTATICVERSION;//No I18N
+}
+else
+{
+var url = "/" + _WMSCONT + "/javascript/embed/" + filename + "?version=" + _JSSTATICVERSION;//No I18N
+}
+loadjs( url );
+}
+}</script><script src="./wmsbridge.js" type="text/javascript"></script><iframe name="wms" src="./clogin.html"></iframe></body></html>

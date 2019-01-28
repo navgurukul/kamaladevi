@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import localforage from "localforage";
 import Router from "next/router";
 
-import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -14,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import {filterPendingAssignment}  from "../../services/utils"
 
 import AlertNotification from "../alert-notification";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import AssignmentsReviewSidenav from "./assignment-review-sidenav";
 import AssignmentsReviewDetails from "./assignment-review-details";
 import AssignmentsReviewCompleted from "./assignment-review-completed";
@@ -28,7 +27,6 @@ const styles = theme => ({
     display: "flex",
     flexGrow: 1,
   },
-
   navIconHide: {
     [theme.breakpoints.up("md")]: {
       display: "none"
@@ -45,6 +43,13 @@ const styles = theme => ({
       marginTop:'0px'
     }
   },
+  progress: {
+		margin: theme.spacing.unit * 1,
+	},
+	rootLoader: {
+		textAlign: 'center',
+		paddingTop: theme.spacing.unit * 20,
+	},
 });
 
 const navigateToAssignment = submissionId => {
@@ -67,6 +72,7 @@ class AssignmentsReview extends React.Component {
       notifcationMessage:"",
       alertType:""
     };
+
   }
 
   getAssignment = (id) => {
@@ -179,7 +185,8 @@ class AssignmentsReview extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    
+    const { classes,showLoader } = this.props;
     const {
       assignments,
       selectedAssignment,
@@ -188,12 +195,21 @@ class AssignmentsReview extends React.Component {
       notifcationMessage,
       alertType,
     } = this.state;
+    
+    console.log("render");
+  
+    if (showLoader === true) {
+      return (
+        <div className={classes.rootLoader}>
+          <CircularProgress className={classes.progress} size={50} />
+        </div>);
+    }
+    
     return (
       <div className={classes.root}>
         {
           assignments.length?
           <React.Fragment>
-
             {/* Side Drawer to display assignment list*/}
             <IconButton
               color="inherit"

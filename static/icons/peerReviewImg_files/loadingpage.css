@@ -1,0 +1,30 @@
+/*$Id$*/
+.quoteui{top: 0px; z-index: 11111; position: fixed; width: 100%; height: 100%; background-color:#fff;}
+.quotebg{width: 100%; height: 100%; background-color: #fff;}
+.ldngwhtbg{position: fixed; width: 100%; height: 100%; background-color: #fff;}
+.pgload { bottom: 5px; margin: auto; left: 0; right: 0;}
+.pgload div { font-size:100px; width:15px; display: inline-block; color:#000; animation-name: loading; animation-duration: 1.8s; animation-iteration-count: infinite; animation-fill-mode: both;}
+.pgload div:nth-child(2) { animation-delay:.2s;}
+.pgload div:nth-child(3) { animation-delay: .4s;}
+@keyframes loading { 0% { opacity: .5;} 20% {opacity: 1;} 100% { opacity: .2;}}
+
+.zcdqut{ display: block; margin: auto; left: 0; top: 0; right: 0; bottom: 0; width: 300px; height: 300px; border-radius: 100%; padding: 50px; background-color: #fff; box-shadow: 0px 0px 20px 5px #d9d9d9; font-size: 20px; color: #545454; position:absolute; text-align:center; z-index: 12;}
+.zcdqutmin { width: 50px; height: 50px; left: 95%; top: 90%; right: 0; bottom: 0; padding: 0px; position: fixed; display: block; margin: auto; text-align: center; z-index: 12; background-color: #fff; box-shadow: 0px 0px 10px 1px #a1a1a1; font-size: 20px; color: #545454; border-radius: 100%;}
+.zcquttxt{ display: table-cell; vertical-align: middle; height: 200px; width: inherit;} 
+.zcqutauth{ font-size: 15px; line-height: 15px; margin-top: 10px;}
+.quoteic{position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; height: 30px; cursor:pointer;}
+.quotwin{width: 100%; height: 100%; background: transparent !important; border: none !important; box-shadow: none !important;}
+.quotwin .mheader{border: none !important;}
+.asas{box-shadow: 0px 0px 3px 5px #fff;}
+
+.permadiv, .zcoverlay.permadiv{position: fixed; z-index: 1000; top: 0; left: 0; width: 100%;  height: 100%; background: #f8f8f8;}
+.permadiv ~ #officechat{visibility: hidden;}
+.permaloading{position: fixed; top: 50%; left: 50%; margin: auto; width: 200px; margin-left: -100px; height: 200px; margin-top: -100px;}
+.permaloading .msi-link-line:before{width: 80px; height: 80px; position: absolute; right: 60px; top: 0; font-size: 80px; color: #f3f3f3;}
+.permaloading .infotxt{font-size: 20px; margin: 50px auto; text-align: center;}
+.permaloading .pgloader {position: relative; border: 7px solid #f3f3f3; border-radius: 50%; border-top: 7px solid #4a90e2; width: 80px; height: 80px; z-index: 1; margin: auto; -webkit-animation: spin 2s linear infinite; animation: spin 2s linear infinite;}
+.permaloading .pgloader.loaded{border: 7px solid #4a90e2;}
+
+@-webkit-keyframes spin { 0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); } }
+
+@keyframes spin { 0% { transform: rotate(0deg); }  100% { transform: rotate(360deg); } }
