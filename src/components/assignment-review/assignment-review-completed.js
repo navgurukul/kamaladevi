@@ -10,43 +10,54 @@ const styles = theme => ({
   root: {
     display: "flex",
     flexGrow: 1,
-    marginTop: "30vh",
+    marginTop: "40vh",
     height: "100%"
   },
   cardGrid: {
-	maxWidth: "80vh",
-	margin: "auto"
+	maxWidth: "60vh",
+  margin: "auto",
   },
   image: {
     display: "inline",
     float: "left",
-    paddingRight: theme.spacing.unit * 6,
+    width: theme.spacing.unit * 14,
+    height: theme.spacing.unit * 14,
+    paddingRight: theme.spacing.unit * 4,
     [theme.breakpoints.down("md")]: {
       paddingRight: theme.spacing.unit*4,
-      width: "180px"
+      width: theme.spacing.unit * 23
     },
     [theme.breakpoints.down("sm")]: {
       paddingRight: theme.spacing.unit*2,
-      width: "120px"
+      width: theme.spacing.unit * 15
     },
     [theme.breakpoints.down("xs")]: {
       paddingRight: theme.spacing.unit*2,
-      width: "60"
+      width: theme.spacing.unit * 16,
+      height:theme.spacing.unit * 16,
+      paddingLeft: theme.spacing.unit * 4,
     }
 
   },
   content: {
-    fontSize: "26px",
+    fontSize: theme.spacing.unit *3,
     fontWeight:"400",
+    paddingTop:theme.spacing.unit,
     [theme.breakpoints.down("md")]: {
-      fontSize: "40px"
+      fontSize: theme.spacing.unit * 5,
+      paddingTop:theme.spacing.unit * 2,
     },
     [theme.breakpoints.down("sm")]: {
-      fontSize: "28px"
+      fontSize: theme.spacing.unit * 4,
+      paddingTop:theme.spacing.unit * 2,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "20px"
+      fontSize: theme.spacing.unit * 2.5,
+      paddingTop:theme.spacing.unit  *2,
     }
+  },
+  boldContent: {
+    fontWeight: "bold"
   },
   showLoader: {
 		textAlign: 'center',
@@ -56,6 +67,7 @@ const styles = theme => ({
 		margin: theme.spacing.unit * 1,
 	},
 });
+
 // TODO:  Need to edit this page
 const AssignmentsReviewCompleted = props => {
   const { classes,showLoader } = props;
@@ -66,14 +78,14 @@ const AssignmentsReviewCompleted = props => {
         <CircularProgress className={classes.progress} size={50} />
       </div>);
   }
-  
+
   return (
     <div className={classes.root}>
-      <Grid className={classes.cardGrid}>
+      <Grid className={classes.cardGrid} container>
         <img src="static/icons/peer-review.png" className={classes.image} />
         <Typography className={classes.content}>
-          Aapke pass aur koi assignment nhi aye hai abhi review karne ke liye
-          aap apni padhai continue karsakte hai.
+          <span className={classes.boldContent}>No</span><br />
+          peer review requests <br /> right now.
         </Typography>
       </Grid>
     </div>
