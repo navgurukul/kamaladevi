@@ -66,6 +66,7 @@ const AssignmentsReviewCompleted = props => {
         <CircularProgress className={classes.progress} size={50} />
       </div>);
   }
+  
   return (
     <div className={classes.root}>
       <Grid className={classes.cardGrid}>
