@@ -14,42 +14,18 @@ const styles = theme => ({
     height: "100%"
   },
   cardGrid: {
-    width: theme.spacing.unit * 42,
-	  maxWidth: "90vh",
+    width:  theme.spacing.unit * 42,
     margin: "0 auto",
-    [theme.breakpoints.down("md")]: {
-      width: theme.spacing.unit * 46,
-      margin: "0 auto"
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: theme.spacing.unit * 38,
-      margin: "0 auto"
-    },
     [theme.breakpoints.down("xs")]: {
       width: theme.spacing.unit * 24,
-      margin: "0 auto"
     }
   },
   image: {
     display: "inline",
     float: "left",
-    // margin:"auto",
     width: theme.spacing.unit * 14,
     height: theme.spacing.unit * 14,
     paddingRight: theme.spacing.unit * 4,
-    [theme.breakpoints.down("md")]: {
-      paddingRight: theme.spacing.unit*4,
-      width: theme.spacing.unit * 28,
-      height: theme.spacing.unit * 28,
-      marginLeft: theme.spacing.unit * 10,
-      float: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      paddingRight: theme.spacing.unit*2,
-      width: theme.spacing.unit * 22,
-      float: "none",
-      marginLeft: theme.spacing.unit * 8
-    },
     [theme.breakpoints.down("xs")]: {
       paddingRight: theme.spacing.unit*2,
       width: theme.spacing.unit * 12,
@@ -63,14 +39,6 @@ const styles = theme => ({
     fontSize: theme.spacing.unit *3,
     fontWeight:"400",
     paddingTop:theme.spacing.unit,
-    [theme.breakpoints.down("md")]: {
-      fontSize: theme.spacing.unit * 5,
-      paddingTop:theme.spacing.unit * 2,
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: theme.spacing.unit * 4,
-      paddingTop:theme.spacing.unit * 2,
-    },
     [theme.breakpoints.down("xs")]: {
       fontSize: theme.spacing.unit * 2.5,
       paddingTop:theme.spacing.unit  *2,
