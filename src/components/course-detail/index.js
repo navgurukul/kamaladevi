@@ -97,7 +97,8 @@ const styles = theme => {
     },
     content: {
       padding: theme.spacing.unit * 2.5,
-      paddingTop: theme.spacing.unit * 3
+      paddingTop: theme.spacing.unit * 3,
+      fontFamily: "roboto"
     },
     progress: {
       margin: theme.spacing.unit * 2

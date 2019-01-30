@@ -14,28 +14,48 @@ const styles = theme => ({
     height: "100%"
   },
   cardGrid: {
-	maxWidth: "60vh",
-  margin: "auto",
+    width: theme.spacing.unit * 42,
+	  maxWidth: "90vh",
+    margin: "0 auto",
+    [theme.breakpoints.down("md")]: {
+      width: theme.spacing.unit * 46,
+      margin: "0 auto"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: theme.spacing.unit * 38,
+      margin: "0 auto"
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: theme.spacing.unit * 24,
+      margin: "0 auto"
+    }
   },
   image: {
     display: "inline",
     float: "left",
+    // margin:"auto",
     width: theme.spacing.unit * 14,
     height: theme.spacing.unit * 14,
     paddingRight: theme.spacing.unit * 4,
     [theme.breakpoints.down("md")]: {
       paddingRight: theme.spacing.unit*4,
-      width: theme.spacing.unit * 23
+      width: theme.spacing.unit * 28,
+      height: theme.spacing.unit * 28,
+      marginLeft: theme.spacing.unit * 10,
+      float: "none"
     },
     [theme.breakpoints.down("sm")]: {
       paddingRight: theme.spacing.unit*2,
-      width: theme.spacing.unit * 15
+      width: theme.spacing.unit * 22,
+      float: "none",
+      marginLeft: theme.spacing.unit * 8
     },
     [theme.breakpoints.down("xs")]: {
       paddingRight: theme.spacing.unit*2,
-      width: theme.spacing.unit * 16,
-      height:theme.spacing.unit * 16,
-      paddingLeft: theme.spacing.unit * 4,
+      width: theme.spacing.unit * 12,
+      height:theme.spacing.unit * 12,
+      float: "none",
+      marginLeft: theme.spacing.unit * 6
     }
 
   },
@@ -60,8 +80,10 @@ const styles = theme => ({
     fontWeight: "bold"
   },
   showLoader: {
-		textAlign: 'center',
-		paddingTop: theme.spacing.unit * 20,
+    display: "flex",
+    flexGrow:1,
+    justifyContent: "center",
+    marginTop: "46vh"
   },
   progress: {
 		margin: theme.spacing.unit * 1,
@@ -74,14 +96,15 @@ const AssignmentsReviewCompleted = props => {
 
   if (showLoader === true) {
     return (
-      <div className={classes.showLoader}>
-        <CircularProgress className={classes.progress} size={50} />
-      </div>);
+        <div className={classes.showLoader}>
+          <CircularProgress className={classes.progress} size={50} />
+        </div>
+      );
   }
 
   return (
     <div className={classes.root}>
-      <Grid className={classes.cardGrid} container>
+      <Grid className={classes.cardGrid}>
         <img src="static/icons/peer-review.png" className={classes.image} />
         <Typography className={classes.content}>
           <span className={classes.boldContent}>No</span><br />
