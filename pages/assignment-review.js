@@ -51,7 +51,8 @@ class AssignmentReview extends React.Component {
 		let assignmentsToReview = response.data;
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 		this.setState({
-			assignments: assignmentsToReview,showLoader: false
+			assignments: assignmentsToReview,
+			showLoader: false
 		});
 	}
 
