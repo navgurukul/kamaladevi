@@ -14,7 +14,7 @@ const styles = theme => ({
     height: "100%"
   },
   cardGrid: {
-    width:  theme.spacing.unit * 42,
+    width:  theme.spacing.unit * 44,
     margin: "0 auto",
     [theme.breakpoints.down("xs")]: {
       width: theme.spacing.unit * 24,
@@ -23,12 +23,10 @@ const styles = theme => ({
   image: {
     display: "inline",
     float: "left",
-    width: theme.spacing.unit * 14,
     height: theme.spacing.unit * 14,
     paddingRight: theme.spacing.unit * 4,
     [theme.breakpoints.down("xs")]: {
       paddingRight: theme.spacing.unit*2,
-      width: theme.spacing.unit * 12,
       height:theme.spacing.unit * 12,
       float: "none",
       marginLeft: theme.spacing.unit * 6
