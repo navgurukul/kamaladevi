@@ -17,6 +17,7 @@ class AssignmentReview extends React.Component {
 		super(props);
 		this.state = {
 			assignments: [],
+			showLoader: true
 		};
 	}
 	componentDidMount() {
@@ -51,16 +52,17 @@ class AssignmentReview extends React.Component {
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 		this.setState({
 			assignments: assignmentsToReview,
+			showLoader: false
 		});
 	}
 
 	render() {
-		const { assignments } = this.state;
+		const { assignments ,showLoader} = this.state;
 		if (assignments.length === 0) {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReviewCompleted />
+					<AssignmentsReviewCompleted showLoader={showLoader} />
 				</div>
 			);
 		} else {
@@ -68,7 +70,7 @@ class AssignmentReview extends React.Component {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReview assignments={assignments} />
+					<AssignmentsReview showLoader={showLoader} assignments={assignments} />
 				</div>
 			);
 		}
