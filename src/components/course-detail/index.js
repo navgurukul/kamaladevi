@@ -12,12 +12,12 @@ import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import withMobileDialog from "@material-ui/core/withMobileDialog";
 
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
@@ -75,7 +75,7 @@ const styles = theme => {
       "& img": {
         maxWidth: "100%",
         display: "block",
-        margin: "0 auto"
+        // margin: "0 auto"
       },
       "& iframe": {
         width: "100%"
@@ -134,6 +134,9 @@ const styles = theme => {
       marginLeft: "auto !important",
       width: theme.spacing.unit * 5,
       height: theme.spacing.unit * 5
+    },
+    solutionButtonYes: {
+      textDecoration: 'none '
     }
   };
 };
@@ -145,6 +148,8 @@ const navigateToExercise = id => slug => {
   });
 };
 
+// console.log(navigateToExercise)
+
 class CourseDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -155,7 +160,8 @@ class CourseDetail extends React.Component {
       content: "",
       prevSolutionDetail: "",
       selectedExercise: {},
-      open: false
+      open: false,
+      ifSolution:false,
     };
     this.courseDetail = React.createRef();
     this.loadExercise = this.loadExercise.bind(this);
@@ -211,6 +217,7 @@ class CourseDetail extends React.Component {
         { slug },
         { Authorization: jwt }
       );
+      // console.log(response)
     } catch (e) {
       // TODO: Handle network error cases
 
@@ -221,10 +228,14 @@ class CourseDetail extends React.Component {
       courseId,
       exerciseId
     );
+
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
+    const ifSolution = response.ifSolution
+    // console.log(ifSolution)
     console.log(slug);
     this.setState({
       content,
+      ifSolution,
       prefetchedData: true,
       notes: "",
       prevSolutionDetail: prevSolutionDetail.data,
@@ -241,7 +252,14 @@ class CourseDetail extends React.Component {
   };
 
   render() {
-    const { classes, exercises, id, slug, updateExercises ,fullScreen} = this.props;
+    const {
+      classes,
+      exercises,
+      id,
+      slug,
+      updateExercises,
+      fullScreen
+    } = this.props;
     const {
       reviewType,
       submissionType,
@@ -254,7 +272,8 @@ class CourseDetail extends React.Component {
       prefetchedData,
       content,
       prevSolutionDetail,
-      selectedExercise
+      selectedExercise,
+      ifSolution
     } = this.state;
 
     if (!prefetchedData) {
@@ -267,8 +286,10 @@ class CourseDetail extends React.Component {
     const previousSlug = getSlugOfPreviousCourse(slug, exercises);
     const nextSlug = getSlugOfNextCourse(slug, exercises);
     const marginLeft = "auto";
-    return (
-      <Grid container spacing={0} className={classes.root}>
+
+    if(ifSolution === true) {
+     return(
+       <Grid container spacing={0} className={classes.root}>
         <Grid item xs={12} md={8} className={classes.content}>
           <Card className={classes.content}>
             {/* eslint-disable-next-line react/no-danger */}
@@ -283,7 +304,11 @@ class CourseDetail extends React.Component {
                 src="static/icons/solution-icon.png"
                 className={classes.solutionIcon}
               />
-              <Button size="large" className={classes.solutionButton} onClick={this.handleClickOpen}>
+              <Button
+                // className={classes.solutionButton}
+                onClick={this.handleClickOpen}
+                variant="contained" color="primary"
+              >
                 solution
               </Button>
               <Dialog
@@ -293,19 +318,99 @@ class CourseDetail extends React.Component {
                 aria-labelledby="responsive-dialog-title"
               >
                 <DialogTitle id="responsive-dialog-title">
-                  {" Agar aap solution dekhna chahte ho to 'Yes' button par click kare warna 'No' button pr click kare "}
+                  {
+                    " Agar aap solution dekhna chahte ho to 'Yes' button par click kare warna 'No' button pr click kare "
+                  }
                 </DialogTitle>
 
                 <DialogActions>
                   <Button onClick={this.handleClose} color="primary">
                     NO
                   </Button>
-                  <Button onClick={this.handleClose} color="primary" autoFocus>
-                    Yes
-                  </Button>
+                  <a
+                    href=""
+                    target="_blank"
+                    className={classes.solutionButtonYes}
+                  >
+                    <Button color="primary" onClick={this.handleClose} autoFocus >
+                      Yes
+                    </Button>
+                  </a>
                 </DialogActions>
               </Dialog>
             </div>
+          </Card>
+          <br />
+
+          {reviewrs.includes(reviewType) && submissionType != null ? (
+            <CourseDetailSubmission
+              prevSolutionDetail={prevSolutionDetail[0]}
+              exercises={exercises}
+              courseId={id}
+              slug={slug}
+              loadExercise={this.loadExercise}
+              updateExercises={updateExercises}
+            />
+          ) : null}
+
+          {/*link to github page*/}
+          <div className={classes.editLink}>
+            <a href={githubLink} target="_blank">
+              Edit
+            </a>{" "}
+            on GitHub
+          </div>
+
+          <div className={classes.navigationBtnDiv}>
+            {previousSlug ? (
+              <Button
+                variant="fab"
+                color="primary"
+                onClick={() => {
+                  navigateToExercise(id)(previousSlug);
+                }}
+              >
+                <NavigateBeforeIcon />
+              </Button>
+            ) : null}
+            {nextSlug ? (
+              <Button
+                className={classes.floatButtonRight}
+                variant="fab"
+                color="primary"
+                onClick={() => {
+                  navigateToExercise(id)(nextSlug);
+                }}
+              >
+                <NavigateNextIcon />
+              </Button>
+            ) : null}
+          </div>
+          <Utterances slug={slug} />
+        </Grid>
+        <Grid item xs={4} className={classes.sidebar}>
+          <CourseDetailSideNav
+            exercises={exercises}
+            loadExercise={navigateToExercise(id)}
+            slug={slug}
+            selectedExercise={selectedExercise}
+          />
+        </Grid>
+      </Grid>
+     )
+    }
+
+    return (
+      <Grid container spacing={0} className={classes.root}>
+        <Grid item xs={12} md={8} className={classes.content}>
+          <Card className={classes.content}>
+            {/* eslint-disable-next-line react/no-danger */}
+            <div
+              id="course"
+              dangerouslySetInnerHTML={{
+                __html: this.updateLinks(md.render(content))
+              }}
+            />
           </Card>
           <br />
 
