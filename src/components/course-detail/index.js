@@ -8,16 +8,11 @@ import localforage from "localforage";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import withMobileDialog from "@material-ui/core/withMobileDialog";
 
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
@@ -148,7 +143,7 @@ const navigateToExercise = id => slug => {
   });
 };
 
-// console.log(navigateToExercise)
+console.log(navigateToExercise)
 
 class CourseDetail extends React.Component {
   constructor(props) {
@@ -217,7 +212,7 @@ class CourseDetail extends React.Component {
         { slug },
         { Authorization: jwt }
       );
-      // console.log(response)
+      console.log(response)
     } catch (e) {
       // TODO: Handle network error cases
 
@@ -229,13 +224,15 @@ class CourseDetail extends React.Component {
       exerciseId
     );
 
+
+    // console.log({ id: exerciseId } )
+
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
     const ifSolution = response.ifSolution
-    // console.log(ifSolution)
     console.log(slug);
     this.setState({
       content,
-      ifSolution,
+      ifSolution:true,
       prefetchedData: true,
       notes: "",
       prevSolutionDetail: prevSolutionDetail.data,
@@ -328,7 +325,7 @@ class CourseDetail extends React.Component {
                     NO
                   </Button>
                   <a
-                    href=""
+                    href="http://localhost:3000/solution"
                     target="_blank"
                     className={classes.solutionButtonYes}
                   >
@@ -398,9 +395,8 @@ class CourseDetail extends React.Component {
         </Grid>
       </Grid>
      )
-    }
-
-    return (
+    }else {
+       return (
       <Grid container spacing={0} className={classes.root}>
         <Grid item xs={12} md={8} className={classes.content}>
           <Card className={classes.content}>
@@ -470,6 +466,8 @@ class CourseDetail extends React.Component {
         </Grid>
       </Grid>
     );
+
+    }
   }
 }
 
