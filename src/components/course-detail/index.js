@@ -143,7 +143,7 @@ const navigateToExercise = id => slug => {
   });
 };
 
-console.log(navigateToExercise)
+// console.log(navigateToExercise)
 
 class CourseDetail extends React.Component {
   constructor(props) {
@@ -157,6 +157,7 @@ class CourseDetail extends React.Component {
       selectedExercise: {},
       open: false,
       ifSolution:false,
+      exerciseId:0
     };
     this.courseDetail = React.createRef();
     this.loadExercise = this.loadExercise.bind(this);
@@ -212,7 +213,6 @@ class CourseDetail extends React.Component {
         { slug },
         { Authorization: jwt }
       );
-      console.log(response)
     } catch (e) {
       // TODO: Handle network error cases
 
@@ -225,14 +225,14 @@ class CourseDetail extends React.Component {
     );
 
 
-    // console.log({ id: exerciseId } )
-
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
-    const ifSolution = response.ifSolution
-    console.log(slug);
+    const uniqueId = response.id
+    const ifSolution = response.ifSolution;
+
     this.setState({
+      exerciseId: uniqueId,
       content,
-      ifSolution:true,
+      ifSolution,
       prefetchedData: true,
       notes: "",
       prevSolutionDetail: prevSolutionDetail.data,
@@ -270,7 +270,8 @@ class CourseDetail extends React.Component {
       content,
       prevSolutionDetail,
       selectedExercise,
-      ifSolution
+      ifSolution,
+      exerciseId
     } = this.state;
 
     if (!prefetchedData) {
@@ -283,6 +284,8 @@ class CourseDetail extends React.Component {
     const previousSlug = getSlugOfPreviousCourse(slug, exercises);
     const nextSlug = getSlugOfNextCourse(slug, exercises);
     const marginLeft = "auto";
+
+    // console.log(exerciseId)
 
     if(ifSolution === true) {
      return(
@@ -325,7 +328,7 @@ class CourseDetail extends React.Component {
                     NO
                   </Button>
                   <a
-                    href="http://localhost:3000/solution"
+                    href={`/solution?id=${exerciseId}`}
                     target="_blank"
                     className={classes.solutionButtonYes}
                   >

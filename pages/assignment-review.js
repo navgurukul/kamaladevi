@@ -2,10 +2,8 @@
 // Peer review system
 import React from 'react';
 import Router, { withRouter } from 'next/router';
-import localforage from 'localforage';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import { fetchApi } from '../src/services/api';
 import { filterPendingAssignment } from '../src/services/utils';
 
 

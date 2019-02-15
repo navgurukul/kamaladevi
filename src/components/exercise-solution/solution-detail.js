@@ -46,15 +46,7 @@ class SolutionDetail extends React.Component {
       htmlFromServer,
       "text/html"
     );
-    const anchorList = solutionDetail.querySelectorAll("a");
-    anchorList.forEach(anchor => {
-      if (anchor.innerText === "Saral") {
-        return false;
-      } else {
-        anchor.setAttribute("target", "_blank");
-      }
-    });
-    return solutionDetail.body.innerHTML;
+    return htmlFromServer;
   };
     render(){
       const { classes,solution } = this.props;
@@ -66,11 +58,6 @@ class SolutionDetail extends React.Component {
                 __html:this.updateLinks(md.render(solution))
               }}
               />
-              {/* <div>
-              {/* hi I am Rani I am studying in class 10TH and now I am in NavGurukul and doing softerware 
-              engineering I love to enjoy the coding here really it is a awesome to be in NavGurukul and do the 
-              things . */}
-              {/* </div> */} 
             </Card>
         )
     }
