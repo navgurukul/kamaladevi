@@ -88,6 +88,11 @@ export const deleteCourseAPI = (courseId) => {
 	return authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete')
 };
 
+//solution detail api call 
+export const getExerciseIdOfSolutionAPI = (exerciseId) => {
+	return authenticatedFetchAPI(`/courses/${exerciseId}/solution`)
+}
+
 // Make notes submission api call to get submitted notes
 export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
 	const query = {
