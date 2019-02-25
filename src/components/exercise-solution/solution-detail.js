@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 var blockEmbedPlugin = require("markdown-it-block-embed");
-var DOMParser = require('xmldom').DOMParser
 
 // Parse markdown content
 const md = require("markdown-it")({
@@ -39,23 +38,13 @@ const styles = theme => ({
   });
 
 class SolutionDetail extends React.Component {
-
-  updateLinks = htmlFromServer => {
-    var parser = new DOMParser();
-    let solutionDetail = parser.parseFromString(
-      htmlFromServer,
-      "text/html"
-    );
-    return htmlFromServer;
-  };
     render(){
       const { classes,solution } = this.props;
-      console.log(solution)
         return(
             <Card className={classes.solutionContent}>
               <div
               dangerouslySetInnerHTML={{
-                __html:this.updateLinks(md.render(solution))
+                __html:md.render(solution)
               }}
               />
             </Card>
