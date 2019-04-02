@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import localforage from 'localforage'
 import Link from "next/link";
-
+import * as Sentry from '@sentry/browser';
+import {EventEmitter} from "events";
 import MenuIcon from '@material-ui/icons/Menu';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -52,6 +53,9 @@ const styles = theme => {
 			backgroundColor:theme.palette.grey[300],
 			transition:theme.transitions.easing.easyInOut,
 		}
+	},
+	hidden: {
+		display:"none"
 	}
 
 })};
@@ -112,8 +116,12 @@ class Header extends React.Component {
 		this.checkIsAuthenticated();
 	}
 
+	changeHandler =(e)=> {
+		this.props.bus.emit("search", e.target.value);
+    }
   render() {
 		const { classes } = this.props;
+		const hidden = this.props.classes.hidden;
 		const {
 			isAuthenticated,
 			open,
@@ -138,6 +146,7 @@ class Header extends React.Component {
 							Saral
 							</a>
 						</Typography>
+						<input type="text" ref="filterInput" className={this.props.searchHidden ? hidden : ''} onChange={this.changeHandler} placeholder="Search" />
 					</Toolbar>
 				</AppBar>
 				{/*Drawer should be here.*/}

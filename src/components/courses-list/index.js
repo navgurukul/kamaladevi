@@ -1,5 +1,6 @@
 // Course list
 import React from "react";
+import ReactGA from 'react-ga';
 import Link from "next/link";
 import Router from "next/router";
 import PropTypes from "prop-types";
@@ -103,14 +104,63 @@ class CourseList extends React.Component {
   }
 
   componentDidMount() {
+    ReactGA.initialize('UA-135762938-1');
+    ReactGA.pageview(window.location.pathname);
+    if (typeof this.props.bus !== "undefined") {
+      this.props.bus.on("search", (searchString) => {
+        var updatedList = this.state.initialAvailableCourses;
+        var updatedEnrolledCourses = this.state.initialEnrolledCourses;
+        updatedList = updatedList.filter(function(course){
+          return course.name.toLowerCase().search(
+            searchString.toLowerCase()) !== -1;
+        });
+        updatedEnrolledCourses = updatedEnrolledCourses.filter(function(course){
+          return course.name.toLowerCase().search(
+            searchString.toLowerCase()) !== -1;
+        });
+        this.setState({availableCourses: updatedList});
+        this.setState({enrolledCourses: updatedEnrolledCourses});
+      })
+  }
     this.getCoursesUpdated();
+    this.checkIsAuthenticated();
   }
 
+  checkIsAuthenticated = () => {
+		localforage.getItem("authResponse", (error, value) => {
+			if (error) {
+				if (!window.navigator.onLine) {
+					alert("Aap internet se connected nhi ho.");
+				}
+				console.log(e);
+			} else {
+				if (!value) {
+				} else {
+					this.setState({
+						isAuthenticated: true
+					})
+				}
+			}
+		});
+  }
   getCoursesUpdated = () => {
     localforage.getItem("authResponse", (error, value) => {
       if (!error) {
         if (value === null) {
-          Router.replace("/");
+         fetchApi("/courses", {})
+           .then(response => {
+              console.log(response);
+             this.setState({
+               prefetchedData: true,
+               isAdmin: false,
+               initialAvailableCourses: response.availableCourses,
+               initialEnrolledCourses: [],
+               ...response
+             });
+           })
+           .catch(() => {
+           });
+          //Router.replace("/");
         } else {
           const { jwt, user } = value;
           fetchApi("/courses", {}, { Authorization: jwt })
@@ -120,10 +170,13 @@ class CourseList extends React.Component {
               this.setState({
                 prefetchedData: true,
                 isAdmin: user.isAdmin,
+                initialAvailableCourses: response.availableCourses,
+                initialEnrolledCourses: response.enrolledCourses,
                 ...response
               });
             })
-            .catch(() => {
+            .catch((error) => {
+              throw(error);
               /* TODO: Handle network error cases */
             });
         }
@@ -147,7 +200,8 @@ class CourseList extends React.Component {
       facilitatingCourses,
       prefetchedData,
       editCourseSequence,
-      isAdmin
+      isAdmin,
+      isAuthenticated
     } = this.state;
     if (!prefetchedData) {
       return (
@@ -211,7 +265,12 @@ class CourseList extends React.Component {
               showProgress
             />
           ) : (
-            ""
+            isAuthenticated ?
+            (<CourseListCategoryView
+            headline={"No enrolled courses found"}
+            courses={sortCoursesBySequenceNum(enrolledCourses)}
+            showProgress
+          />) : ""
           )}
 
           <Grid container spacing={0} className={classes.dividerContainer}>
@@ -228,7 +287,11 @@ class CourseList extends React.Component {
               paddingTop
             />
           ) : (
-            ""
+            <CourseListCategoryView
+              headline={"No courses Found"}
+              courses={sortCoursesBySequenceNum([])}
+              paddingTop
+            />
           )}
         </div>
       </div>

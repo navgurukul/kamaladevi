@@ -17,6 +17,8 @@ import AlertNotification from "../alert-notification";
 
 import {  submitExerciseAPI } from '../../services/api';
 import {  getExerciseDetailFromSlug } from '../../services/utils';
+import localforage from "localforage";
+import {  setSession } from '../../services/session';
 
 const styles = theme => {
   return {
@@ -104,6 +106,7 @@ class CourseDetailSubmission extends React.Component {
       notifcationMessage: "",
       variant:"error",
       disableSubmitButton: false,
+      isAuthenticated: false,
     }
   }
 
@@ -179,6 +182,26 @@ class CourseDetailSubmission extends React.Component {
       [name]: event.target.value
     });
   };
+  checkIsAuthenticated = () => {
+    localforage.getItem("authResponse", (error, value) => {
+      if (error) {
+        if (!window.navigator.onLine) {
+          alert("Aap internet se connected nhi ho.");
+        }
+        console.log(e);
+      } else {
+        if (!value) {
+        } else {
+          this.setState({
+            isAuthenticated: true
+          })
+        }
+      }
+    });
+  }
+  componentDidMount() {
+    this.checkIsAuthenticated();
+  }
 
   render(){
     const {
@@ -194,11 +217,13 @@ class CourseDetailSubmission extends React.Component {
       notifcationMessage,
       variant,
       disableSubmitButton,
+      isAuthenticated
     } = this.state;
     
     const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
 
     return (
+      isAuthenticated ?
       <Card>
         {/*previously submitted notes*/}
           {
@@ -281,6 +306,7 @@ class CourseDetailSubmission extends React.Component {
           onClose={this.handleHideNotification}
           />
       </Card>
+        : null
     );
   }
 }

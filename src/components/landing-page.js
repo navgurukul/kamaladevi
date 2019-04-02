@@ -14,7 +14,7 @@ import GoogleLogin from 'react-google-login';
 
 import { fetchApi } from '../services/api';
 import { setSession } from '../services/session';
-
+ import queryString from 'query-string';
 
 const styles = theme => ({
 	root: {
@@ -35,7 +35,10 @@ const styles = theme => ({
 const authSuccess = (response) => {
 	const { tokenId } = response;
 	fetchApi('/users/auth/google', { idToken: tokenId }, { 'Content-Type': 'application/json' }, 'post')
-		.then(authResponse => setSession(authResponse));
+		.then(authResponse => {
+			console.log('authResponse', authResponse);
+			setSession(authResponse)
+		});
 };
 
 const authFailure = (response) => {
@@ -48,15 +51,27 @@ class LandingPage extends React.Component {
 		super(props);
 		this.state = {
 			loading: false,
+			queryParams:{"params":null}
 		};
+	}
+	componentDidMount(){
+		const values = queryString.parse(location.search);
+		this.setState({queryParams:{params:values.params}});
 	}
 	render() {
 		const { classes } = this.props;
+		const {loading,queryParams}=this.state;
 		localforage.getItem('authResponse', (error, value) => {
 			if (!error) {
 				if (value !== null) {
 					Router.replace('/home');
 					return <CircularProgress className={classes.progress} size={50} />;
+				}else{
+					if(queryParams!=undefined && queryParams.params=="signin"){
+					Router.replace('/');	
+					}else{
+					Router.replace('/home');
+					}
 				}
 			} else {
 				// TODO: Handle error cases
@@ -76,7 +91,7 @@ class LandingPage extends React.Component {
 		// 	);
 		// }
 
-
+		if(queryParams.params=="signin"){
 		return (
 			<div className={classes.root}>
 				<Paper className={classes.paper}>
@@ -125,7 +140,11 @@ class LandingPage extends React.Component {
             ~ Margaret Mead
 					</Typography>
 				</Paper>
-			</div>);
+			</div>
+			);
+					}else{
+						return null;
+					}
 	}
 }
 

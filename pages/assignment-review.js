@@ -2,6 +2,7 @@
 // Peer review system
 import React from 'react';
 import Router, { withRouter } from 'next/router';
+import * as Sentry from '@sentry/browser';
 import localforage from 'localforage';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
@@ -21,9 +22,32 @@ class AssignmentReview extends React.Component {
 		};
 	}
 	componentDidMount() {
+		Sentry.init({ dsn: 'https://dac738139bd14514bbec319da7c8b28c@sentry.io/1417825' });
+		this.configSentryOnMount();
 		this.loadAssignments();
 	}
+	async componentDidCatch(error, errorInfo) {
+		this.triggerSentry(error, errorInfo);
+		}
 
+		configSentryOnMount= async ()=>{
+			let userId = await localforage.getItem('authResponse').then((value)=>{
+				let id = value ? value.user.id : 'non logged in user';
+				return id;
+		 })
+		 Sentry.configureScope((scope) => {
+			scope.setExtra("userId", userId);
+		  });
+		 }
+	triggerSentry=async (error, errorInfo)=>{
+		this.setState({ error });
+		Sentry.withScope(scope => {
+		  Object.keys(errorInfo).forEach(key => {
+			scope.setExtra(errorInfo, errorInfo[key])
+		  });
+		  Sentry.captureException(error);
+		});
+		};
 	async loadAssignments() {
 		let value;
 		let response;
@@ -31,7 +55,7 @@ class AssignmentReview extends React.Component {
 			value = await localforage.getItem('authResponse');
 			if (!value) {
 				// No access tokens saved
-				Router.replace('/');
+				Router.replace('/?params=signin');
 				return null;
 			}
 		} catch (e) {
@@ -61,7 +85,7 @@ class AssignmentReview extends React.Component {
 		if (assignments.length === 0) {
 			return (
 				<div>
-					<Header />
+					<Header searchHidden={true}/>
 					<AssignmentsReviewCompleted showLoader={showLoader} />
 				</div>
 			);
@@ -69,7 +93,7 @@ class AssignmentReview extends React.Component {
 
 			return (
 				<div>
-					<Header />
+					<Header searchHidden={true}/>
 					<AssignmentsReview showLoader={showLoader} assignments={assignments} />
 				</div>
 			);

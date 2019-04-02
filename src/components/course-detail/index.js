@@ -29,6 +29,7 @@ import {
 					fetchApi,
           submitExerciseAPI,
           getExerciseSubmissionAPI,
+  getExerciseSubmissionAPIWithoutLogin
         } from '../../services/api';
 
 import CourseDetailSideNav from './course-detail-sidenav';
@@ -180,32 +181,48 @@ class CourseDetail extends React.Component {
   async loadExercise() {
 		// get the exerciseId for the exercise
 		let value, response;
+    const { id: courseId, slug, exercises } = this.props;
     try {
       value = await localforage.getItem("authResponse");
       if (!value) {
         // No access tokens saved
-        Router.replace("/");
-        return;
+        response = await fetchApi(
+          `/courses/${courseId}/exercise/getBySlug`,
+          { slug },
+          {}
+        );
+        // Router.replace("/");
+        // return;
       }
-    } catch (e) {
+    } catch (error) {
+      throw(error);
       // TODO: Handle localforage error cases
       return;
     }
-		const { id:courseId, slug, exercises } = this.props;
-    const { jwt } = value;
+   
+
     try {
+      if (value) {
+        const { jwt } = value;
       response = await fetchApi(
         `/courses/${courseId}/exercise/getBySlug`,
         { slug },
         { Authorization: jwt }
       );
-    } catch (e) {
+      }
+    } catch (error) {
+      throw(error);
       // TODO: Handle network error cases
 
       return;
     }
 		const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-    const prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
+    console.log("courseId, exerciseId :",courseId, exerciseId)
+    let prevSolutionDetail={data:null};
+    if (value) {
+     prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
+    }else{
+    }
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
 		console.log(slug)
     this.setState({
