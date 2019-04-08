@@ -4,7 +4,9 @@ import React from 'react';
 import Router, { withRouter } from 'next/router';
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
+import localforage from "localforage";
 import { filterPendingAssignment } from '../src/services/utils';
+import { fetchApi } from '../src/services/api';
 
 
 import AssignmentsReview from '../src/components/assignment-review';
@@ -39,31 +41,30 @@ class AssignmentReview extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
+		console.log("2")
 		const { jwt } = value;
 		try {
 			response = await fetchApi('/assignments/peerReview', {}, { Authorization: jwt });
-		} catch (e) {
-			// TODO: Handle network error cases
-			return;
-		}
-		console.log(response)
-		let assignmentsToReview = response.data;
-		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
-		if (Object.keys(assignmentsToReview).length !== 0){
+			console.log(response)
+			let assignmentsToReview = response.data;
+			assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 			this.setState({
 				assignments: assignmentsToReview,
 				showLoader: false
 			});
-		} else {
+		} catch (e) {
+			console.error(e)
 			this.setState({
 				assignments: [],
 				showLoader: true
 			});
+			// TODO: Handle network error cases
+			return;
 		}
 	}
 
 	render() {
-		const { assignments ,showLoader} = this.state;
+		const { assignments , showLoader} = this.state;
 		if (assignments.length === 0) {
 			return (
 				<div>
