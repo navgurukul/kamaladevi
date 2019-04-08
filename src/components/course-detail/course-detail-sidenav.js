@@ -127,6 +127,7 @@ class CourseDetailSideNav extends React.Component {
 			selectedvalue,
 			selectedchildExercise,
 		} = getExerciseIdFromSlug(slug, exercises);
+		
 		openExercises[openExerciseId] = true;
 		this.state = {
 			openExercises,
