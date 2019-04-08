@@ -48,12 +48,20 @@ class AssignmentReview extends React.Component {
 			// TODO: Handle network error cases
 			return;
 		}
+		console.log(response)
 		let assignmentsToReview = response.data;
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
-		this.setState({
-			assignments: assignmentsToReview,
-			showLoader: false
-		});
+		if (Object.keys(assignmentsToReview).length !== 0){
+			this.setState({
+				assignments: assignmentsToReview,
+				showLoader: false
+			});
+		} else {
+			this.setState({
+				assignments: [],
+				showLoader: true
+			});
+		}
 	}
 
 	render() {
