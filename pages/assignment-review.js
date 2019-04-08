@@ -51,18 +51,18 @@ class AssignmentReview extends React.Component {
 		let assignmentsToReview = response.data;
 		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
 		this.setState({
-			assignments: assignmentsToReview,showLoader: false
+			assignments: assignmentsToReview,
+			showLoader: false
 		});
 	}
 
 	render() {
-		const { assignments,showLoader } = this.state;
-		
+		const { assignments ,showLoader} = this.state;
 		if (assignments.length === 0) {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReviewCompleted showLoader = {showLoader}/>
+					<AssignmentsReviewCompleted showLoader={showLoader} />
 				</div>
 			);
 		} else {
@@ -70,7 +70,7 @@ class AssignmentReview extends React.Component {
 			return (
 				<div>
 					<Header />
-					<AssignmentsReview showLoader = {showLoader} assignments={assignments} />
+					<AssignmentsReview showLoader={showLoader} assignments={assignments} />
 				</div>
 			);
 		}
