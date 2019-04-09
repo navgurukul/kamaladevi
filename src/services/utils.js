@@ -1,4 +1,4 @@
-//gets gihtub Link for each exercise
+// gets gihtub Link for each exercise
 export const getExerciseDetailFromSlug = (slug, exercises) => {
 	for (let exerciseId = 0; exerciseId < exercises.length; exerciseId += 1) {
 		if (exercises[exerciseId].slug === slug) {
@@ -46,8 +46,8 @@ export const getExerciseIdFromSlug = (slug, exercises) => {
 
 // get the Title out of slug for the page
 export const getTitleFromSlug = (slug) => {
-	if (slug){
-		var title = slug.replace(/[-__/_]/g, ' ')
+	if (slug) {
+		let title = slug.replace(/[-__/_]/g, ' ');
 		title = title[0].toUpperCase() + title.slice(1, title.length);
 		return title;
 	}
@@ -63,11 +63,11 @@ const getNextExerciseSlug = (exercises, exerciseId) => {
 };
 
 const getPreviousChildSlug = (exercises, exerciseId, childExerciseId) => {
-  if (childExerciseId === 0) {
-    return exercises[exerciseId].slug;
-  } else {
-    return exercises[exerciseId].childExercises[childExerciseId - 1].slug;
-  }
+	if (childExerciseId === 0) {
+		return exercises[exerciseId].slug;
+	} else {
+		return exercises[exerciseId].childExercises[childExerciseId - 1].slug;
+	}
 };
 
 const getNextChildSlug = (exercises, exerciseId, childExerciseId) => {
@@ -126,13 +126,11 @@ export const getSlugOfNextCourse = (slug, exercises) => {
 };
 
 // sort the courses by sequenceNum
-export const sortCoursesBySequenceNum = courses => {
-	let sortedCourses = Array.from(courses);
-	sortedCourses.sort((a,b)=>{
-		return a.sequenceNum - b.sequenceNum;
-	});
+export const sortCoursesBySequenceNum = (courses) => {
+	const sortedCourses = Array.from(courses);
+	sortedCourses.sort((a, b) => a.sequenceNum - b.sequenceNum);
 	return sortedCourses;
-}
+};
 
 // Get slug of the previous course to navigate using next button
 export const getSlugOfPreviousCourse = (slug, exercises) => {
@@ -154,67 +152,63 @@ export const getSlugOfPreviousCourse = (slug, exercises) => {
 
 // filters the pending assignment from the list
 export const filterPendingAssignment = (assignments) => {
-	let pendingAssignmentList = [];
+	const pendingAssignmentList = [];
 	for (let i = 0; i < assignments.length; i++) {
-		let assignment = assignments[i];
-		if(!assignment.completed && assignment.state === 'pending'){
-			pendingAssignmentList.push(assignment)
+		const assignment = assignments[i];
+		if (!assignment.completed && assignment.state === 'pending') {
+			pendingAssignmentList.push(assignment);
 		}
 	}
-	return pendingAssignmentList
-}
+	return pendingAssignmentList;
+};
 
 
-////////////////////////////////////////////////////////////
-const findObjectIndex = (array, key, value) => {
-	return array.findIndex((element) => {
-		return element[key] === value;
-	})
-}
+// //////////////////////////////////////////////////////////
+const findObjectIndex = (array, key, value) => array.findIndex(element => element[key] === value);
 
 
 // to create a mentee schema row for Dashboard
 const _getMenteesReportSchema = (mentees, extraFields) => {
-	const menteesCourseReportSchema =  [];
-	for(let i = 0; i < mentees.length; i++){
-		let menteeCourseReportSchema = {
-			id : mentees[i].id,
+	const menteesCourseReportSchema = [];
+	for (let i = 0; i < mentees.length; i++) {
+		const menteeCourseReportSchema = {
+			id: mentees[i].id,
 			name: mentees[i].name,
 			email: mentees[i].email,
-			...extraFields
+			...extraFields,
 		};
 		menteesCourseReportSchema.push(menteeCourseReportSchema);
 	}
 	return menteesCourseReportSchema;
-}
+};
 
 export const getMenteeCoursesTable = (coursesReport, mentees) => {
-	let coursesReportTable = [];
+	const coursesReportTable = [];
 	const extraFields = {
-		isEnrolled:false,
-		isCourseCompleted:false,
-	}
+		isEnrolled: false,
+		isCourseCompleted: false,
+	};
 	// get a schema of mentees courses reports to display in each courses
 	const menteesCourseReportSchema = _getMenteesReportSchema(mentees, extraFields);
 
 	// update each and every courses
 	coursesReport.forEach((course) => {
-		const {  studentEnrolled, ...courseDetails } = course;
+		const { studentEnrolled, ...courseDetails } = course;
 
 		// create a copy of schema for every courses
-		let courseReport = {
+		const courseReport = {
 			students: menteesCourseReportSchema.slice(),
-			...courseDetails
-		}
+			...courseDetails,
+		};
 
 		// update each schema with the current detail of the student
 		studentEnrolled.forEach((mentee) => {
 			const email = mentee.email;
-			const menteeIndex = findObjectIndex(mentees, "email", email);
-			courseReport['students'][menteeIndex] = { ...mentee };
+			const menteeIndex = findObjectIndex(mentees, 'email', email);
+			courseReport.students[menteeIndex] = { ...mentee };
 		});
 		coursesReportTable.push(courseReport);
 	});
 	// console.log(coursesReportTable);
 	return coursesReportTable;
-}
+};
