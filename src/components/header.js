@@ -28,13 +28,13 @@ const styles = theme => {
 		flex: 1,
 	},
 	drawerPaper: {
-   	width: drawerWidth,
+		width: drawerWidth,
 		zIndex: theme.zIndex.appBar - 1,
 		...theme.mixins.toolbar,
 		backgroundColor:theme.palette.grey[50]
 	},
 	link: {
-	  textDecoration: 'inherit',
+		textDecoration: 'inherit',
 		color: 'inherit',
 	},
 	drawerContent:{
@@ -57,13 +57,13 @@ const styles = theme => {
 })};
 
 class Header extends React.Component {
-  constructor(props) {
-    super(props);
-		this.state = {
-			isAuthenticated:false,
-			open:false,
-		}
-  }
+	constructor(props) {
+		super(props);
+			this.state = {
+				isAuthenticated:false,
+				open:false,
+			}
+	}
 
 	toggleMenu = () => {
 		this.setState(prevState => ({
@@ -112,7 +112,7 @@ class Header extends React.Component {
 		this.checkIsAuthenticated();
 	}
 
-  render() {
+	render() {
 		const { classes } = this.props;
 		const {
 			isAuthenticated,
@@ -167,7 +167,7 @@ class Header extends React.Component {
 				</SwipeableDrawer>
 			</div>
 		);
-  }
+	}
 }
 
 // function Header(props)  {
