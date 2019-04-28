@@ -1,4 +1,5 @@
 // Course list
+
 import React from "react";
 import ReactGA from 'react-ga';
 import Link from "next/link";
@@ -20,73 +21,74 @@ import { sortCoursesBySequenceNum } from "../../services/utils";
 import CourseListCategoryView from "./course-list-category-view";
 import CourseListDragAndDropView from "./course-list-dragdrop-view";
 
-const styles = theme => ({
-  rootLoader: {
-    display: "flex",
-    flexGrow: 1,
-    justifyContent: "center",
-    marginTop: "46vh"
-  },
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    paddingBottom: 50
-  },
-  rootContent: {
-    paddingTop: theme.spacing.unit * 5,
-    display: "flex",
-    flexDirection: "column",
-    width: "80%",
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      paddingLeft: 10,
-      paddingRight: 10
-    }
-  },
-  courseEditButton: {
-    display: "block",
-    float: "right",
-    margin: "0",
-    top: "auto",
-    float: "right",
-    right: theme.spacing.unit * 4,
-    bottom: theme.spacing.unit * 4,
-    left: "auto",
-    zIndex: "100",
-    position: "fixed",
-    [theme.breakpoints.down("xs")]: {
-      fontSize: theme.spacing.unit * 2
-    }
-  },
 
-  courseSequenceEditRootContent: {
-    width: "40%",
-    [theme.breakpoints.down("sm")]: {
-      width: "100%"
-    }
-  },
-  // dividerContainer: {
-  // 	paddingTop: theme.spacing.unit * 2,
-  // 	justifyContent: 'center',
-  // },
-  progress: {
-    margin: theme.spacing.unit * 1
-  }
+const styles = theme => ({
+	rootLoader: {
+		display: 'flex',
+		flexGrow: 1,
+		justifyContent: 'center',
+		marginTop: '46vh',
+	},
+	root: {
+		display: 'flex',
+		justifyContent: 'center',
+		paddingBottom: 50,
+	},
+	rootContent: {
+		paddingTop: theme.spacing.unit * 5,
+		display: 'flex',
+		flexDirection: 'column',
+		width: '80%',
+		[theme.breakpoints.down('sm')]: {
+			width: '100%',
+			paddingLeft: 10,
+			paddingRight: 10,
+		},
+	},
+	courseEditButton: {
+		display: 'block',
+		float: 'right',
+		margin: '0',
+		top: 'auto',
+		float: 'right',
+		right: theme.spacing.unit * 4,
+		bottom: theme.spacing.unit * 4,
+		left: 'auto',
+		zIndex: '100',
+		position: 'fixed',
+		[theme.breakpoints.down('xs')]: {
+			fontSize: theme.spacing.unit * 2,
+		},
+	},
+
+	courseSequenceEditRootContent: {
+		width: '40%',
+		[theme.breakpoints.down('sm')]: {
+			width: '100%',
+		},
+	},
+	// dividerContainer: {
+	// 	paddingTop: theme.spacing.unit * 2,
+	// 	justifyContent: 'center',
+	// },
+	progress: {
+		margin: theme.spacing.unit * 1,
+	},
 });
 
 const navigateToEditMode = () => {
-  Router.push({
-    pathname: "/home",
-    query: {
-      edit: true
-    }
-  });
+	Router.push({
+		pathname: '/home',
+		query: {
+			edit: true,
+		},
+	});
 };
 
 const navigateToHome = () => {
-  Router.push({
-    pathname: "/home"
-  });
+	Router.push({
+		pathname: '/home',
+	});
 };
 
 class CourseList extends React.Component {
@@ -125,6 +127,7 @@ class CourseList extends React.Component {
     this.getCoursesUpdated();
     this.checkIsAuthenticated();
   }
+
 
   checkIsAuthenticated = () => {
 		localforage.getItem("authResponse", (error, value) => {
@@ -184,12 +187,13 @@ class CourseList extends React.Component {
         // TODO: Handle error cases
       }
     });
+
   };
   stopCourseSequenceEditing = () => {
-    this.getCoursesUpdated();
-    this.setState({
-      editCourseSequence: false
-    });
+  	this.getCoursesUpdated();
+  	this.setState({
+  		editCourseSequence: false,
+  	});
   };
 
   render() {
@@ -296,11 +300,12 @@ class CourseList extends React.Component {
         </div>
       </div>
     );
+
   }
 }
 
 CourseList.propTypes = {
-  classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(CourseList);

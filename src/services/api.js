@@ -32,7 +32,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 		method: method.toUpperCase(),
 		headers,
 	};
-	let url = new URL(`${BACKEND_URL}${endpoint}`);
+	const url = new URL(`${BACKEND_URL}${endpoint}`);
 
 	if (options.method === 'GET') {
 		Object.keys(payload).forEach(key => url.searchParams.append(key, payload[key]));
@@ -41,7 +41,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 	}
 
 	return fetch(url, options)
-		.then(response => {
+		.then((response) => {
 			if (!response.ok) {
 				console.error(response);
 				// TODO: More sane error handling. Currently, assuming that
@@ -52,7 +52,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 					// throw response.statusText;
 				}
     	}
-			return response.json()
+			return response.json();
 		})
 		.catch((error) => {
 			console.log('errr fetchApi');
@@ -60,6 +60,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 			throw error;
 		});
 };
+
 
 export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => {
 	return localforage.getItem('authResponse')
@@ -73,29 +74,22 @@ export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') =>
 						});
 }
 
+
 // Make notes submission api call to submit notes for students
-export const submitExerciseAPI = (courseId, exerciseId, notes) => {
-  return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, {notes}, 'post')
-};
+export const submitExerciseAPI = (courseId, exerciseId, notes) => authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, { notes }, 'post');
 
-export const getExerciseFromSlugAPI =  (courseId, slug) => {
-	return authenticatedFetchAPI(`/courses/${courseId}/exercise/getBySlug`, {slug})
-}
-export const saveCoursesSequenceAPI = (payload) => {
-	return authenticatedFetchAPI(`/courses/sequenceNum`, {"courses": payload}, 'put')
-};
+export const getExerciseFromSlugAPI = (courseId, slug) => authenticatedFetchAPI(`/courses/${courseId}/exercise/getBySlug`, { slug });
+export const saveCoursesSequenceAPI = payload => authenticatedFetchAPI('/courses/sequenceNum', { courses: payload }, 'put');
 
-export const deleteCourseAPI = (courseId) => {
-	return authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete')
-};
+export const deleteCourseAPI = courseId => authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete');
 
 // Make notes submission api call to get submitted notes
 export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
 	const query = {
-			submissionUsers: 'current',
-			submissionState: 'all',
+		submissionUsers: 'current',
+		submissionState: 'all',
 	};
-	return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
+	return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, query);
 };
 export const getExerciseSubmissionAPIWithoutLogin = (courseId, exerciseId) => {
 	const query = {
@@ -106,6 +100,7 @@ export const getExerciseSubmissionAPIWithoutLogin = (courseId, exerciseId) => {
 	return fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
 };
 // Make enroll API call, and add that course to enrolledCourses
+
 export const enrollCourseAPI = async (courseId, callBack) => {
 		return authenticatedFetchAPI(`/courses/${courseId}/enroll`, {}, 'post')
 			.then((response) => {
@@ -120,15 +115,14 @@ export const enrollCourseAPI = async (courseId, callBack) => {
 			})
 };
 
+
 // Submit the feedback for student assignment
-export const reviewerFeedbackSubmissionAPI = (notes,isApprove,submissionId)=>{
-	return localforage.getItem('authResponse')
-		.then(value => {
-			const {jwt} =value;
-			const payload = {
-				notes:notes,
-				approved:isApprove
-			}
-			return fetchApi(`/assignments/peerReview/${submissionId}`,payload,{Authorization:jwt},'put')
-		})
-	}
+export const reviewerFeedbackSubmissionAPI = (notes, isApprove, submissionId) => localforage.getItem('authResponse')
+	.then((value) => {
+		const { jwt } = value;
+		const payload = {
+			notes,
+			approved: isApprove,
+		};
+		return fetchApi(`/assignments/peerReview/${submissionId}`, payload, { Authorization: jwt }, 'put');
+	});

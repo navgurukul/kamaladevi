@@ -6,7 +6,7 @@ import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 import blue from '@material-ui/core/colors/blue';
-import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 
 // Generate breakpoints so we can use them in the theme definition
@@ -26,28 +26,28 @@ const theme = createMuiTheme({
 			main: green[500],
 			dark: green[700],
 		},
-		warning:{
+		warning: {
 			light: amber[300],
 			main: amber[500],
 			dark: amber[700],
 		},
-		info:{
+		info: {
 			light: blue[300],
 			main: blue[500],
 			dark: blue[700],
-		}
+		},
 	},
 	typography: {
 		headline: {
-		    [breakpoints.down("md")]: {
+		    [breakpoints.down('md')]: {
 		      fontSize: 16,
-		    }
+		    },
 		},
 		textSecondary: {
-		  [breakpoints.down("md")]: {
-		    fontSize: 10
-		  }
-    },
+		  [breakpoints.down('md')]: {
+		    fontSize: 10,
+		  },
+		},
 	},
 
 });

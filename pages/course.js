@@ -42,7 +42,6 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		return;
 	}
 	const exercises = response.data;
-	// console.log(response)
 
 	setExerciseCallback(exercises);
 	// If there is a slug in the URL, use that slug, else get the

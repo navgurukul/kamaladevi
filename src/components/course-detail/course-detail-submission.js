@@ -1,4 +1,5 @@
 // Submission Details of exercises solution
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -59,43 +60,45 @@ const styles = theme => {
     }
   }
 };
-const getValidationMessage = (submissionType, notes) => {
-    let message = "";
 
-    if (submissionType == "number") {
-      message = `App nich ek integer value hi dal sakte hai.`;
-    } else if (submissionType == "text") {
-      message = `App niche 100 se jada character nhi dal sakte hai.`;
-    } else if (submissionType == "text_large") {
-      message = `App niche 1500 se jada character nhi dal sakte hai.`;
-    } else if (submissionType == "url") {
-      message =  (!notes.startsWith("http"))?
-                `Link ke aage http:// yea https:// hona chaiye.`
-                : `Apko niche ek url ka link dalna hai.`;
-    }
-    return message
-}
+const getValidationMessage = (submissionType, notes) => {
+	let message = '';
+
+	if (submissionType == 'number') {
+		message = 'App nich ek integer value hi dal sakte hai.';
+	} else if (submissionType == 'text') {
+		message = 'App niche 100 se jada character nhi dal sakte hai.';
+	} else if (submissionType == 'text_large') {
+		message = 'App niche 1500 se jada character nhi dal sakte hai.';
+	} else if (submissionType == 'url') {
+		message = (!notes.startsWith('http')) ?
+			'Link ke aage http:// yea https:// hona chaiye.'
+			: 'Apko niche ek url ka link dalna hai.';
+	}
+	return message;
+};
 
 const isSubmissionTypeValid = (submissionType, notes) => {
-  if (submissionType == "number") {
-    return !isNaN(notes);
-  } else if (submissionType == "text") {
-    return notes.length <= 100;
-  } else if (submissionType == "text_large") {
-    return notes.length <= 1500;
-  } else if (submissionType == "url") {
-    if (!notes.startsWith("http")){
-      return false
-    } else {
-      let urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
-      return notes.match(urlRegex) != null;
-    }
-  }
-  return true;
+	if (submissionType == 'number') {
+		return !isNaN(notes);
+	} else if (submissionType == 'text') {
+		return notes.length <= 100;
+	} else if (submissionType == 'text_large') {
+		return notes.length <= 1500;
+	} else if (submissionType == 'url') {
+		if (!notes.startsWith('http')) {
+			return false;
+		} else {
+			const urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+			return notes.match(urlRegex) != null;
+		}
+	}
+	return true;
 };
 
 
 class CourseDetailSubmission extends React.Component {
+
   constructor(props){
     super(props);
     this.submitButton = React.createRef();
@@ -159,28 +162,29 @@ class CourseDetailSubmission extends React.Component {
             loadExercise();
           }
         });
+
   }
 
-  showNotification = (message, variant="success") => {
-    this.setState({
-      showNotification:true,
-      notifcationMessage:message,
-      variant,
-    })
+  showNotification = (message, variant = 'success') => {
+  	this.setState({
+  		showNotification: true,
+  		notifcationMessage: message,
+  		variant,
+  	});
   }
 
   handleHideNotification = () => {
-    this.setState({
-      showNotification:false,
-    })
+  	this.setState({
+  		showNotification: false,
+  	});
   }
 
   // handle the text in the input
-  handleChange = event => {
-    const name = event.target.name;
-    this.setState({
-      [name]: event.target.value
-    });
+  handleChange = (event) => {
+  	const name = event.target.name;
+  	this.setState({
+  		[name]: event.target.value,
+  	});
   };
   checkIsAuthenticated = () => {
     localforage.getItem("authResponse", (error, value) => {
@@ -202,6 +206,7 @@ class CourseDetailSubmission extends React.Component {
   componentDidMount() {
     this.checkIsAuthenticated();
   }
+
 
   render(){
     const {
@@ -232,32 +237,34 @@ class CourseDetailSubmission extends React.Component {
               <Grid container>
                 <Grid item xs={6} sm={6} md={6}>
                   <Typography variant="body2" className={classes.typography}>
-                    Previous Solution:
-                  </Typography>
-                  <Typography variant="body1">
-                    {
-                      prevSolutionDetail.submitterNotes.startsWith("http")?
-                      <a href={prevSolutionDetail.submitterNotes} target="_blank">
-                        Solution
-                      </a>
-                      :prevSolutionDetail.submitterNotes
-                    }
-                  </Typography>
-                </Grid>
 
-                <Grid item xs={6} sm={6} md={6} className={classes.floatRight}>
-                  {
-                    prevSolutionDetail.reviewerName?
-                    <Typography variant="body2" className={classes.typography}>
+                    Previous Solution:
+ </Typography>
+  								<Typography variant="body1">
+  									{
+  										prevSolutionDetail.submitterNotes.startsWith('http') ?
+  											<a href={prevSolutionDetail.submitterNotes} target="_blank">
+                        Solution
+ </a>
+  											: prevSolutionDetail.submitterNotes
+  									}
+  								</Typography>
+ </Grid>
+
+  							<Grid item xs={6} sm={6} md={6} className={classes.floatRight}>
+  								{
+  									prevSolutionDetail.reviewerName ?
+	<Typography variant="body2" className={classes.typography}>
                       Reviewer Name: <span className={classes.reviewer}>{prevSolutionDetail.reviewerName}</span>
-                    </Typography>
-                    :null
-                  }
-                  {
-                    prevSolutionDetail.state !== "pending"?
-                    <React.Fragment>
-                      <Typography variant="body2">
+  										</Typography>
+  										: null
+  								}
+  								{
+  									prevSolutionDetail.state !== 'pending' ?
+  										<React.Fragment>
+  											<Typography variant="body2">
                         Reviewer Feedback:
+
                       </Typography>
                       <Typography variant="body1">
                         {prevSolutionDetail.notesReviewer}
@@ -308,17 +315,18 @@ class CourseDetailSubmission extends React.Component {
       </Card>
         : null
     );
+
   }
 }
 
 CourseDetailSubmission.propTypes = {
-  classes: PropTypes.object.isRequired,
-  slug: PropTypes.string.isRequired,
-  exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
-  courseId: PropTypes.string.isRequired,
-  loadExercise: PropTypes.func.isRequired,
-  updateExercises: PropTypes.func.isRequired,
-  prevSolutionDetail: PropTypes.object,
+	classes: PropTypes.object.isRequired,
+	slug: PropTypes.string.isRequired,
+	exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+	courseId: PropTypes.string.isRequired,
+	loadExercise: PropTypes.func.isRequired,
+	updateExercises: PropTypes.func.isRequired,
+	prevSolutionDetail: PropTypes.object,
 };
 
 export default withStyles(styles)(CourseDetailSubmission);

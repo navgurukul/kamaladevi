@@ -2,12 +2,15 @@
 // Peer review system
 import React from 'react';
 import Router, { withRouter } from 'next/router';
+
 import * as Sentry from '@sentry/browser';
 import localforage from 'localforage';
+
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import { fetchApi } from '../src/services/api';
+import localforage from "localforage";
 import { filterPendingAssignment } from '../src/services/utils';
+import { fetchApi } from '../src/services/api';
 
 
 import AssignmentsReview from '../src/components/assignment-review';
@@ -65,23 +68,30 @@ class AssignmentReview extends React.Component {
 			// TODO: Handle localforage error cases
 			return;
 		}
+		console.log("2")
 		const { jwt } = value;
 		try {
 			response = await fetchApi('/assignments/peerReview', {}, { Authorization: jwt });
+			console.log(response)
+			let assignmentsToReview = response.data;
+			assignmentsToReview = filterPendingAssignment(assignmentsToReview);
+			this.setState({
+				assignments: assignmentsToReview,
+				showLoader: false
+			});
 		} catch (e) {
+			console.error(e)
+			this.setState({
+				assignments: [],
+				showLoader: true
+			});
 			// TODO: Handle network error cases
 			return;
 		}
-		let assignmentsToReview = response.data;
-		assignmentsToReview = filterPendingAssignment(assignmentsToReview);
-		this.setState({
-			assignments: assignmentsToReview,
-			showLoader: false
-		});
 	}
 
 	render() {
-		const { assignments ,showLoader} = this.state;
+		const { assignments , showLoader} = this.state;
 		if (assignments.length === 0) {
 			return (
 				<div>
