@@ -27,10 +27,12 @@ import {
 } from '../../services/utils';
 
 import {
-	fetchApi,
-	submitExerciseAPI,
-	getExerciseSubmissionAPI,
-} from '../../services/api';
+					fetchApi,
+          submitExerciseAPI,
+          getExerciseSubmissionAPI,
+  getExerciseSubmissionAPIWithoutLogin
+        } from '../../services/api';
+
 
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';
@@ -190,53 +192,61 @@ class CourseDetail extends React.Component {
   }
 
   async loadExercise() {
-  	// get the exerciseId for the exercise
-  	let value,
-  		response;
-  	try {
-  		value = await localforage.getItem('authResponse');
-  		if (!value) {
-  			// No access tokens saved
-  			Router.replace('/');
-  			return;
-  		}
-  	} catch (e) {
-  		// TODO: Handle localforage error cases
-  		return;
-  	}
-  	const { id: courseId, slug, exercises } = this.props;
-  	const { jwt } = value;
-  	try {
-  		response = await fetchApi(
-  			`/courses/${courseId}/exercise/getBySlug`,
-  			{ slug },
-  			{ Authorization: jwt },
-  		);
-  	} catch (e) {
-  		// TODO: Handle network error cases
+		// get the exerciseId for the exercise
+		let value, response;
+    const { id: courseId, slug, exercises } = this.props;
+    try {
+      value = await localforage.getItem("authResponse");
+      if (!value) {
+        // No access tokens saved
+        response = await fetchApi(
+          `/courses/${courseId}/exercise/getBySlug`,
+          { slug },
+          {}
+        );
+        // Router.replace("/");
+        // return;
+      }
+    } catch (error) {
+      throw(error);
+      // TODO: Handle localforage error cases
+      return;
+    }
+   
 
-  		return;
-  	}
-  	const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-  	const prevSolutionDetail = await getExerciseSubmissionAPI(
-  		courseId,
-  		exerciseId,
-  	);
+    try {
+      if (value) {
+        const { jwt } = value;
+      response = await fetchApi(
+        `/courses/${courseId}/exercise/getBySlug`,
+        { slug },
+        { Authorization: jwt }
+      );
+      }
+    } catch (error) {
+      throw(error);
+      // TODO: Handle network error cases
+
+      return;
+    }
+		const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
+    console.log("courseId, exerciseId :",courseId, exerciseId)
+    let prevSolutionDetail={data:null};
+    if (value) {
+     prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
+    }else{
+    }
+    const content = response.content.replace(/```ngMeta[\s\S]*?```/, "");
+		console.log(slug)
+    this.setState({
+      content,
+      prefetchedData: true,
+      notes: "",
+      prevSolutionDetail: prevSolutionDetail.data,
+      selectedExercise:response
+    });
 
 
-  	const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
-  	const uniqueId = response.id;
-  	const ifSolution = response.ifSolution;
-
-  	this.setState({
-  		exerciseId: uniqueId,
-  		content,
-  		ifSolution,
-  		prefetchedData: true,
-  		notes: '',
-  		prevSolutionDetail: prevSolutionDetail.data,
-  		selectedExercise: response,
-  	});
   }
 
   handleClickOpen = () => {

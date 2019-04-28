@@ -7,7 +7,7 @@ import Header from '../src/components/header';
 
 const Index = () => (
 	<div>
-		<Header />
+		<Header searchHidden={true}/>
 		<LandingPage />
 	</div>
 

@@ -31,8 +31,10 @@ import { withStyles } from '@material-ui/core/styles';
 import AlertNotification from '../alert-notification';
 
 import { getExerciseIdFromSlug } from '../../services/utils';
-import { isEnrolled } from '../../services/session';
-import { enrollCourseAPI } from '../../services/api';
+import { isEnrolled, setSession } from '../../services/session';
+import { enrollCourseAPI, fetchApi } from '../../services/api';
+import GoogleLogin from 'react-google-login';
+import localforage from "localforage";
 
 
 const styles = theme =>
@@ -112,6 +114,36 @@ const exerciseSubmissionStatus = (status) => {
 // Change this property to let multiple panels to be open simultaneously
 const onlyonePanelOpen = true;
 
+const authSuccess = async (response) => {
+	//var that=this;
+	const { tokenId } = response;
+	return new Promise((resolve, reject)=>{
+		fetchApi('/users/auth/google', { idToken: tokenId }, { 'Content-Type': 'application/json' }, 'post')
+		.then(authResponse => {
+			console.log('authResponse', authResponse);
+			console.log('1st then');
+			setSession(authResponse)
+			resolve();
+		}).catch(()=>{
+			reject();
+		})
+	});
+	// console.log('auth response');
+	// console.log(response);
+	// const { tokenId } = response;
+	//  fetchApi('/users/auth/google', { idToken: tokenId }, { 'Content-Type': 'application/json' }, 'post')
+	// 	.then(authResponse => {
+	// 		console.log('authResponse', authResponse);
+	// 		console.log('1st then');
+	// 		setSession(authResponse)
+	// 		p.resolve();
+	// 	}).cathc(()=>{
+	// 		p.reject();
+	// 	})
+};
+const authFailure = (response) => {
+	console.log(response);
+};
 class CourseDetailSideNav extends React.Component {
 	constructor(props) {
 		super(props);
@@ -135,6 +167,10 @@ class CourseDetailSideNav extends React.Component {
 			// when the button disappers after appearing
 			enrolled: true,
 			showEnrolledNotification: false,
+
+			isAuthenticated: false,
+			verient:"success",
+			notifcationCustomeMessage:null
 		};
 	}
 
@@ -177,8 +213,30 @@ class CourseDetailSideNav extends React.Component {
 		});
 	}
 
-	handleHideNotification = () => {
-		this.setState({ showEnrolledNotification: false });
+
+	handleHideNotification = () =>{
+		this.setState({ showEnrolledNotification: false,notifcationCustomeMessage:null})
+	}
+	checkIsAuthenticated = () => {
+		localforage.getItem("authResponse", (error, value) => {
+			if (error) {
+				if (!window.navigator.onLine) {
+					alert("Aap internet se connected nhi ho.");
+				}
+				console.log(e);
+			} else {
+				if (!value) {
+				} else {
+					this.setState({
+						isAuthenticated: true
+					})
+				}
+			}
+		});
+	}
+	componentDidMount() {
+		this.checkIsAuthenticated();
+
 	}
 
 	render() {
@@ -188,6 +246,9 @@ class CourseDetailSideNav extends React.Component {
 			selectedchildExercise,
 			enrolled,
 			showEnrolledNotification,
+			isAuthenticated,
+			verient,
+			notifcationCustomeMessage
 		} = this.state;
 		const {
 			classes,
@@ -198,46 +259,105 @@ class CourseDetailSideNav extends React.Component {
 		//  getting exercises as an object because react/forbid-prop-types array in .eslintrc
 		const { exercises } = this.props;
 
-		const notifcationMessage = (enrolled && showEnrolledNotification) ?
-			'You have enrolled in the course'
-			: 'Kuch Error Ayi ha Enrolled nhi kar paye';
+		const notifcationMessage = (notifcationCustomeMessage)?
+		notifcationCustomeMessage
+		:
+		(enrolled && showEnrolledNotification) ?
+																"You have enrolled in the course"
+																:"Kuch Error Ayi ha Enrolled nhi kar paye";
+
 
 		return (
 			<div className={classes.root}>
 				{/* Check whether the user is enrolled in the course.
-          If enrolled, do not show the enroll button */}
-				<AlertNotification
-					open={showEnrolledNotification}
-					message={notifcationMessage}
-					variant="success"
-					autoHideDuration={6000}
-					onClose={this.handleHideNotification}
-				/>
+          If enrolled, do not show the enroll button */}<<<<<<< master
+					<AlertNotification
+						open={showEnrolledNotification}
+						message={notifcationMessage}
+					
+						autoHideDuration={6000}
+						onClose={this.handleHideNotification}
+					variant={verient}
+					/>
+
 				{!enrolled ?
 					<ExpansionPanel
 						expanded
 					>
+						{isAuthenticated ?
 						<Button
 							variant="raised"
 							color="primary"
 							className={classes.enrollButton}
 							onClick={() => {
 								const { id } = Router.query;
-								enrollCourseAPI(id, success => this.setState({ enrolled: success, showEnrolledNotification: true }))
-									.catch((error) => {
-										console.log(error);
-										this.setState({
-											showEnrolledNotification: true,
+								enrollCourseAPI(id, success => {
+									this.setState({ enrolled: success, showEnrolledNotification:true })
+							}).catch(error => {
+											this.setState({
+												notifcationCustomeMessage: error.message,
+												verient: 'error',
+												showEnrolledNotification: true,
+											});
+										})
+								}}
+							>
+								Enroll In Course
+						</Button>
+							:
+							<Button
+								color="primary"
+								variant="raised"
+								component={GoogleLogin}
+								clientId="96851996756-7lfcdrojvu63k0jcjsqma61jggd72uli.apps.googleusercontent.com"
+								cookiePolicy="single_host_origin"
+								scope="profile email"
+								onSuccess={(response) => {
+									this.setState({ loading: true });
+									authSuccess(response).then(() => {
+										console.log('2nd then');
+										const { id } = Router.query;
+										enrollCourseAPI(id, (success) => {
+											this.setState({ enrolled: success, showEnrolledNotification:true });
+											Router.replace('/home');
+										}).catch(error => {
+													console.log('<-------------------error enrol course------------------------>',error);
+													console.log(typeof error);
+											this.setState({
+														notifcationCustomeMessage: error.message,
+														verient: 'error',
+														showEnrolledNotification: true,
+											});
+										})
 										});
-									});
+									// const { id } = Router.query;
+									// enrollCourseAPI(id, success => this.setState({ enrolled: success, showEnrolledNotification: true }))
+									// 	.catch(error => {
+									// 		console.log(error);
+									// 		this.setState({
+									// 			showEnrolledNotification:true
+									// 		});
+									// 	})
+									//  this.setState({ loading: true });
+									//  this.setState({
+									//  	showEnrolledNotification:true
+									//  });
+									//this.setState({ loading: true });
+									//authSuccess(response);
+
 							}}
+								className={classes.enrollButton}
+								onFailure={authFailure}
 						>
             Enroll In Course
 						</Button>
+						}
 					</ExpansionPanel>
 					:
 
-					selectedExercise.usersCompletedExercise.length !== 0 ?
+<
+					selectedExercise.usersCompletedExercise !== undefined && selectedExercise.usersCompletedExercise.length !== 0 ?
+
 						<ExpansionPanel
 							expanded
 						>
@@ -269,6 +389,7 @@ class CourseDetailSideNav extends React.Component {
 					<ExpansionPanel
 						expanded={(value.childExercises.length !== 0) ? openExercises[index] : false}
 						key={value.id}
+						classes={classes.disable}
 					>
 						{/* ExpansionPanelSummary wraps child in different classes,
 								classes prop is to target the wrapper classes and style */}
@@ -286,7 +407,13 @@ class CourseDetailSideNav extends React.Component {
 							<List component="nav" className={classes.flex1}>
 								<ListItem
 									onClick={() => {
-										loadExercise(value.slug);
+									//	isAuthenticated?
+										loadExercise(value.slug)
+									//	:
+										// this.setState({
+										// 	showEnrolledNotification: true,
+										// 	verient:'error',
+										// 	notifcationCustomeMessage:"Please payhle login karo"
 									}}
 								>
 									<ListItemIcon>

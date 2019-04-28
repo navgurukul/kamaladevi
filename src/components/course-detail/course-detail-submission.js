@@ -1,60 +1,66 @@
 // Submission Details of exercises solution
-import React from 'react';
-import PropTypes from 'prop-types';
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import CardContent from '@material-ui/core/CardContent';
+import React from "react";
+import PropTypes from "prop-types";
 
-import CheckIcon from '@material-ui/icons/Check';
+import Card from "@material-ui/core/Card";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import CardContent from "@material-ui/core/CardContent";
 
-import { withStyles } from '@material-ui/core/styles';
+import CheckIcon from "@material-ui/icons/Check";
 
-import AlertNotification from '../alert-notification';
+import { withStyles } from "@material-ui/core/styles";
 
-import { submitExerciseAPI } from '../../services/api';
-import { getExerciseDetailFromSlug } from '../../services/utils';
+import AlertNotification from "../alert-notification";
 
-const styles = theme => ({
-	root: {
-		flexGrow: 1,
-	},
-	cardContent: {
-		paddingTop: theme.spacing.unit * 2,
-		paddingBottom: theme.spacing.unit * 0,
-		'&:last-child': {
-			paddingTop: theme.spacing.unit,
-			paddingBottom: theme.spacing.unit * 0.5,
-		},
-	},
-	submitExercise: {
-		marginTop: -theme.spacing.unit * 8,
-		float: 'right',
-		color: 'white',
-		borderRadius: '8',
-	},
-	submissionField: {
-		width: '90%',
-		[theme.breakpoints.down('sm')]: {
-			width: '90%',
-		},
-		[theme.breakpoints.down('xs')]: {
-			width: '80%',
-		},
-	},
-	floatRight: {
-		float: 'right',
-	},
-	typography: {
-		display: 'inline',
-	},
-	reviewer: {
-		fontWeight: '400',
-	},
-});
+import {  submitExerciseAPI } from '../../services/api';
+import {  getExerciseDetailFromSlug } from '../../services/utils';
+import localforage from "localforage";
+import {  setSession } from '../../services/session';
+
+const styles = theme => {
+  return {
+    root: {
+      flexGrow: 1,
+    },
+    cardContent:{
+      paddingTop: theme.spacing.unit * 2,
+      paddingBottom:theme.spacing.unit * 0,
+      '&:last-child': {
+        paddingTop: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit * 0.5,
+      },
+    },
+    submitExercise: {
+      marginTop:-theme.spacing.unit * 8,
+      float: "right",
+      color:"white",
+      borderRadius:"8"
+    },
+    submissionField:{
+      width:"90%",
+      [theme.breakpoints.down("sm")]:{
+        width:"90%",
+      },
+      [theme.breakpoints.down("xs")]:{
+        width:"80%",
+      },
+    },
+    floatRight:{
+      float:"right",
+    },
+    typography:{
+      display:"inline",
+    },
+    reviewer:{
+      fontWeight:"400",
+    }
+  }
+};
+
 const getValidationMessage = (submissionType, notes) => {
 	let message = '';
 
@@ -92,65 +98,71 @@ const isSubmissionTypeValid = (submissionType, notes) => {
 
 
 class CourseDetailSubmission extends React.Component {
-	constructor(props) {
-		super(props);
-		this.submitButton = React.createRef();
 
-		this.state = {
-			notes: '',
-			showNotification: false,
-			notifcationMessage: '',
-			variant: 'error',
-			disableSubmitButton: false,
-		};
-	}
+  constructor(props){
+    super(props);
+    this.submitButton = React.createRef();
+
+    this.state = {
+      notes: "",
+      showNotification: false,
+      notifcationMessage: "",
+      variant:"error",
+      disableSubmitButton: false,
+      isAuthenticated: false,
+    }
+  }
 
 
-  submitExercise = (event) => {
-  	const { notes } = this.state;
-  	const {
-  		courseId,
-  		exercises,
-  		slug,
-  		loadExercise,
-  		updateExercises,
-  	} = this.props;
+  submitExercise = event => {
+    const { notes } = this.state;
+    const {
+      courseId,
+      exercises,
+      slug,
+      loadExercise,
+      updateExercises,
+    } = this.props;
 
-  	const exercise = getExerciseDetailFromSlug(slug, exercises);
-  	const { submissionType, id: exerciseId } = exercise;
+    const exercise = getExerciseDetailFromSlug(slug,exercises);
+    const { submissionType, id: exerciseId } = exercise;
 
-  	// here should be the validation
-  	if (!isSubmissionTypeValid(submissionType, notes)) {
-  		const message = getValidationMessage(submissionType, notes);
-  		this.showNotification(message, 'warning');
-  		return;
-  	}
+    // here should be the validation
+    if (!isSubmissionTypeValid(submissionType, notes)) {
+      let message = getValidationMessage(submissionType, notes);
+      this.showNotification(message, "warning");
+      return;
+    }
 
-  	submitExerciseAPI(courseId, exerciseId, notes)
-  		.then((response) => {
-  			let message;
+    submitExerciseAPI(courseId, exerciseId, notes)
+        .then(response => {
+          let message;
 
-  			// if the user is not enrolled in the course and tries to submit assignment
-  			const enrolledServerMessage = "User can't submit an assignment unless enrolled in course";
-  			if (response.statusCode === 417 && response.message === enrolledServerMessage) {
-  				// call a function to show popup
-  				message = 'Phele course me Enroll kare.';
-  				this.showNotification(message, 'error');
-  			} else {
-  				// when the assignment is submitted
-  				message = 'Aapki assignment submit ho chuka hai.';
-  				this.setState({ notes: '' });
-  				// update the submissionType
-  				exercise.submissionState = 'pending';
-  				updateExercises(exercises);
-  				this.showNotification(message);
+          // if the user is not enrolled in the course and tries to submit assignment
+          let enrolledServerMessage = "User can't submit an assignment unless enrolled in course";
+          if (response.statusCode === 417 && response.message === enrolledServerMessage ){
 
-  				this.setState({
-  					disableSubmitButton: true,
-  				});
-  				loadExercise();
-  			}
-  		});
+            // call a function to show popup
+            message = "Phele course me Enroll kare.";
+            this.showNotification(message, "error");
+
+          } else {
+
+            // when the assignment is submitted
+            message = "Aapki assignment submit ho chuka hai.";
+            this.setState({notes:""});
+            // update the submissionType
+            exercise["submissionState"] = "pending";
+            updateExercises(exercises);
+            this.showNotification(message);
+
+            this.setState({
+              disableSubmitButton:true
+            })
+            loadExercise();
+          }
+        });
+
   }
 
   showNotification = (message, variant = 'success') => {
@@ -174,34 +186,58 @@ class CourseDetailSubmission extends React.Component {
   		[name]: event.target.value,
   	});
   };
+  checkIsAuthenticated = () => {
+    localforage.getItem("authResponse", (error, value) => {
+      if (error) {
+        if (!window.navigator.onLine) {
+          alert("Aap internet se connected nhi ho.");
+        }
+        console.log(e);
+      } else {
+        if (!value) {
+        } else {
+          this.setState({
+            isAuthenticated: true
+          })
+        }
+      }
+    });
+  }
+  componentDidMount() {
+    this.checkIsAuthenticated();
+  }
 
-  render() {
-  	const {
-  		classes,
-  		prevSolutionDetail,
-  		slug,
-  		exercises,
-  	} = this.props;
 
-  	const {
-  		notes,
-  		showNotification,
-  		notifcationMessage,
-  		variant,
-  		disableSubmitButton,
-  	} = this.state;
+  render(){
+    const {
+      classes,
+      prevSolutionDetail,
+      slug,
+      exercises,
+    } = this.props;
 
-  	const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
+    const {
+      notes,
+      showNotification,
+      notifcationMessage,
+      variant,
+      disableSubmitButton,
+      isAuthenticated
+    } = this.state;
+    
+    const { submissionType, submissionState } = getExerciseDetailFromSlug(slug, exercises);
 
-  	return (
-	<Card>
-	{/* previously submitted notes */}
-	{
-  				prevSolutionDetail ?
-	<CardContent className={classes.cardContent}>
-	<Grid container>
-			<Grid item xs={6} sm={6} md={6}>
-  								<Typography variant="body2" className={classes.typography}>
+    return (
+      isAuthenticated ?
+      <Card>
+        {/*previously submitted notes*/}
+          {
+            prevSolutionDetail?
+            <CardContent className={classes.cardContent}>
+              <Grid container>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Typography variant="body2" className={classes.typography}>
+
                     Previous Solution:
  </Typography>
   								<Typography variant="body1">
@@ -228,55 +264,58 @@ class CourseDetailSubmission extends React.Component {
   										<React.Fragment>
   											<Typography variant="body2">
                         Reviewer Feedback:
- </Typography>
-		<Typography variant="body1">
-		{prevSolutionDetail.notesReviewer}
-  											</Typography>
-  										</React.Fragment>
-  										: null
-  								}
- </Grid>
 
-  </Grid>
+                      </Typography>
+                      <Typography variant="body1">
+                        {prevSolutionDetail.notesReviewer}
+                      </Typography>
+                    </React.Fragment>
+                    :null
+                  }
+                </Grid>
 
-  					</CardContent>
-  					: null
-  			}
+              </Grid>
 
-	{/* submission form */}
-  			<CardContent className={classes.cardContent}>
-			<form autoComplete="off">
-	<TextField
-					multiline
-  						fullWidth
-					value={notes}
-  						label="Exercise Submission"
-  						onChange={this.handleChange}
-					className={classes.submissionField}
-					name="notes"
-				/>
-  					<br />
-  					<br />
-	<Button
-	disabled={disableSubmitButton}
-	variant="extendedFab"
-	color="secondary"
-	className={classes.submitExercise}
-	onClick={this.submitExercise}
-  					>
-  						<img src="/static/icons/icons8-upload-to-cloud-24.png" />
-  					</Button>
-  				</form>
-		</CardContent>
-	<AlertNotification
-	open={showNotification}
-	message={notifcationMessage}
-	autoHideDuration={6000}
-  				variant={variant}
-  				onClose={this.handleHideNotification}
-  			/>
-  		</Card>
-  	);
+            </CardContent>
+            : null
+          }
+
+        {/*submission form*/}
+        <CardContent className={classes.cardContent}>
+          <form autoComplete="off">
+            <TextField
+              multiline={true}
+              fullWidth
+              value={notes}
+              label={"Exercise Submission"}
+              onChange={this.handleChange}
+              className={classes.submissionField}
+              name="notes"
+              />
+            <br />
+            <br />
+            <Button
+              disabled={disableSubmitButton}
+              variant="extendedFab"
+              color="secondary"
+              className={classes.submitExercise}
+              onClick={this.submitExercise}
+              >
+              <img src="/static/icons/icons8-upload-to-cloud-24.png" />
+            </Button>
+          </form>
+        </CardContent>
+        <AlertNotification
+          open={showNotification}
+          message={notifcationMessage}
+          autoHideDuration={6000}
+          variant={variant}
+          onClose={this.handleHideNotification}
+          />
+      </Card>
+        : null
+    );
+
   }
 }
 

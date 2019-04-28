@@ -4,7 +4,7 @@ import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import DocumentTitle from 'react-document-title';
-
+import * as Sentry from '@sentry/browser';
 import withRoot from '../src/with-root';
 
 import { fetchApi } from '../src/services/api';
@@ -20,8 +20,9 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		value = await localforage.getItem('authResponse');
 		if (!value) {
 			// No access tokens saved
-			Router.replace('/');
-			return null;
+			response = await fetchApi(`/courses/${courseId}/exercises`, {}, {});
+			// Router.replace('/home');
+			// return null;
 		}
 	} catch (e) {
 		// Do not remove this catch block, as the server side rendering
@@ -30,9 +31,12 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 		// TODO: Handle localforage error cases
 		return;
 	}
-	const { jwt } = value;
+
 	try {
+		if (value != null) {
+			const { jwt } = value;
 		response = await fetchApi(`/courses/${courseId}/exercises`, {}, { Authorization: jwt });
+		}
 	} catch (e) {
 		// TODO: Handle network error cases
 		return;
@@ -61,7 +65,39 @@ class Course extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		Sentry.init({ dsn: 'https://dac738139bd14514bbec319da7c8b28c@sentry.io/1417825' });
+		this.configSentryOnMount();
+	}
 
+	configSentryOnMount= async ()=>{
+		let userId = await localforage.getItem('authResponse').then((value)=>{
+			let id = value ? value.user.id : 'non logged in user';
+			return id;
+	 })
+	 Sentry.configureScope((scope) => {
+		scope.setExtra("userId", userId);
+	  });
+	 }
+	async componentDidCatch(error, errorInfo) {
+		this.triggerSentry(error, errorInfo);
+		}
+		 triggerSentry=async (error, errorInfo)=>{
+		  let userId = await localforage.getItem('authResponse').then((value)=>{
+			 let id = value ? value.user.id : 'non logged in user';
+			 return id;
+		})
+		Sentry.configureScope((scope) => {
+			scope.setExtra("userId", userId);
+		  });
+		this.setState({ error });
+		Sentry.withScope(scope => {
+		  Object.keys(errorInfo).forEach(key => {
+			scope.setExtra(errorInfo, errorInfo[key])
+		  });
+		  Sentry.captureException(error);
+		});
+		};
 	render() {
 		const { id, slug } = this.props.router.query;
 
@@ -79,7 +115,7 @@ class Course extends React.Component {
 		return (
 				<DocumentTitle title={title}>
 					<div>
-						<Header />
+						<Header searchHidden={true}/>
 						<CourseDetail
 							id={id}
 							slug={slug}
