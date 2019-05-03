@@ -339,9 +339,7 @@ class CourseDetailSideNav extends React.Component {
 						}
 					</ExpansionPanel>
 					:
-
-<
-					selectedExercise.usersCompletedExercise !== undefined && selectedExercise.usersCompletedExercise.length !== 0 ?
+					(selectedExercise.usersCompletedExercise !== undefined) && selectedExercise.usersCompletedExercise.length !== 0 ?
 
 						<ExpansionPanel
 							expanded

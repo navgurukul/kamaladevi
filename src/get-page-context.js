@@ -1,19 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 
 import { SheetsRegistry } from 'jss';
-<<<<<<< HEAD
-import { createMuiTheme, createGenerateClassName } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
-import amber from '@material-ui/core/colors/amber';
-import blue from '@material-ui/core/colors/blue';
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
-=======
 import {
 	createMuiTheme,
 	createGenerateClassName,
 } from '@material-ui/core/styles';
->>>>>>> master
 
 import * as colors from '@material-ui/core/colors';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
@@ -36,14 +27,14 @@ const theme = createMuiTheme({
 			dark: colors.green[700],
 		},
 		warning: {
-			light: amber[300],
-			main: amber[500],
-			dark: amber[700],
+			light: colors.amber[300],
+			main: colors.amber[500],
+			dark: colors.amber[700],
 		},
 		info: {
-			light: blue[300],
-			main: blue[500],
-			dark: blue[700],
+			light: colors.blue[300],
+			main: colors.blue[500],
+			dark: colors.blue[700],
 		},
 	},
 	typography: {

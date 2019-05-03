@@ -2,16 +2,12 @@
 // Peer review system
 import React from 'react';
 import Router, { withRouter } from 'next/router';
-<<<<<<< HEAD
 
 import * as Sentry from '@sentry/browser';
 import localforage from 'localforage';
 
-=======
->>>>>>> master
 import withRoot from '../src/with-root';
 import Header from '../src/components/header';
-import localforage from "localforage";
 import { filterPendingAssignment } from '../src/services/utils';
 import { fetchApi } from '../src/services/api';
 
