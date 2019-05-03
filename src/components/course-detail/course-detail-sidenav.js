@@ -39,7 +39,7 @@ import localforage from "localforage";
 
 const styles = theme =>
 	// console.log(theme);
-	 ({
+	({
 		root: {
 			textAlign: 'center',
 		},
@@ -67,8 +67,8 @@ const styles = theme =>
 			width: '100%',
 		},
 		close: {
-		 	padding: '10px',
-	 	},
+			padding: '10px',
+		},
 		Approved: {
 			color: theme.palette.secondary.main,
 		},
@@ -270,7 +270,7 @@ class CourseDetailSideNav extends React.Component {
 		return (
 			<div className={classes.root}>
 				{/* Check whether the user is enrolled in the course.
-          If enrolled, do not show the enroll button */}<<<<<<< master
+          If enrolled, do not show the enroll button */}
 					<AlertNotification
 						open={showEnrolledNotification}
 						message={notifcationMessage}
@@ -330,21 +330,6 @@ class CourseDetailSideNav extends React.Component {
 											});
 										})
 										});
-									// const { id } = Router.query;
-									// enrollCourseAPI(id, success => this.setState({ enrolled: success, showEnrolledNotification: true }))
-									// 	.catch(error => {
-									// 		console.log(error);
-									// 		this.setState({
-									// 			showEnrolledNotification:true
-									// 		});
-									// 	})
-									//  this.setState({ loading: true });
-									//  this.setState({
-									//  	showEnrolledNotification:true
-									//  });
-									//this.setState({ loading: true });
-									//authSuccess(response);
-
 							}}
 								className={classes.enrollButton}
 								onFailure={authFailure}

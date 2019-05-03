@@ -1,13 +1,22 @@
 /* eslint-disable no-underscore-dangle */
 
 import { SheetsRegistry } from 'jss';
+<<<<<<< HEAD
 import { createMuiTheme, createGenerateClassName } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 import blue from '@material-ui/core/colors/blue';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+=======
+import {
+	createMuiTheme,
+	createGenerateClassName,
+} from '@material-ui/core/styles';
+>>>>>>> master
 
+import * as colors from '@material-ui/core/colors';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 // Generate breakpoints so we can use them in the theme definition
 const breakpoints = createBreakpoints({});
@@ -17,14 +26,14 @@ const breakpoints = createBreakpoints({});
 const theme = createMuiTheme({
 	palette: {
 		primary: {
-			light: purple[300],
-			main: purple[500],
-			dark: purple[700],
+			light: colors.orange[200],
+			main: '#f05f40',
+			dark: colors.orange[800],
 		},
 		secondary: {
-			light: green[300],
-			main: green[500],
-			dark: green[700],
+			light: colors.green[300],
+			main: colors.green[500],
+			dark: colors.green[700],
 		},
 		warning: {
 			light: amber[300],
@@ -49,7 +58,6 @@ const theme = createMuiTheme({
 		  },
 		},
 	},
-
 });
 
 function createPageContext() {
