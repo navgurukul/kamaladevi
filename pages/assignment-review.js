@@ -10,6 +10,7 @@ import withRoot from '../src/with-root';
 import Header from '../src/components/header';
 import { filterPendingAssignment } from '../src/services/utils';
 import { fetchApi } from '../src/services/api';
+import {withGATag} from '../src/with-ga-tag';
 
 
 import AssignmentsReview from '../src/components/assignment-review';
@@ -110,4 +111,4 @@ class AssignmentReview extends React.Component {
 	}
 }
 
-export default withRoot(withRouter(AssignmentReview));
+export default withGATag(withRoot(withRouter(AssignmentReview)));

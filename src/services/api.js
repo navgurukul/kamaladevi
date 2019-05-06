@@ -74,7 +74,9 @@ export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') =>
 						});
 }
 
-
+export const markCourseCompleteAPI = (courseId, menteeId) => {
+	return authenticatedFetchAPI(`/courses/${courseId}/complete`, {"menteeId":menteeId}, 'post')
+  };
 // Make notes submission api call to submit notes for students
 export const submitExerciseAPI = (courseId, exerciseId, notes) => authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, { notes }, 'post');
 

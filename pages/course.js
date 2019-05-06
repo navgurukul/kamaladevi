@@ -9,7 +9,7 @@ import withRoot from '../src/with-root';
 
 import { fetchApi } from '../src/services/api';
 import { getTitleFromSlug } from '../src/services/utils';
-
+import {withGATag} from '../src/with-ga-tag';
 import Header from '../src/components/header';
 import CourseDetail from '../src/components/course-detail';
 
@@ -132,4 +132,4 @@ Course.propTypes = {
 	router: PropTypes.object.isRequired,
 };
 
-export default withRoot(withRouter(Course));
+export default withGATag(withRoot(withRouter(Course)));
