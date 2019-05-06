@@ -21,6 +21,7 @@
   "dependencies": {
     "@material-ui/core": "^1.5.1",
     "@material-ui/icons": "^1.1.1",
+    "@sentry/browser": "^4.6.4",
     "axios": "^0.18.0",
     "jsdom": "^13.2.0",
     "localforage": "^1.7.1",
@@ -29,10 +30,12 @@
     "markdown-it-highlightjs": "^3.0.0",
     "next": "^6.0.3",
     "prop-types": "^15.6.1",
+    "query-string": "^6.4.2",
     "react": "^16.4.1",
     "react-beautiful-dnd": "^10.0.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.4.1",
+    "react-ga": "^2.5.7",
     "react-google-login": "^3.2.1",
     "react-markdown": "^3.3.2"  
   },

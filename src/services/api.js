@@ -55,20 +55,25 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 			return response.json();
 		})
 		.catch((error) => {
+			console.log('errr fetchApi');
 			console.error(error);
 			throw error;
 		});
 };
 
-export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => localforage.getItem('authResponse')
-	.then((value) => {
-		if (value === null) {
-			Router.replace('/');
-		} else {
-			const { jwt } = value;
-			return fetchApi(endpoint, payload, { Authorization: jwt }, method);
-		}
-	});
+
+export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => {
+	return localforage.getItem('authResponse')
+						.then(value => {
+								if(value === null){
+				Router.replace('/home');
+								} else {
+									const { jwt } = value;
+									return fetchApi(endpoint, payload, { Authorization: jwt }, method)
+								}
+						});
+}
+
 
 // Make notes submission api call to submit notes for students
 export const submitExerciseAPI = (courseId, exerciseId, notes) => authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, { notes }, 'post');
@@ -86,15 +91,30 @@ export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
 	};
 	return authenticatedFetchAPI(`/courses/${courseId}/exercise/${exerciseId}/submission`, query);
 };
+export const getExerciseSubmissionAPIWithoutLogin = (courseId, exerciseId) => {
+	const query = {
+		submissionUsers: 'all',
+		submissionState: 'all',
+	};
 
+	return fetchApi(`/courses/${courseId}/exercise/${exerciseId}/submission`, query)
+};
 // Make enroll API call, and add that course to enrolledCourses
-export const enrollCourseAPI = async (courseId, callBack) => authenticatedFetchAPI(`/courses/${courseId}/enroll`, {}, 'post')
-	.then((response) => {
-		if (response.enrolled) {
-			callBack(true);
-			addEnrolledCourses(courseId);
-		}
-	});
+
+export const enrollCourseAPI = async (courseId, callBack) => {
+		return authenticatedFetchAPI(`/courses/${courseId}/enroll`, {}, 'post')
+			.then((response) => {
+				console.log('response', response);
+				if (response.enrolled) {
+					console.log('response if');
+					callBack(true);
+					addEnrolledCourses(courseId);
+				} else {
+					throw new Error(response.message);
+				}
+			})
+};
+
 
 // Submit the feedback for student assignment
 export const reviewerFeedbackSubmissionAPI = (notes, isApprove, submissionId) => localforage.getItem('authResponse')
