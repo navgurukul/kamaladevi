@@ -62,6 +62,7 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 };
 
 
+
 export const authenticatedFetchAPI = (endpoint, payload = {}, method = 'get') => {
 	return localforage.getItem('authResponse')
 						.then(value => {

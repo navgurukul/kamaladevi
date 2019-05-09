@@ -10,6 +10,8 @@ import {withGATag} from '../src/with-ga-tag';
 
 var bus = new EventEmitter();
 
+
+
 class Home extends React.Component {
 	componentDidMount() {
 		Sentry.init({ dsn: 'https://dac738139bd14514bbec319da7c8b28c@sentry.io/1417825' });

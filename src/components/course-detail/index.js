@@ -344,7 +344,9 @@ class CourseDetail extends React.Component {
 
             {reviewrs.includes(reviewType) && submissionType != null ? (
               <CourseDetailSubmission
+
                 prevSolutionDetail={prevSolutionDetail ? prevSolutionDetail[0]:""}
+
                 exercises={exercises}
                 courseId={id}
                 slug={slug}
