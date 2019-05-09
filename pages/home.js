@@ -6,8 +6,11 @@ import withRoot from '../src/with-root';
 import localforage from 'localforage';
 import CourseList from '../src/components/courses-list';
 import Header from '../src/components/header';
+import {withGATag} from '../src/with-ga-tag';
 
 var bus = new EventEmitter();
+
+
 
 class Home extends React.Component {
 	componentDidMount() {
@@ -52,4 +55,4 @@ class Home extends React.Component {
 	  }
 }
 
-export default withRoot(Home);
+export default withRoot(withGATag(Home));

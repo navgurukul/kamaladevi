@@ -176,6 +176,13 @@ class Header extends React.Component {
               <Link href="/assignment-review">
                 <div className={classes.sideNavItem}>
                   <span>PeerReview</span>
+
+								</div>
+							</Link>
+							<Link href='/reports/course-progress-report-per-mentor'>
+								<div className={classes.sideNavItem}>
+											<span>Mentee courses</span>
+
                 </div>
               </Link>
             </List>
