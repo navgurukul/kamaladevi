@@ -100,7 +100,6 @@ class Course extends React.Component {
 		};
 	render() {
 		const { id, slug } = this.props.router.query;
-
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 		if (!this.state.exercises.length) {
