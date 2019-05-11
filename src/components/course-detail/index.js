@@ -141,7 +141,6 @@ const navigateToExercise = id => slug => {
 class CourseDetail extends React.Component {
   constructor(props) {
     super(props);
-    // console.log('updating props', props);
 
     this.state = {
       prefetchedData: false,
@@ -179,64 +178,61 @@ class CourseDetail extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.slug !== this.props.slug) {
-      this.loadExercise();
+      this.loadExercise(nextProps.slug);
     }
     return true;
   }
 
-  async loadExercise() {
+  async loadExercise(nextSlug) {
     // get the exerciseId for the exercise
     let value, response;
     const { id: courseId, slug, exercises } = this.props;
     try {
       value = await localforage.getItem('authResponse');
+    } catch (error) {
+      // throw error;
+      console.error(error);
+      // TODO: Handle localforage error cases
+      return;
+    }
+    const payload = !nextSlug ? { slug } : { slug: nextSlug };
+    try {
       if (!value) {
         // No access tokens saved
         response = await fetchApi(
           `/courses/${courseId}/exercise/getBySlug`,
-          { slug },
+          payload,
           {},
         );
-        // Router.replace("/");
-        // return;
-      }
-    } catch (error) {
-      throw error;
-      // TODO: Handle localforage error cases
-      return;
-    }
-
-    try {
-      if (value) {
+      } else {
         const { jwt } = value;
         response = await fetchApi(
           `/courses/${courseId}/exercise/getBySlug`,
-          { slug },
+          payload,
           { Authorization: jwt },
         );
       }
-    } catch (error) {
-      throw error;
+    } catch (e) {
       // TODO: Handle network error cases
-
+      // console.log(e)
       return;
     }
     const { id: exerciseId } = getExerciseDetailFromSlug(slug, exercises);
-    console.log('courseId, exerciseId :', courseId, exerciseId);
+    // console.log('courseId, exerciseId :', courseId, exerciseId);
     let prevSolutionDetail = { data: null };
     if (value) {
       prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
     } else {
     }
     const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
-    console.log(slug);
-    this.setState({
-      content,
+    // console.log(content);
+    this.setState(prevState => ({
+      content: content,
       prefetchedData: true,
       notes: '',
       prevSolutionDetail: prevSolutionDetail.data,
       selectedExercise: response,
-    });
+    }));
   }
 
   handleClickOpen = () => {
@@ -282,7 +278,6 @@ class CourseDetail extends React.Component {
     }
     const previousSlug = getSlugOfPreviousCourse(slug, exercises);
     const nextSlug = getSlugOfNextCourse(slug, exercises);
-    const marginLeft = 'auto';
 
     // console.log(exerciseId)
 
@@ -344,9 +339,9 @@ class CourseDetail extends React.Component {
 
             {reviewrs.includes(reviewType) && submissionType != null ? (
               <CourseDetailSubmission
-
-                prevSolutionDetail={prevSolutionDetail ? prevSolutionDetail[0]:""}
-
+                prevSolutionDetail={
+                  prevSolutionDetail ? prevSolutionDetail[0] : ''
+                }
                 exercises={exercises}
                 courseId={id}
                 slug={slug}
@@ -415,7 +410,9 @@ class CourseDetail extends React.Component {
 
             {reviewrs.includes(reviewType) && submissionType != null ? (
               <CourseDetailSubmission
-                prevSolutionDetail={prevSolutionDetail[0]}
+                prevSolutionDetail={
+                  prevSolutionDetail ? prevSolutionDetail[0] : ''
+                }
                 exercises={exercises}
                 courseId={id}
                 slug={slug}
