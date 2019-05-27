@@ -82,6 +82,9 @@ export const getExerciseFromSlugAPI = (courseId, slug) => authenticatedFetchAPI(
 export const saveCoursesSequenceAPI = payload => authenticatedFetchAPI('/courses/sequenceNum', { courses: payload }, 'put');
 
 export const deleteCourseAPI = courseId => authenticatedFetchAPI(`/courses/${courseId}/delete`, {}, 'delete');
+export const deleteCourseRelaionAPI = (courseId,reliesOn) => authenticatedFetchAPI(`/courseRelation/${courseId}/${reliesOn}/delete`, {}, 'delete');
+export const addCourseRelaionAPI = (courseId,reliesOn) => authenticatedFetchAPI(`/courseRelation/${courseId}/${reliesOn}/add`, {}, 'post');
+
 
 // Make notes submission api call to get submitted notes
 export const getExerciseSubmissionAPI = (courseId, exerciseId) => {
