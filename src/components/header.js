@@ -178,6 +178,11 @@ class Header extends React.Component {
                   <span>PeerReview</span>
                 </div>
               </Link>
+              <Link href='/create-course-dependency'>
+								<div className={classes.sideNavItem}>
+											<span>Course dependency system</span>
+                </div>
+              </Link>
             </List>
           </div>
         </SwipeableDrawer>

@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/navgurukul/kamaladevi#readme",
   "dependencies": {
-    "@material-ui/core": "^1.5.1",
+    "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^1.1.1",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "@sentry/browser": "^4.6.4",
     "axios": "^0.18.0",
     "jsdom": "^13.2.0",
@@ -37,7 +38,9 @@
     "react-dom": "^16.4.1",
     "react-ga": "^2.5.7",
     "react-google-login": "^3.2.1",
-    "react-markdown": "^3.3.2"  
+    "react-jss": "^8.6.1",
+    "react-markdown": "^3.3.2",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
