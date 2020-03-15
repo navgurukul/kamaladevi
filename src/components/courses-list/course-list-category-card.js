@@ -88,7 +88,7 @@ const CourseListCard = (props) => {
 				}}
 			>
 				<Card
-					variant="raised"
+					variant="contained"
 					className={classes.cardMargin}
 				>
 					<Grid container>

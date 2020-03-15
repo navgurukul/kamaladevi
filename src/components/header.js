@@ -74,6 +74,7 @@ class Header extends React.Component {
     this.state = {
       isAuthenticated: false,
       open: false,
+      email: ''
     };
   }
 
@@ -117,8 +118,15 @@ class Header extends React.Component {
       }
     });
   };
-  componentDidMount() {
+  
+  async componentDidMount() {
     this.checkIsAuthenticated();
+    const value = await localforage.getItem('authResponse')
+    if (value) {
+      this.setState({
+        email: value.user.email 
+      })
+    }
   }
 
   changeHandler = e => {
@@ -127,7 +135,8 @@ class Header extends React.Component {
   render() {
     const { classes } = this.props;
     const hidden = this.props.classes.hidden;
-    const { isAuthenticated, open } = this.state;
+    const { isAuthenticated, open, email } = this.state;
+
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -185,6 +194,11 @@ class Header extends React.Component {
 
                 </div>
               </Link>
+              { email.includes('@navgurukul') ?  <Link href="/githubAccess">
+                <div className={classes.sideNavItem}>
+                  <span>Get Github Student Pack</span>
+								</div>
+							</Link> : null }
             </List>
           </div>
         </SwipeableDrawer>
