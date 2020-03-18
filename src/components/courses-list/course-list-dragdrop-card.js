@@ -77,7 +77,7 @@ const CourseListCard = (props) => {
 	return (
 		<Grid item xs={12} className={classes.root}>
 			<Card
-				variant="raised"
+				variant="contained"
 				className={`${classes.cardMargin} ${classes.deleteCourse}`}
 			>
 				<Grid >

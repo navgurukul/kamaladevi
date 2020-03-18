@@ -44,7 +44,7 @@ export const clearSession = () => {
 export const setSession = (authResponse) => {
 	localforage.setItem('authResponse', authResponse, (error) => {
 		if (!error) {
-			//Router.replace('/home');
+			Router.replace('/home');
 		} else {
 			// TODO: Handle error case
 		}

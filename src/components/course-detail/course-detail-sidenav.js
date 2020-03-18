@@ -286,7 +286,7 @@ class CourseDetailSideNav extends React.Component {
 					>
 						{isAuthenticated ?
 						<Button
-							variant="raised"
+							variant="contained"
 							color="primary"
 							className={classes.enrollButton}
 							onClick={() => {
@@ -307,7 +307,7 @@ class CourseDetailSideNav extends React.Component {
 							:
 							<Button
 								color="primary"
-								variant="raised"
+								variant="contained"
 								component={GoogleLogin}
 								clientId="96851996756-7lfcdrojvu63k0jcjsqma61jggd72uli.apps.googleusercontent.com"
 								cookiePolicy="single_host_origin"
@@ -474,7 +474,7 @@ class CourseDetailSideNav extends React.Component {
 						expanded
 					>
 						<Button
-							variant="raised"
+							variant="contained"
 							color="primary"
 							className={classes.unEnrollButton}
 						>

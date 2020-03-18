@@ -17,14 +17,22 @@ import { clearSession, addEnrolledCourses } from './session';
 // 	}
 // 	return axios(`${BACKEND_URL}${endpoint}`, axiosConfig)
 // 		.catch((error) => {
-// 			// TODO: More sane error handling. Currently, assuming that
+// 			// TODO: More sane error handling. Currently, 
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, assuming that
 // 			// the access token has expired, and hence sending to / to
 // 			// ask user to log in again
 // 			if (error.response && error.response.status === 401) {
 // 				clearSession();
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, 
 // 			}
-// 			throw error;
+
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, // 			throw error;
 // 		});
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, 
 // };
 
 export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
@@ -42,16 +50,26 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 
 	return fetch(url, options)
 		.then((response) => {
+			// 	}
+			// 	return axios(`${BACKEND_URL}${endpoint}`, 
+			// 	}
+			// 	return axios(`${BACKEND_URL}${endpoint}`, 
 			if (!response.ok) {
 				console.error(response);
 				// TODO: More sane error handling. Currently, assuming that
 				// the access token has expired, and hence sending to / to
-				// ask user to log in again
+				// ask user to log in 
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`,  		
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, 
+// 	}
+// 	return axios(`${BACKEND_URL}${endpoint}`, 
 				if (response.status === 401) {
 					clearSession();
 					// throw response.statusText;
 				}
-    	}
+		}
 			return response.json();
 		})
 		.catch((error) => {
