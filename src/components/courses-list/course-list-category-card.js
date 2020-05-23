@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
-
 import { withStyles } from '@material-ui/core/styles';
-
+import { Button } from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -27,8 +26,6 @@ const styles = theme => ({
 		},
 	},
 	image: {
-		paddingTop: theme.spacing.unit * 3,
-		marginLeft: 10,
 		marginRight: 10,
 		width: '100%',
 		[theme.breakpoints.up('xl')]: {
@@ -47,6 +44,9 @@ const styles = theme => ({
 	},
 	deleteIcon: {
 		fontSize: theme.spacing.unit * 2,
+	},
+	media: {
+		height: 190,
 	},
 	cardMargin: {
 		marginLeft: theme.spacing.unit * 1,
@@ -80,23 +80,16 @@ const CourseListCard = (props) => {
 
 
 	return (
+		<Fragment >
 		<Grid item md={4} xs={6} className={classes.root}>
-			<Link
-				href={{
-					pathname: '/course',
-					query: { id: value.id },
-				}}
-			>
 				<Card
 					variant="contained"
 					className={classes.cardMargin}
 				>
+				<img className={classes.image} src={`../../../static/coursesimages/${value}`} />
 					<Grid container>
-						<Grid	item xs={2} sm md>
-							<img className={classes.image} src={value.logo} />
-						</Grid>
-						<Grid item xs={9} sm={10} md={10} container className={classes.cardContent}>
-							<CardContent>
+						<Grid item xs={9} sm={10} md={10}>
+							<CardContent >
 								<Typography variant="headline" className={classes.headline}>
 									{value.name}
 								</Typography>
@@ -113,12 +106,24 @@ const CourseListCard = (props) => {
 										</div>
 										: null
 								}
+								<Link
+									href={{
+										pathname: '/course',
+										query: { id: value.id },
+									}}
+									
+								>
+								<Button style={{marginTop:"4px"}} variant="outlined" color="primary">
+									learn 
+								</Button>
+								</Link>
 							</CardContent>
 						</Grid>
 					</Grid>
 				</Card>
-			</Link>
+
 		</Grid>
+	</Fragment>
 	);
 };
 

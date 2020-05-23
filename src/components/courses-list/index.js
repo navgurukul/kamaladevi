@@ -277,12 +277,6 @@ class CourseList extends React.Component {
           />) : ""
           )}
 
-          <Grid container spacing={0} className={classes.dividerContainer}>
-            <Grid item xs={6}>
-              <Divider />
-            </Grid>
-          </Grid>
-
           {/* Available courses list */}
           {availableCourses.length ? (
             <CourseListCategoryView

@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
 import { withStyles } from '@material-ui/core/styles';
+import { Input } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -157,12 +158,17 @@ class Header extends React.Component {
                 Saral
               </a>
             </Typography>
-            <input
+            <Input
+            
+              style={{
+                background: "white",
+                borderRadius:'4px',paddingLeft:'4px'}}
+              inputProps={{ 'aria-label': 'search' }}
               type="text"
               ref="filterInput"
               className={this.props.searchHidden ? hidden : ''}
               onChange={this.changeHandler}
-              placeholder="Search"
+              placeholder="Search course .."
             />
           </Toolbar>
         </AppBar>

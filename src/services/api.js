@@ -2,7 +2,8 @@ import axios from 'axios';
 import Router from 'next/router';
 import localforage from 'localforage';
 
-import { BACKEND_URL } from './config';
+// import { BACKEND_URL } from './config';
+var BACKEND_URL = 'https://saral.navgurukul.org/api'
 import { clearSession, addEnrolledCourses } from './session';
 
 // export const fetchApi = (endpoint, payload, headers, method = 'get') => {
@@ -40,6 +41,8 @@ export const fetchApi = (endpoint, payload, headers, method = 'GET') => {
 		method: method.toUpperCase(),
 		headers,
 	};
+	console.log(Router);
+	
 	const url = new URL(`${BACKEND_URL}${endpoint}`);
 
 	if (options.method === 'GET') {
