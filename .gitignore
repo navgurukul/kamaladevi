@@ -60,6 +60,3 @@ android/gradle.properties
 
 # NextJS
 .next/
-
-# config
-src/services/config.js
