@@ -41,11 +41,17 @@ const styles = theme => ({
 			marginLeft: 1,
 		},
 	},
+	imageContainer: {
+		maxHeight: 155,
+		minWidth: '100%',
+		flex: 1,
+		display: 'inline',
+	},
 	image: {
 		width: '100%',
 		overflow: 'hidden',
 		objectFit: 'cover',
-		height: 155,
+		maxHeight: 155,
 		[theme.breakpoints.up('xl')]: {
 			paddingTop: theme.spacing.unit,
 		},
@@ -169,7 +175,7 @@ const CourseListCard = (props) => {
 					className={classes.cardMargin}
 				>
 					<Grid container direction="column" className={classes.cardContainer}>
-						<Grid item xs={2} sm md className={classes.cardContent}>
+						<Grid item xs={2} sm md className={classes.imageContainer}>
 							<img className={classes.image} src={value.logo} />
 						</Grid>
 						<Grid item xs={9} sm={10} md={10} container className={classes.cardContent}>
