@@ -18,7 +18,7 @@
     "url": "https://github.com/navgurukul/kamaladevi/issues"
   },
   "gh-pages-deploy": {
-    "staticpath": ".next",
+    "staticpath": ".",
     "cname": "saral.navgurukul.org",
     "noprompt": true
   },     

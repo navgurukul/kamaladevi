@@ -14,7 +14,7 @@ deploy:
   cleanup: false
   keep_history: true
   strategy: git
-  local_dir: .next
+  local_dir: .
   on:
     branch: master
   edge: true
