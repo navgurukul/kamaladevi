@@ -7,6 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "export": "yarn build && next export",
     "lint": "eslint --fix src/**"
   },
   "repository": {
