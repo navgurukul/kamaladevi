@@ -2072,7 +2072,7 @@ function (_React$Component) {
         color: "primary",
         variant: "contained",
         component: external__react_google_login__default.a,
-        clientId: "96851996756-7lfcdrojvu63k0jcjsqma61jggd72uli.apps.googleusercontent.com",
+        clientId: "34917283366-b806koktimo2pod1cjas8kn2lcpn7bse.apps.googleusercontent.com",
         cookiePolicy: "single_host_origin",
         scope: "profile email",
         onSuccess: function onSuccess(response) {
