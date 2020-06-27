@@ -90,7 +90,7 @@ const CourseListCard = (props) => {
 					</IconButton>
 				</Grid>
 				<Grid container spacing={16}>
-					<Grid item xs={2} sm md={2}>
+					<Grid	item xs={2} sm md={2}>
 						<img className={classes.image} src={value.logo} />
 					</Grid>
 					<Grid item xs={10} sm={12} md={10} container className={classes.cardContent}>
