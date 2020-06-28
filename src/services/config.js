@@ -1,1 +1,1 @@
-export const BACKEND_URL = window.location.protocol + '://' + window.location.host;
+export const BACKEND_URL = 'https://saral.navgurukul.org/api';
