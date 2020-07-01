@@ -57,6 +57,17 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 	}
 };
 
+function getQueryVariable(path, variable)
+{
+	var vars = path.split("?")[1].split("&");
+	console.log(vars);
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == variable) { return pair[1]; }
+	}
+	return(false);
+}
+
 class Course extends React.Component {
 	constructor(props) {
 		super(props);
@@ -102,7 +113,11 @@ class Course extends React.Component {
 	};
 
 	render() {
-		const { id, slug } = this.props.router.query;
+		// const { id, slug } = this.props.router.query;
+
+		const id = getQueryVariable(this.props.router.asPath, "id");
+		const slug = getQueryVariable(this.props.router.asPath, "slug");
+
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 
