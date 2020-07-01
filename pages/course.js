@@ -59,13 +59,17 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 
 function getQueryVariable(path, variable)
 {
-	var vars = path.split("?")[1].split("&");
-	console.log(vars);
-	for (var i=0;i<vars.length;i++) {
-		var pair = vars[i].split("=");
-		if(pair[0] == variable) { return pair[1]; }
+	var vars = path.split("?")[1]
+	if (vars) {
+		vars = vars.split("&");
+		console.log(vars);
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if(pair[0] == variable) { return pair[1]; }
+		}
+		return(false);
 	}
-	return(false);
+	return (false);
 }
 
 class Course extends React.Component {
