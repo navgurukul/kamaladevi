@@ -75,10 +75,12 @@ class Course extends React.Component {
 			let id = value ? value.user.id : 'non logged in user';
 			return id;
 	 })
+
 	 Sentry.configureScope((scope) => {
 		scope.setExtra("userId", userId);
 	  });
 	 }
+
 	async componentDidCatch(error, errorInfo) {
 		this.triggerSentry(error, errorInfo);
 		}
@@ -97,11 +99,15 @@ class Course extends React.Component {
 		  });
 		  Sentry.captureException(error);
 		});
-		};
+	};
+
 	render() {
 		const { id, slug } = this.props.router.query;
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
+
+		console.log("id, slug", id, slug, title);
+
 		if (!this.state.exercises.length) {
 			// TODO: Only run this code on server side
 			sendToCourse(id, slug, exercises => this.setState({ exercises }));
