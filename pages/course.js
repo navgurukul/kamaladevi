@@ -106,7 +106,7 @@ class Course extends React.Component {
 		const title = getTitleFromSlug(slug);
 		// If exercises.length is 0, it means the exercises are not loaded yet
 
-		console.log("id, slug", id, slug, title);
+		console.log("id, slug", id, slug, title, this.props);
 
 		if (!this.state.exercises.length) {
 			// TODO: Only run this code on server side
