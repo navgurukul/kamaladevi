@@ -262,13 +262,13 @@ class CourseDetail extends React.Component {
 
     const {
       prefetchedData,
-      content,
       prevSolutionDetail,
       selectedExercise,
       ifSolution,
       exerciseId,
     } = this.state;
-
+    let { content } = this.state;
+    content = content.match(/hi_text/g) ? JSON.parse(content)['hi_text'] : content;
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>
