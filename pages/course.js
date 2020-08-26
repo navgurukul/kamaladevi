@@ -2,6 +2,7 @@
 import React from 'react';
 import localforage from 'localforage';
 import Router, { withRouter } from 'next/router';
+import { toastr } from "react-redux-toastr"
 import PropTypes from 'prop-types';
 import DocumentTitle from 'react-document-title';
 import * as Sentry from '@sentry/browser';
@@ -9,7 +10,7 @@ import withRoot from '../src/with-root';
 
 import { fetchApi } from '../src/services/api';
 import { getTitleFromSlug } from '../src/services/utils';
-import {withGATag} from '../src/with-ga-tag';
+import { withGATag } from '../src/with-ga-tag';
 import Header from '../src/components/header';
 import CourseDetail from '../src/components/course-detail';
 
@@ -35,39 +36,47 @@ const sendToCourse = async (courseId, slug, setExerciseCallback) => {
 	try {
 		if (value != null) {
 			const { jwt } = value;
-		response = await fetchApi(`/courses/${courseId}/exercises`, {}, { Authorization: jwt });
+			response = await fetchApi(`/courses/${courseId}/exercises`, {}, { Authorization: jwt });
 		}
 	} catch (e) {
 		// TODO: Handle network error cases
 		return;
 	}
 	const exercises = response.data;
-
-	setExerciseCallback(exercises);
-	// If there is a slug in the URL, use that slug, else get the
-	// slug of the first exercise
-	if (!slug) {
-		const firstExerciseSlug = exercises[0].slug;
-		// Calling replace instead of slug, since we don't want the back
-		// button to take to ?id=courseId page.
+	if (exercises.length) {
+		setExerciseCallback(exercises);
+		// If there is a slug in the URL, use that slug, else get the
+		// slug of the first exercise
+		if (!slug) {
+			const firstExerciseSlug = exercises[0].slug;
+			// Calling replace instead of slug, since we don't want the back
+			// button to take to ?id=courseId page.
+			Router.replace({
+				pathname: '/course',
+				query: { id: courseId, slug: firstExerciseSlug },
+			});
+		}
+	} else {
 		Router.replace({
-			pathname: '/course',
-			query: { id: courseId, slug: firstExerciseSlug },
+			pathname: '/'
 		});
+		toastr.error(
+			"error",
+			"Selected course is not available please try another one!"
+		  );
 	}
 };
 
-function getQueryVariable(path, variable)
-{
+function getQueryVariable(path, variable) {
 	var vars = path.split("?")[1]
 	if (vars) {
 		vars = vars.split("&");
 		console.log(vars);
-		for (var i=0;i<vars.length;i++) {
+		for (var i = 0; i < vars.length; i++) {
 			var pair = vars[i].split("=");
-			if(pair[0] == variable) { return decodeURIComponent(pair[1]); }
+			if (pair[0] == variable) { return decodeURIComponent(pair[1]); }
 		}
-		return(false);
+		return (false);
 	}
 	return (false);
 }
@@ -85,34 +94,34 @@ class Course extends React.Component {
 		this.configSentryOnMount();
 	}
 
-	configSentryOnMount= async ()=>{
-		let userId = await localforage.getItem('authResponse').then((value)=>{
+	configSentryOnMount = async () => {
+		let userId = await localforage.getItem('authResponse').then((value) => {
 			let id = value ? value.user.id : 'non logged in user';
 			return id;
-	 })
+		})
 
-	 Sentry.configureScope((scope) => {
-		scope.setExtra("userId", userId);
-	  });
-	 }
+		Sentry.configureScope((scope) => {
+			scope.setExtra("userId", userId);
+		});
+	}
 
 	async componentDidCatch(error, errorInfo) {
 		this.triggerSentry(error, errorInfo);
-		}
-		 triggerSentry=async (error, errorInfo)=>{
-		  let userId = await localforage.getItem('authResponse').then((value)=>{
-			 let id = value ? value.user.id : 'non logged in user';
-			 return id;
+	}
+	triggerSentry = async (error, errorInfo) => {
+		let userId = await localforage.getItem('authResponse').then((value) => {
+			let id = value ? value.user.id : 'non logged in user';
+			return id;
 		})
 		Sentry.configureScope((scope) => {
 			scope.setExtra("userId", userId);
-		  });
+		});
 		this.setState({ error });
 		Sentry.withScope(scope => {
-		  Object.keys(errorInfo).forEach(key => {
-			scope.setExtra(errorInfo, errorInfo[key])
-		  });
-		  Sentry.captureException(error);
+			Object.keys(errorInfo).forEach(key => {
+				scope.setExtra(errorInfo, errorInfo[key])
+			});
+			Sentry.captureException(error);
 		});
 	};
 
@@ -137,17 +146,17 @@ class Course extends React.Component {
 			return null;
 		}
 		return (
-				<DocumentTitle title={title}>
-					<div>
-						<Header searchHidden={true}/>
-						<CourseDetail
-							id={id}
-							slug={slug}
-							exercises={this.state.exercises}
-							updateExercises={exercises => this.setState({ exercises })}
-							/>
-					</div>
-				</DocumentTitle>
+			<DocumentTitle title={title}>
+				<div>
+					<Header searchHidden={true} />
+					<CourseDetail
+						id={id}
+						slug={slug}
+						exercises={this.state.exercises}
+						updateExercises={exercises => this.setState({ exercises })}
+					/>
+				</div>
+			</DocumentTitle>
 		);
 	}
 }

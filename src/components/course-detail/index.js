@@ -2,9 +2,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import localforage from 'localforage';
-
+import { toastr } from "react-redux-toastr"
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -18,7 +18,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
 import { withStyles } from '@material-ui/core/styles';
-
+import {connect} from 'react-redux';
 import {
   getSlugOfPreviousCourse,
   getSlugOfNextCourse,
@@ -30,6 +30,7 @@ import { fetchApi, getExerciseSubmissionAPI } from '../../services/api';
 import CourseDetailSideNav from './course-detail-sidenav';
 import CourseDetailSubmission from './course-detail-submission';
 import Utterances from './utterances';
+import { object } from 'underscore';
 
 const blockEmbedPlugin = require('markdown-it-block-embed');
 
@@ -175,9 +176,9 @@ class CourseDetail extends React.Component {
   componentDidMount() {
     this.loadExercise();
   }
-
+  
   shouldComponentUpdate(nextProps) {
-    if (nextProps.slug !== this.props.slug) {
+    if (nextProps.slug !== this.props.slug || nextProps.selectedLanguage!==this.props.selectedLanguage) {
       this.loadExercise(nextProps.slug);
     }
     return true;
@@ -224,8 +225,9 @@ class CourseDetail extends React.Component {
       prevSolutionDetail = await getExerciseSubmissionAPI(courseId, exerciseId);
     } else {
     }
-    const content = response.content.replace(/```ngMeta[\s\S]*?```/, '');
-    // console.log(content);
+    console.log(typeof(response.content))
+    let content = typeof(response.content) == "object" ? response.content: response.content;
+    console.log(typeof(response.content), content)
     this.setState(prevState => ({
       content: content,
       prefetchedData: true,
@@ -251,6 +253,7 @@ class CourseDetail extends React.Component {
       slug,
       updateExercises,
       fullScreen,
+      selectedLanguage
     } = this.props;
     const {
       reviewType,
@@ -268,7 +271,26 @@ class CourseDetail extends React.Component {
       exerciseId,
     } = this.state;
     let { content } = this.state;
-    content = content.match(/hi_text/g) ? JSON.parse(content)['hi_text'] : content;
+    if (typeof(content)=="string") {
+      content = content.replace(/```ngMeta[\s\S]*?```/, '');
+      if (selectedLanguage !="hi" && selectedLanguage) {
+        toastr.warning(
+          "Warning",
+          "Selected language course content is not available please try another one!"
+        );
+      }
+    } else {
+      const availableLang = content[`${selectedLanguage}_text`];
+      if (availableLang) {
+        content = content[`${selectedLanguage}_text`].replace(/```ngMeta[\s\S]*?```/, '')
+      } else {
+        content = content['hi_text'].replace(/```ngMeta[\s\S]*?```/, '')
+        toastr.warning(
+          "Warning",
+          "Selected language course content is not available please try another one!"
+        );
+      }
+    }
     if (!prefetchedData) {
       return (
         <div className={classes.loaderRoot}>
@@ -287,7 +309,7 @@ class CourseDetail extends React.Component {
           <Grid item xs={12} md={8} className={classes.content}>
             <Card className={classes.content}>
               {/* eslint-disable-next-line react/no-danger */}
-              <div
+              <div  
                 id="course"
                 dangerouslySetInnerHTML={{
                   __html: this.updateLinks(md.render(content)),
@@ -468,6 +490,12 @@ class CourseDetail extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    selectedLanguage: state.state.selectedLanguage,
+  }
+}
+
 CourseDetail.propTypes = {
   classes: PropTypes.object.isRequired,
   exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -476,4 +504,4 @@ CourseDetail.propTypes = {
   updateExercises: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(CourseDetail);
+export default withStyles(styles)(connect(mapStateToProps, undefined)(CourseDetail));

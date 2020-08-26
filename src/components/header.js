@@ -16,6 +16,9 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
 import { withStyles } from '@material-ui/core/styles';
+import {connect} from 'react-redux';
+import { fetchAPI, selectLanguage, login } from '../store/action/index';
+import { fetchApi } from '../services/api';
 
 const drawerWidth = 240;
 
@@ -32,6 +35,7 @@ const styles = theme => ({
     zIndex: theme.zIndex.appBar - 1,
     ...theme.mixins.toolbar,
     backgroundColor: theme.palette.grey[50],
+    opacity: 0.8
   },
   link: {
     textDecoration: 'inherit',
@@ -74,7 +78,7 @@ class Header extends React.Component {
     this.state = {
       isAuthenticated: false,
       open: false,
-      email: ''
+      email: '',
     };
   }
 
@@ -108,9 +112,11 @@ class Header extends React.Component {
         }
         console.log(e);
       } else if (!value) {
+        this.props.selectLanguage(localStorage.getItem("selected_language"))
         // No access tokens saved
         // Do nothing
       } else {
+        this.props.login()
         // Access token is already saved
         this.setState({
           isAuthenticated: true,
@@ -119,6 +125,16 @@ class Header extends React.Component {
     });
   };
   
+  selectLanguage = async (id) => {
+    await fetchApi(`/users/${id}/selected_language`, {}, { Authorization: "null" })
+    .then((res) => {
+      if(res) {
+        localStorage.setItem("selected_language", res.selected_language)
+        this.props.selectLanguage(res.selected_language)
+      }
+    });
+  }
+  
   async componentDidMount() {
     this.checkIsAuthenticated();
     const value = await localforage.getItem('authResponse')
@@ -126,14 +142,31 @@ class Header extends React.Component {
       this.setState({
         email: value.user.email 
       })
+      this.selectLanguage(value.user.id)
     }
+  }
+  
+  handelChange = async (event) => {
+    const { value } = event.target;
+    const { isAuthenticated } = this.props;
+
+    const isAuth = await localforage.getItem("authResponse");
+    let userId = isAuth ? isAuth.user.id : null;
+    
+    if (isAuthenticated ) {
+      this.props.fetchAPI(value, userId)
+    }
+
+    localStorage.setItem("selected_language", value)
+    this.props.selectLanguage(value)
   }
 
   changeHandler = e => {
     this.props.bus.emit('search', e.target.value);
   };
   render() {
-    const { classes } = this.props;
+    console.log(this.props, "Babau JP")
+    const { classes, selectedLanguage } = this.props;
     const hidden = this.props.classes.hidden;
     const { isAuthenticated, open, email } = this.state;
 
@@ -164,10 +197,17 @@ class Header extends React.Component {
               onChange={this.changeHandler}
               placeholder="Search"
             />
+            <select style={{margin: 5}} value={selectedLanguage} onChange={this.handelChange} >
+              <option value='hi'>hi</option>
+              <option value='en'>en</option>
+              <option value='ta'>ta</option>
+              <option value='te'>te</option>
+            </select>
           </Toolbar>
         </AppBar>
         {/* Drawer should be here. */}
         <SwipeableDrawer
+
           variant="persistent"
           open={open}
           onOpen={() => this.openMenu(true)}
@@ -207,8 +247,23 @@ class Header extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    selectedLanguage: state.state.selectedLanguage,
+    isAuthenticated: state.state.isAuthenticated
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+     fetchAPI: (language, userId) => { dispatch(fetchAPI(language, userId)) },
+     login: () => dispatch(login()),
+     selectLanguage: (language) => dispatch(selectLanguage(language))
+  }
+}
+
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Header));

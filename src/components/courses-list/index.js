@@ -17,7 +17,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { fetchApi } from "../../services/api";
 import { setEnrolledCourses } from "../../services/session";
 import { sortCoursesBySequenceNum } from "../../services/utils";
-
+import {connect} from "react-redux";
 import CourseListCategoryView from "./course-list-category-view";
 import CourseListDragAndDropView from "./course-list-dragdrop-view";
 
@@ -308,4 +308,10 @@ CourseList.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CourseList);
+const mapStateToProps = state => {
+  return {
+    selectedLanguage: state.state.selectedLanguage
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, undefined)(CourseList));
