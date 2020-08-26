@@ -154,7 +154,7 @@ class Header extends React.Component {
               color="inherit"
               className={classes.flex}>
               <a href="/home" className={classes.link}>
-                Saral
+                Meraki
               </a>
             </Typography>
             <input
