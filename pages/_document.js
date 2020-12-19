@@ -52,6 +52,11 @@ class MyDocument extends Document {
 						href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 						rel="stylesheet"
 					/>
+					<link
+						href="https://diegoddox.github.io/react-redux-toastr/7.1/react-redux-toastr.min.css"
+						rel="stylesheet"
+						type="text/css"
+					/>
 				</Head>
 				<body>
 					<Main />
