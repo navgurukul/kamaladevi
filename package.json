@@ -45,7 +45,7 @@
     "react-google-login": "^3.2.1",
     "react-markdown": "^3.3.2",
     "react-jss": "^8.6.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
