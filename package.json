@@ -34,7 +34,7 @@
     "markdown-it": "^8.4.1",
     "markdown-it-block-embed": "0.0.3",
     "markdown-it-highlightjs": "^3.0.0",
-    "next": "^6.0.3",
+    "next": "^11.1.0",
     "prop-types": "^15.6.1",
     "query-string": "^6.4.2",
     "react": "^16.4.1",
