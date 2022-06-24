@@ -29,7 +29,7 @@
     "@material-ui/icons": "^1.1.1",
     "@sentry/browser": "^4.6.4",
     "axios": "^0.18.0",
-    "jsdom": "^13.2.0",
+    "jsdom": "^16.5.0",
     "localforage": "^1.7.1",
     "markdown-it": "^8.4.1",
     "markdown-it-block-embed": "0.0.3",
